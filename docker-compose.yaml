@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  next-server:
+    build: .
+    container_name: mpa-next-server
+    volumes:
+    - "/app/node_modules"
+    - ".:/app:cached"
+    ports:
+    - "3000:3000"

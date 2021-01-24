@@ -1,4 +1,4 @@
-import {Connection, createConnection, getConnection, getConnectionManager, getConnectionOptions} from "typeorm";
+import {Connection, createConnection, getConnection, getConnectionManager, getConnectionOptions, Table} from "typeorm";
 import {Parlour} from "./entities/Parlour";
 
 const CONNECTION_NAME="default"

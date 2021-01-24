@@ -2,20 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7cfe604a-58c1-4632-a054-561ad2110488" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.babelrc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Dockerfile.dev" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Dockerfile.prod" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/connection.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/entities/Parlour.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/entities/Table.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docker-compose.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ormconfig.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/d1644161-a6b7-43fe-b7bf-24964012d05f.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/d1644161-a6b7-43fe-b7bf-24964012d05f.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/d1644161-a6b7-43fe-b7bf-24964012d05f/storage_v2/_src_/database/mpa.HqcBAA/schema/public.abK9xQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/d1644161-a6b7-43fe-b7bf-24964012d05f/storage_v2/_src_/database/mpa.HqcBAA/schema/public.abK9xQ.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/connection.ts" beforeDir="false" afterPath="$PROJECT_DIR$/database/connection.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/entities/Parlour.ts" beforeDir="false" afterPath="$PROJECT_DIR$/database/entities/Parlour.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/entities/Table.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/api/hello.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pages/api/hello.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,7 +68,7 @@
       <updated>1611379053237</updated>
       <workItem from="1611379054399" duration="4980000" />
       <workItem from="1611445952816" duration="76000" />
-      <workItem from="1611446033209" duration="9996000" />
+      <workItem from="1611446033209" duration="11082000" />
     </task>
     <servers />
   </component>

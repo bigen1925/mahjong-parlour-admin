@@ -1413,7 +1413,7 @@ false posixrules
     <database id="2" parent="1" name="mpa">
       <ObjectId>16384</ObjectId>
       <Owner>mpa</Owner>
-      <IntrospectionStateNumber>489</IntrospectionStateNumber>
+      <IntrospectionStateNumber>494</IntrospectionStateNumber>
       <Current>1</Current>
     </database>
     <database id="3" parent="1" name="postgres">
@@ -1489,7 +1489,7 @@ UC/10
 </Acl>
       <StateNumber>287</StateNumber>
       <Owner>mpa</Owner>
-      <IntrospectionStateNumber>490</IntrospectionStateNumber>
+      <IntrospectionStateNumber>495</IntrospectionStateNumber>
       <Current>1</Current>
     </schema>
     <extension id="18" parent="2" name="plpgsql">

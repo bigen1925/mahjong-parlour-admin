@@ -1,5 +1,4 @@
-import {Entity, Column, PrimaryGeneratedColumn, BaseEntity, OneToMany} from "typeorm";
-import {Table} from "./Table";
+import {Entity, Column, PrimaryGeneratedColumn, BaseEntity} from "typeorm";
 
 @Entity()
 export class Parlour extends BaseEntity {
@@ -8,7 +7,4 @@ export class Parlour extends BaseEntity {
 
     @Column('varchar', {nullable: false})
     name?: string;
-
-    @OneToMany(() => Table, table => table.parlour)
-    tables?: Table[];
 }

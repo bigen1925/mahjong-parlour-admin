@@ -5,19 +5,8 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm ci && npm run build
+RUN npm ci
 
-# ==== server stage =====
-FROM node:15.5-buster
-
-WORKDIR /app
-
-COPY package*.json ./
-
-RUN npm ci --production
-
-COPY --from=builder /app/.next ./.next
-
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]
 
 EXPOSE 3000

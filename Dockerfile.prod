@@ -1,0 +1,10 @@
+FROM node:15.5-alpine as builder
+
+WORKDIR /build
+
+COPY package*.json ./
+
+RUN npm ci &&
+
+
+EXPOSE 3000

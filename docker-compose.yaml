@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    image: mpa-server-dev
+    container_name: mpa-server-dev
+    volumes:
+      - /app/node_modules
+      - ./:/app/
+    ports:
+      - 3000:3000
+
+  database:
+    image: postgres:13.1
+    container_name: mpa-database-dev
+    volumes:
+      - /var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=mpa
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=mpa

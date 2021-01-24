@@ -33,7 +33,12 @@ export const connectDatabase = async () => {
     //create new connection
     await createConnection({
         name: CONNECTION_NAME,
-        ...(await getConnectionOptions()),
+        type: "postgres",
+        host: "database",
+        port: 5432,
+        username: "mpa",
+        password: "password",
+        database: "mpa",
         entities: [Parlour],
         synchronize: true,
     });

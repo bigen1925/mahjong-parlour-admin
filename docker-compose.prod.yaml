@@ -2,18 +2,17 @@ version: "3"
 
 services:
   server:
-    build: .
-    image: mpa-server-dev
-    container_name: mpa-server-dev
-    volumes:
-      - /app/node_modules
-      - ./:/app/
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    image: mpa-server-prod
+    container_name: mpa-server-prod
     ports:
       - 3000:3000
 
   database:
     image: postgres:13.1
-    container_name: mpa-database-dev
+    container_name: mpa-database-prod
     volumes:
       - /var/lib/postgresql/data
     ports:

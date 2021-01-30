@@ -2,14 +2,16 @@ version: "3"
 
 services:
   server:
-    build: .
-    image: mpa-server-dev
+    image: node:15.5-buster
     container_name: mpa-server-dev
+    command: "npm run dev"
+    working_dir: /app
     volumes:
-      - /app/node_modules
-      - ./:/app/
+      - ./:/app
     ports:
       - 3000:3000
+    environment:
+      - DATABASE_URL=postgresql://mpa:password@database:5432/mpa
 
   database:
     image: postgres:13.1

@@ -3,7 +3,7 @@ import { createMuiTheme, CssBaseline, ThemeProvider } from "@material-ui/core";
 import { green, lightBlue } from "@material-ui/core/colors";
 import React from "react";
 
-function MyApp({ Component, pageProps }: AppProps): JSX.Element {
+export default function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   const theme = createMuiTheme({
     palette: {
       primary: {
@@ -27,13 +27,9 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   }, []);
 
   return (
-    <>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Component {...pageProps} />
-      </ThemeProvider>
-    </>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Component {...pageProps} />
+    </ThemeProvider>
   );
 }
-
-export default MyApp;

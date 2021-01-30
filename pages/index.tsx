@@ -3,7 +3,7 @@ import Footer from "../components/organisms/Footer";
 import Main from "../components/organisms/Main";
 import { Box } from "@material-ui/core";
 
-export default function Home(): JSX.Element {
+export default function Index(): JSX.Element {
   return (
     <Box width="100%">
       <Header />

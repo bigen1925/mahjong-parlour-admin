@@ -166,18 +166,18 @@ declare namespace DMMF {
         count?: string | null;
     }
     enum ModelAction {
-        findUnique = "findUnique",
-        findFirst = "findFirst",
-        findMany = "findMany",
-        create = "create",
-        update = "update",
-        updateMany = "updateMany",
-        upsert = "upsert",
-        delete = "delete",
-        deleteMany = "deleteMany",
-        groupBy = "groupBy",
-        count = "count",
-        aggregate = "aggregate"
+        findUnique = 'findUnique',
+        findFirst = 'findFirst',
+        findMany = 'findMany',
+        create = 'create',
+        update = 'update',
+        updateMany = 'updateMany',
+        upsert = 'upsert',
+        delete = 'delete',
+        deleteMany = 'deleteMany',
+        groupBy = 'groupBy',
+        count = 'count',
+        aggregate = 'aggregate',
     }
 }
 
@@ -262,7 +262,13 @@ interface FieldError {
     path: string[];
     error: InvalidFieldError;
 }
-declare type InvalidFieldError = InvalidFieldNameError | InvalidFieldTypeError | EmptySelectError | NoTrueSelectError | IncludeAndSelectError | EmptyIncludeError;
+declare type InvalidFieldError =
+    | InvalidFieldNameError
+    | InvalidFieldTypeError
+    | EmptySelectError
+    | NoTrueSelectError
+    | IncludeAndSelectError
+    | EmptyIncludeError;
 interface InvalidFieldTypeError {
     type: 'invalidFieldType';
     modelName: string;
@@ -294,7 +300,13 @@ interface IncludeAndSelectError {
     type: 'includeAndSelect';
     field: DMMF.SchemaField;
 }
-declare type InvalidArgError = InvalidArgNameError | MissingArgError | InvalidArgTypeError | AtLeastOneError | AtMostOneError | InvalidNullArgError;
+declare type InvalidArgError =
+    | InvalidArgNameError
+    | MissingArgError
+    | InvalidArgTypeError
+    | AtLeastOneError
+    | AtMostOneError
+    | InvalidNullArgError;
 /**
  * This error occurs if the user provides an arg name that doens't exist
  */
@@ -365,9 +377,23 @@ declare class Document {
     constructor(type: 'query' | 'mutation', children: Field[]);
     get [Symbol.toStringTag](): string;
     toString(): string;
-    validate(select?: any, isTopLevelQuery?: boolean, originalMethod?: string, errorFormat?: 'pretty' | 'minimal' | 'colorless', validationCallsite?: any): void;
-    protected printFieldError: ({ error }: FieldError, missingItems: MissingItem[], minimal: boolean) => string | undefined;
-    protected printArgError: ({ error, path }: ArgError, hasMissingItems: boolean, minimal: boolean) => string | undefined;
+    validate(
+        select?: any,
+        isTopLevelQuery?: boolean,
+        originalMethod?: string,
+        errorFormat?: 'pretty' | 'minimal' | 'colorless',
+        validationCallsite?: any
+    ): void;
+    protected printFieldError: (
+        { error }: FieldError,
+        missingItems: MissingItem[],
+        minimal: boolean
+    ) => string | undefined;
+    protected printArgError: (
+        { error, path }: ArgError,
+        hasMissingItems: boolean,
+        minimal: boolean
+    ) => string | undefined;
     /**
      * As we're allowing both single objects and array of objects for list inputs, we need to remove incorrect
      * zero indexes from the path
@@ -397,7 +423,9 @@ declare class Field {
     constructor({ name, args, children, error, schemaField }: FieldArgs);
     get [Symbol.toStringTag](): string;
     toString(): string;
-    collectErrors(prefix?: string): {
+    collectErrors(
+        prefix?: string
+    ): {
         fieldErrors: FieldError[];
         argErrors: ArgError[];
     };
@@ -427,7 +455,7 @@ declare class Arg {
     schemaArg?: DMMF.SchemaArg;
     isNullable: boolean;
     inputType?: DMMF.SchemaArgInputType;
-    constructor({ key, value, isEnum, error, schemaArg, inputType, }: ArgOptions);
+    constructor({ key, value, isEnum, error, schemaArg, inputType }: ArgOptions);
     get [Symbol.toStringTag](): string;
     _toString(value: ArgValue, key: string): string | undefined;
     toString(): string | undefined;
@@ -440,7 +468,7 @@ interface DocumentInput {
     rootField: string;
     select?: any;
 }
-declare function makeDocument({ dmmf, rootTypeName, rootField, select, }: DocumentInput): Document;
+declare function makeDocument({ dmmf, rootTypeName, rootField, select }: DocumentInput): Document;
 declare function transformDocument(document: Document): Document;
 interface UnpackOptions {
     document: Document;
@@ -529,7 +557,23 @@ declare class PrismaClientInitializationError extends Error {
     get [Symbol.toStringTag](): string;
 }
 
-declare type Platform = 'native' | 'darwin' | 'debian-openssl-1.0.x' | 'debian-openssl-1.1.x' | 'rhel-openssl-1.0.x' | 'rhel-openssl-1.1.x' | 'linux-arm-openssl-1.1.x' | 'linux-arm-openssl-1.0.x' | 'linux-musl' | 'linux-nixos' | 'windows' | 'freebsd11' | 'freebsd12' | 'openbsd' | 'netbsd' | 'arm';
+declare type Platform =
+    | 'native'
+    | 'darwin'
+    | 'debian-openssl-1.0.x'
+    | 'debian-openssl-1.1.x'
+    | 'rhel-openssl-1.0.x'
+    | 'rhel-openssl-1.1.x'
+    | 'linux-arm-openssl-1.1.x'
+    | 'linux-arm-openssl-1.0.x'
+    | 'linux-musl'
+    | 'linux-nixos'
+    | 'windows'
+    | 'freebsd11'
+    | 'freebsd12'
+    | 'openbsd'
+    | 'netbsd'
+    | 'arm';
 
 interface DatasourceOverwrite {
     name: string;
@@ -542,7 +586,9 @@ interface EngineConfig {
     enableDebugLogs?: boolean;
     enableEngineDebugMode?: boolean;
     prismaPath?: string;
-    fetcher?: (query: string) => Promise<{
+    fetcher?: (
+        query: string
+    ) => Promise<{
         data?: any;
         error?: any;
     }>;
@@ -612,7 +658,26 @@ declare class NodeEngine {
      * exiting is used to tell the .on('exit') hook, if the exit came from our script.
      * As soon as the Prisma binary returns a correct return code (like 1 or 0), we don't need this anymore
      */
-    constructor({ cwd, datamodelPath, prismaPath, generator, datasources, showColors, logLevel, logQueries, env, flags, clientVersion, enableExperimental, engineEndpoint, enableDebugLogs, enableEngineDebugMode, dirname, useUds, activeProvider, }: EngineConfig);
+    constructor({
+        cwd,
+        datamodelPath,
+        prismaPath,
+        generator,
+        datasources,
+        showColors,
+        logLevel,
+        logQueries,
+        env,
+        flags,
+        clientVersion,
+        enableExperimental,
+        engineEndpoint,
+        enableDebugLogs,
+        enableEngineDebugMode,
+        dirname,
+        useUds,
+        activeProvider,
+    }: EngineConfig);
     private setError;
     private checkForTooManyEngines;
     private resolveCwd;
@@ -660,7 +725,10 @@ declare class NodeEngine {
 }
 
 declare type RejectOnNotFound = boolean | ((error: Error) => Error) | undefined;
-declare type InstanceRejectOnNotFound = RejectOnNotFound | Record<string, RejectOnNotFound> | Record<string, Record<string, RejectOnNotFound>>;
+declare type InstanceRejectOnNotFound =
+    | RejectOnNotFound
+    | Record<string, RejectOnNotFound>
+    | Record<string, Record<string, RejectOnNotFound>>;
 
 declare type ErrorFormat = 'pretty' | 'colorless' | 'minimal';
 declare type Datasource = {
@@ -784,268 +852,291 @@ declare function warnEnvConflicts(envPaths: any): void;
 
 // Type definitions for decimal.js >=7.0.0
 
-
 declare namespace Decimal {
-  export type Constructor = typeof Decimal;
-  export type Instance = Decimal;
-  export type Rounding = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
-  export type Modulo = Rounding | 9;
-  export type Value = string | number | Decimal;
+    export type Constructor = typeof Decimal;
+    export type Instance = Decimal;
+    export type Rounding = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+    export type Modulo = Rounding | 9;
+    export type Value = string | number | Decimal;
 
-  // http://mikemcl.github.io/decimal.js/#constructor-properties
-  export interface Config {
-    precision?: number;
-    rounding?: Rounding;
-    toExpNeg?: number;
-    toExpPos?: number;
-    minE?: number;
-    maxE?: number;
-    crypto?: boolean;
-    modulo?: Modulo;
-    defaults?: boolean;
-  }
+    // http://mikemcl.github.io/decimal.js/#constructor-properties
+    export interface Config {
+        precision?: number;
+        rounding?: Rounding;
+        toExpNeg?: number;
+        toExpPos?: number;
+        minE?: number;
+        maxE?: number;
+        crypto?: boolean;
+        modulo?: Modulo;
+        defaults?: boolean;
+    }
 }
 
 declare class Decimal {
-  readonly d: number[];
-  readonly e: number;
-  readonly s: number;
-  private readonly name: string;
+    readonly d: number[];
+    readonly e: number;
+    readonly s: number;
+    private readonly name: string;
 
-  constructor(n: Decimal.Value);
+    constructor(n: Decimal.Value);
 
-  absoluteValue(): Decimal;
-  abs(): Decimal;
+    absoluteValue(): Decimal;
+    abs(): Decimal;
 
-  ceil(): Decimal;
+    ceil(): Decimal;
 
-  comparedTo(n: Decimal.Value): number;
-  cmp(n: Decimal.Value): number;
+    comparedTo(n: Decimal.Value): number;
+    cmp(n: Decimal.Value): number;
 
-  cosine(): Decimal;
-  cos(): Decimal;
+    cosine(): Decimal;
+    cos(): Decimal;
 
-  cubeRoot(): Decimal;
-  cbrt(): Decimal;
+    cubeRoot(): Decimal;
+    cbrt(): Decimal;
 
-  decimalPlaces(): number;
-  dp(): number;
+    decimalPlaces(): number;
+    dp(): number;
 
-  dividedBy(n: Decimal.Value): Decimal;
-  div(n: Decimal.Value): Decimal;
+    dividedBy(n: Decimal.Value): Decimal;
+    div(n: Decimal.Value): Decimal;
 
-  dividedToIntegerBy(n: Decimal.Value): Decimal;
-  divToInt(n: Decimal.Value): Decimal;
+    dividedToIntegerBy(n: Decimal.Value): Decimal;
+    divToInt(n: Decimal.Value): Decimal;
 
-  equals(n: Decimal.Value): boolean;
-  eq(n: Decimal.Value): boolean;
+    equals(n: Decimal.Value): boolean;
+    eq(n: Decimal.Value): boolean;
 
-  floor(): Decimal;
+    floor(): Decimal;
 
-  greaterThan(n: Decimal.Value): boolean;
-  gt(n: Decimal.Value): boolean;
+    greaterThan(n: Decimal.Value): boolean;
+    gt(n: Decimal.Value): boolean;
 
-  greaterThanOrEqualTo(n: Decimal.Value): boolean;
-  gte(n: Decimal.Value): boolean;
+    greaterThanOrEqualTo(n: Decimal.Value): boolean;
+    gte(n: Decimal.Value): boolean;
 
-  hyperbolicCosine(): Decimal;
-  cosh(): Decimal;
+    hyperbolicCosine(): Decimal;
+    cosh(): Decimal;
 
-  hyperbolicSine(): Decimal;
-  sinh(): Decimal;
+    hyperbolicSine(): Decimal;
+    sinh(): Decimal;
 
-  hyperbolicTangent(): Decimal;
-  tanh(): Decimal;
+    hyperbolicTangent(): Decimal;
+    tanh(): Decimal;
 
-  inverseCosine(): Decimal;
-  acos(): Decimal;
+    inverseCosine(): Decimal;
+    acos(): Decimal;
 
-  inverseHyperbolicCosine(): Decimal;
-  acosh(): Decimal;
+    inverseHyperbolicCosine(): Decimal;
+    acosh(): Decimal;
 
-  inverseHyperbolicSine(): Decimal;
-  asinh(): Decimal;
+    inverseHyperbolicSine(): Decimal;
+    asinh(): Decimal;
 
-  inverseHyperbolicTangent(): Decimal;
-  atanh(): Decimal;
+    inverseHyperbolicTangent(): Decimal;
+    atanh(): Decimal;
 
-  inverseSine(): Decimal;
-  asin(): Decimal;
+    inverseSine(): Decimal;
+    asin(): Decimal;
 
-  inverseTangent(): Decimal;
-  atan(): Decimal;
+    inverseTangent(): Decimal;
+    atan(): Decimal;
 
-  isFinite(): boolean;
+    isFinite(): boolean;
 
-  isInteger(): boolean;
-  isInt(): boolean;
+    isInteger(): boolean;
+    isInt(): boolean;
 
-  isNaN(): boolean;
+    isNaN(): boolean;
 
-  isNegative(): boolean;
-  isNeg(): boolean;
+    isNegative(): boolean;
+    isNeg(): boolean;
 
-  isPositive(): boolean;
-  isPos(): boolean;
+    isPositive(): boolean;
+    isPos(): boolean;
 
-  isZero(): boolean;
+    isZero(): boolean;
 
-  lessThan(n: Decimal.Value): boolean;
-  lt(n: Decimal.Value): boolean;
+    lessThan(n: Decimal.Value): boolean;
+    lt(n: Decimal.Value): boolean;
 
-  lessThanOrEqualTo(n: Decimal.Value): boolean;
-  lte(n: Decimal.Value): boolean;
+    lessThanOrEqualTo(n: Decimal.Value): boolean;
+    lte(n: Decimal.Value): boolean;
 
-  logarithm(n?: Decimal.Value): Decimal;
-  log(n?: Decimal.Value): Decimal;
+    logarithm(n?: Decimal.Value): Decimal;
+    log(n?: Decimal.Value): Decimal;
 
-  minus(n: Decimal.Value): Decimal;
-  sub(n: Decimal.Value): Decimal;
+    minus(n: Decimal.Value): Decimal;
+    sub(n: Decimal.Value): Decimal;
 
-  modulo(n: Decimal.Value): Decimal;
-  mod(n: Decimal.Value): Decimal;
+    modulo(n: Decimal.Value): Decimal;
+    mod(n: Decimal.Value): Decimal;
 
-  naturalExponential(): Decimal;
-  exp(): Decimal;
+    naturalExponential(): Decimal;
+    exp(): Decimal;
 
-  naturalLogarithm(): Decimal;
-  ln(): Decimal;
+    naturalLogarithm(): Decimal;
+    ln(): Decimal;
 
-  negated(): Decimal;
-  neg(): Decimal;
+    negated(): Decimal;
+    neg(): Decimal;
 
-  plus(n: Decimal.Value): Decimal;
-  add(n: Decimal.Value): Decimal;
+    plus(n: Decimal.Value): Decimal;
+    add(n: Decimal.Value): Decimal;
 
-  precision(includeZeros?: boolean): number;
-  sd(includeZeros?: boolean): number;
+    precision(includeZeros?: boolean): number;
+    sd(includeZeros?: boolean): number;
 
-  round(): Decimal;
+    round(): Decimal;
 
-  sine() : Decimal;
-  sin() : Decimal;
+    sine(): Decimal;
+    sin(): Decimal;
 
-  squareRoot(): Decimal;
-  sqrt(): Decimal;
+    squareRoot(): Decimal;
+    sqrt(): Decimal;
 
-  tangent() : Decimal;
-  tan() : Decimal;
+    tangent(): Decimal;
+    tan(): Decimal;
 
-  times(n: Decimal.Value): Decimal;
-  mul(n: Decimal.Value) : Decimal;
+    times(n: Decimal.Value): Decimal;
+    mul(n: Decimal.Value): Decimal;
 
-  toBinary(significantDigits?: number): string;
-  toBinary(significantDigits: number, rounding: Decimal.Rounding): string;
+    toBinary(significantDigits?: number): string;
+    toBinary(significantDigits: number, rounding: Decimal.Rounding): string;
 
-  toDecimalPlaces(decimalPlaces?: number): Decimal;
-  toDecimalPlaces(decimalPlaces: number, rounding: Decimal.Rounding): Decimal;
-  toDP(decimalPlaces?: number): Decimal;
-  toDP(decimalPlaces: number, rounding: Decimal.Rounding): Decimal;
+    toDecimalPlaces(decimalPlaces?: number): Decimal;
+    toDecimalPlaces(decimalPlaces: number, rounding: Decimal.Rounding): Decimal;
+    toDP(decimalPlaces?: number): Decimal;
+    toDP(decimalPlaces: number, rounding: Decimal.Rounding): Decimal;
 
-  toExponential(decimalPlaces?: number): string;
-  toExponential(decimalPlaces: number, rounding: Decimal.Rounding): string;
+    toExponential(decimalPlaces?: number): string;
+    toExponential(decimalPlaces: number, rounding: Decimal.Rounding): string;
 
-  toFixed(decimalPlaces?: number): string;
-  toFixed(decimalPlaces: number, rounding: Decimal.Rounding): string;
+    toFixed(decimalPlaces?: number): string;
+    toFixed(decimalPlaces: number, rounding: Decimal.Rounding): string;
 
-  toFraction(max_denominator?: Decimal.Value): Decimal[];
+    toFraction(max_denominator?: Decimal.Value): Decimal[];
 
-  toHexadecimal(significantDigits?: number): string;
-  toHexadecimal(significantDigits: number, rounding: Decimal.Rounding): string;
-  toHex(significantDigits?: number): string;
-  toHex(significantDigits: number, rounding?: Decimal.Rounding): string;
+    toHexadecimal(significantDigits?: number): string;
+    toHexadecimal(significantDigits: number, rounding: Decimal.Rounding): string;
+    toHex(significantDigits?: number): string;
+    toHex(significantDigits: number, rounding?: Decimal.Rounding): string;
 
-  toJSON(): string;
+    toJSON(): string;
 
-  toNearest(n: Decimal.Value, rounding?: Decimal.Rounding): Decimal;
+    toNearest(n: Decimal.Value, rounding?: Decimal.Rounding): Decimal;
 
-  toNumber(): number;
+    toNumber(): number;
 
-  toOctal(significantDigits?: number): string;
-  toOctal(significantDigits: number, rounding: Decimal.Rounding): string;
+    toOctal(significantDigits?: number): string;
+    toOctal(significantDigits: number, rounding: Decimal.Rounding): string;
 
-  toPower(n: Decimal.Value): Decimal;
-  pow(n: Decimal.Value): Decimal;
+    toPower(n: Decimal.Value): Decimal;
+    pow(n: Decimal.Value): Decimal;
 
-  toPrecision(significantDigits?: number): string;
-  toPrecision(significantDigits: number, rounding: Decimal.Rounding): string;
+    toPrecision(significantDigits?: number): string;
+    toPrecision(significantDigits: number, rounding: Decimal.Rounding): string;
 
-  toSignificantDigits(significantDigits?: number): Decimal;
-  toSignificantDigits(significantDigits: number, rounding: Decimal.Rounding): Decimal;
-  toSD(significantDigits?: number): Decimal;
-  toSD(significantDigits: number, rounding: Decimal.Rounding): Decimal;
+    toSignificantDigits(significantDigits?: number): Decimal;
+    toSignificantDigits(significantDigits: number, rounding: Decimal.Rounding): Decimal;
+    toSD(significantDigits?: number): Decimal;
+    toSD(significantDigits: number, rounding: Decimal.Rounding): Decimal;
 
-  toString(): string;
+    toString(): string;
 
-  truncated(): Decimal;
-  trunc(): Decimal;
+    truncated(): Decimal;
+    trunc(): Decimal;
 
-  valueOf(): string;
+    valueOf(): string;
 
-  static abs(n: Decimal.Value): Decimal;
-  static acos(n: Decimal.Value): Decimal;
-  static acosh(n: Decimal.Value): Decimal;
-  static add(x: Decimal.Value, y: Decimal.Value): Decimal;
-  static asin(n: Decimal.Value): Decimal;
-  static asinh(n: Decimal.Value): Decimal;
-  static atan(n: Decimal.Value): Decimal;
-  static atanh(n: Decimal.Value): Decimal;
-  static atan2(y: Decimal.Value, x: Decimal.Value): Decimal;
-  static cbrt(n: Decimal.Value): Decimal;
-  static ceil(n: Decimal.Value): Decimal;
-  static clone(object?: Decimal.Config): Decimal.Constructor;
-  static config(object: Decimal.Config): Decimal.Constructor;
-  static cos(n: Decimal.Value): Decimal;
-  static cosh(n: Decimal.Value): Decimal;
-  static div(x: Decimal.Value, y: Decimal.Value): Decimal;
-  static exp(n: Decimal.Value): Decimal;
-  static floor(n: Decimal.Value): Decimal;
-  static hypot(...n: Decimal.Value[]): Decimal;
-  static isDecimal(object: any): boolean
-  static ln(n: Decimal.Value): Decimal;
-  static log(n: Decimal.Value, base?: Decimal.Value): Decimal;
-  static log2(n: Decimal.Value): Decimal;
-  static log10(n: Decimal.Value): Decimal;
-  static max(...n: Decimal.Value[]): Decimal;
-  static min(...n: Decimal.Value[]): Decimal;
-  static mod(x: Decimal.Value, y: Decimal.Value): Decimal;
-  static mul(x: Decimal.Value, y: Decimal.Value): Decimal;
-  static noConflict(): Decimal.Constructor;   // Browser only
-  static pow(base: Decimal.Value, exponent: Decimal.Value): Decimal;
-  static random(significantDigits?: number): Decimal;
-  static round(n: Decimal.Value): Decimal;
-  static set(object: Decimal.Config): Decimal.Constructor;
-  static sign(n: Decimal.Value): Decimal;
-  static sin(n: Decimal.Value): Decimal;
-  static sinh(n: Decimal.Value): Decimal;
-  static sqrt(n: Decimal.Value): Decimal;
-  static sub(x: Decimal.Value, y: Decimal.Value): Decimal;
-  static tan(n: Decimal.Value): Decimal;
-  static tanh(n: Decimal.Value): Decimal;
-  static trunc(n: Decimal.Value): Decimal;
+    static abs(n: Decimal.Value): Decimal;
+    static acos(n: Decimal.Value): Decimal;
+    static acosh(n: Decimal.Value): Decimal;
+    static add(x: Decimal.Value, y: Decimal.Value): Decimal;
+    static asin(n: Decimal.Value): Decimal;
+    static asinh(n: Decimal.Value): Decimal;
+    static atan(n: Decimal.Value): Decimal;
+    static atanh(n: Decimal.Value): Decimal;
+    static atan2(y: Decimal.Value, x: Decimal.Value): Decimal;
+    static cbrt(n: Decimal.Value): Decimal;
+    static ceil(n: Decimal.Value): Decimal;
+    static clone(object?: Decimal.Config): Decimal.Constructor;
+    static config(object: Decimal.Config): Decimal.Constructor;
+    static cos(n: Decimal.Value): Decimal;
+    static cosh(n: Decimal.Value): Decimal;
+    static div(x: Decimal.Value, y: Decimal.Value): Decimal;
+    static exp(n: Decimal.Value): Decimal;
+    static floor(n: Decimal.Value): Decimal;
+    static hypot(...n: Decimal.Value[]): Decimal;
+    static isDecimal(object: any): boolean;
+    static ln(n: Decimal.Value): Decimal;
+    static log(n: Decimal.Value, base?: Decimal.Value): Decimal;
+    static log2(n: Decimal.Value): Decimal;
+    static log10(n: Decimal.Value): Decimal;
+    static max(...n: Decimal.Value[]): Decimal;
+    static min(...n: Decimal.Value[]): Decimal;
+    static mod(x: Decimal.Value, y: Decimal.Value): Decimal;
+    static mul(x: Decimal.Value, y: Decimal.Value): Decimal;
+    static noConflict(): Decimal.Constructor; // Browser only
+    static pow(base: Decimal.Value, exponent: Decimal.Value): Decimal;
+    static random(significantDigits?: number): Decimal;
+    static round(n: Decimal.Value): Decimal;
+    static set(object: Decimal.Config): Decimal.Constructor;
+    static sign(n: Decimal.Value): Decimal;
+    static sin(n: Decimal.Value): Decimal;
+    static sinh(n: Decimal.Value): Decimal;
+    static sqrt(n: Decimal.Value): Decimal;
+    static sub(x: Decimal.Value, y: Decimal.Value): Decimal;
+    static tan(n: Decimal.Value): Decimal;
+    static tanh(n: Decimal.Value): Decimal;
+    static trunc(n: Decimal.Value): Decimal;
 
-  static readonly default?: Decimal.Constructor;
-  static readonly Decimal?: Decimal.Constructor;
+    static readonly default?: Decimal.Constructor;
+    static readonly Decimal?: Decimal.Constructor;
 
-  static readonly precision: number;
-  static readonly rounding: Decimal.Rounding;
-  static readonly toExpNeg: number;
-  static readonly toExpPos: number;
-  static readonly minE: number;
-  static readonly maxE: number;
-  static readonly crypto: boolean;
-  static readonly modulo: Decimal.Modulo;
+    static readonly precision: number;
+    static readonly rounding: Decimal.Rounding;
+    static readonly toExpNeg: number;
+    static readonly toExpPos: number;
+    static readonly minE: number;
+    static readonly maxE: number;
+    static readonly crypto: boolean;
+    static readonly modulo: Decimal.Modulo;
 
-  static readonly ROUND_UP: 0;
-  static readonly ROUND_DOWN: 1;
-  static readonly ROUND_CEIL: 2;
-  static readonly ROUND_FLOOR: 3;
-  static readonly ROUND_HALF_UP: 4;
-  static readonly ROUND_HALF_DOWN: 5;
-  static readonly ROUND_HALF_EVEN: 6;
-  static readonly ROUND_HALF_CEIL: 7;
-  static readonly ROUND_HALF_FLOOR: 8;
-  static readonly EUCLID: 9;
+    static readonly ROUND_UP: 0;
+    static readonly ROUND_DOWN: 1;
+    static readonly ROUND_CEIL: 2;
+    static readonly ROUND_FLOOR: 3;
+    static readonly ROUND_HALF_UP: 4;
+    static readonly ROUND_HALF_DOWN: 5;
+    static readonly ROUND_HALF_EVEN: 6;
+    static readonly ROUND_HALF_CEIL: 7;
+    static readonly ROUND_HALF_FLOOR: 8;
+    static readonly EUCLID: 9;
 }
 
-export { DMMF, DMMFClass, Decimal, NodeEngine as Engine, PrismaClientInitializationError, PrismaClientKnownRequestError, PrismaClientOptions, PrismaClientRustPanicError, PrismaClientUnknownRequestError, PrismaClientValidationError, RawValue, Sql, Value, Debug as debugLib, empty, getPrismaClient, join, makeDocument, raw, sqltag, transformDocument, unpack, warnEnvConflicts };
+export {
+    DMMF,
+    DMMFClass,
+    Decimal,
+    NodeEngine as Engine,
+    PrismaClientInitializationError,
+    PrismaClientKnownRequestError,
+    PrismaClientOptions,
+    PrismaClientRustPanicError,
+    PrismaClientUnknownRequestError,
+    PrismaClientValidationError,
+    RawValue,
+    Sql,
+    Value,
+    Debug as debugLib,
+    empty,
+    getPrismaClient,
+    join,
+    makeDocument,
+    raw,
+    sqltag,
+    transformDocument,
+    unpack,
+    warnEnvConflicts,
+};

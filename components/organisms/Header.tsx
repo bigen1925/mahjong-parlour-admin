@@ -23,7 +23,7 @@ export default function Header(): JSX.Element {
         </Grid>
         <Grid item xs={2}>
           <Grid container justify="center">
-            <Typography variant="h5">顧客管理</Typography>
+            <Typography variant="h5">卓管理</Typography>
           </Grid>
         </Grid>
       </Grid>

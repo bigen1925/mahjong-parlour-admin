@@ -1,7 +1,7 @@
-import Header from "../components/organisms/header";
-import Footer from "../components/organisms/footer";
+import Header from "../components/organisms/Header";
+import Footer from "../components/organisms/Footer";
+import Main from "../components/organisms/Main";
 import { Box } from "@material-ui/core";
-import Main from "../components/organisms/main";
 
 export default function Home(): JSX.Element {
   return (

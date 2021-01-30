@@ -14,7 +14,7 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
       },
     },
     typography: {
-      fontFamily: ["Noto Sans JP", "sans-serif"],
+      fontFamily: "Noto Sans JP, sans-serif",
     },
   });
 

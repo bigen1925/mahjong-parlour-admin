@@ -6,5 +6,6 @@ import { PrismaClient } from '../../prisma/client';
 const prisma = new PrismaClient();
 
 export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
+    prisma.game;
     return res.json({});
 };

@@ -2,10 +2,9 @@ import { Box, makeStyles } from '@material-ui/core';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import AddCircleOutlineRoundedIcon from '@material-ui/icons/AddCircleOutlineRounded';
 import NamedPerson from '../atoms/NamedPerson';
-import { Named } from '../../domains/interfaces/Named';
 
 interface PlayingTableProps {
-    players: Named[];
+    players: { lastName: string; firstName: string }[];
 }
 
 export default function PlayingTable(props: PlayingTableProps): JSX.Element {
@@ -43,28 +42,28 @@ export default function PlayingTable(props: PlayingTableProps): JSX.Element {
         <Box style={{ position: 'relative', height: 150, width: 150 }}>
             {/* 左上のプレイヤー */}
             {players[0] ? (
-                <NamedPerson name={players[0].name} iconSize={iconSize} className={styles.leftTop} />
+                <NamedPerson name={players[0].lastName} iconSize={iconSize} className={styles.leftTop} />
             ) : (
                 <AddCircleOutlineRoundedIcon className={styles.leftTop} style={{ fontSize: iconSize }} />
             )}
 
             {/* 右上のプレイヤー */}
             {players[1] ? (
-                <NamedPerson name={players[1].name} iconSize={iconSize} className={styles.rightTop} />
+                <NamedPerson name={players[1].lastName} iconSize={iconSize} className={styles.rightTop} />
             ) : (
                 <AddCircleOutlineRoundedIcon className={styles.rightTop} style={{ fontSize: iconSize }} />
             )}
 
             {/* 右下のプレイヤー */}
             {players[2] ? (
-                <NamedPerson name={players[2].name} iconSize={iconSize} className={styles.rightBottom} />
+                <NamedPerson name={players[2].lastName} iconSize={iconSize} className={styles.rightBottom} />
             ) : (
                 <AddCircleOutlineRoundedIcon className={styles.rightBottom} style={{ fontSize: iconSize }} />
             )}
 
             {/* 左下のプレイヤー */}
             {players[3] ? (
-                <NamedPerson name={players[3].name} iconSize={iconSize} className={styles.leftBottom} />
+                <NamedPerson name={players[3].lastName} iconSize={iconSize} className={styles.leftBottom} />
             ) : (
                 <AddCircleOutlineRoundedIcon className={styles.leftBottom} style={{ fontSize: iconSize }} />
             )}

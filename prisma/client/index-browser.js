@@ -1,190 +1,192 @@
-Object.defineProperty(exports, '__esModule', { value: true });
 
-const { Decimal } = require('./runtime/index-browser');
+Object.defineProperty(exports, "__esModule", { value: true });
 
-const Prisma = {};
+const {
+  Decimal
+} = require('./runtime/index-browser')
 
-exports.Prisma = Prisma;
+
+const Prisma = {}
+
+exports.Prisma = Prisma
 
 /**
  * Prisma Client JS version: 2.15.0
  * Query Engine version: e51dc3b5a9ee790a07104bec1c9477d51740fe54
  */
 Prisma.prismaVersion = {
-    client: '2.15.0',
-    engine: 'e51dc3b5a9ee790a07104bec1c9477d51740fe54',
-};
+  client: "2.15.0",
+  engine: "e51dc3b5a9ee790a07104bec1c9477d51740fe54"
+}
 
 Prisma.PrismaClientKnownRequestError = () => {
-    throw new Error(`PrismaClientKnownRequestError is unable to be run in the browser.
-In case this error is unexpected for you, please report it in https://github.com/prisma/prisma/issues`);
-};
+  throw new Error(`PrismaClientKnownRequestError is unable to be run in the browser.
+In case this error is unexpected for you, please report it in https://github.com/prisma/prisma/issues`,
+)};
 Prisma.PrismaClientUnknownRequestError = () => {
-    throw new Error(`PrismaClientUnknownRequestError is unable to be run in the browser.
-In case this error is unexpected for you, please report it in https://github.com/prisma/prisma/issues`);
-};
+  throw new Error(`PrismaClientUnknownRequestError is unable to be run in the browser.
+In case this error is unexpected for you, please report it in https://github.com/prisma/prisma/issues`,
+)}
 Prisma.PrismaClientRustPanicError = () => {
-    throw new Error(`PrismaClientRustPanicError is unable to be run in the browser.
-In case this error is unexpected for you, please report it in https://github.com/prisma/prisma/issues`);
-};
+  throw new Error(`PrismaClientRustPanicError is unable to be run in the browser.
+In case this error is unexpected for you, please report it in https://github.com/prisma/prisma/issues`,
+)}
 Prisma.PrismaClientInitializationError = () => {
-    throw new Error(`PrismaClientInitializationError is unable to be run in the browser.
-In case this error is unexpected for you, please report it in https://github.com/prisma/prisma/issues`);
-};
+  throw new Error(`PrismaClientInitializationError is unable to be run in the browser.
+In case this error is unexpected for you, please report it in https://github.com/prisma/prisma/issues`,
+)}
 Prisma.PrismaClientValidationError = () => {
-    throw new Error(`PrismaClientValidationError is unable to be run in the browser.
-In case this error is unexpected for you, please report it in https://github.com/prisma/prisma/issues`);
-};
-Prisma.Decimal = Decimal;
+  throw new Error(`PrismaClientValidationError is unable to be run in the browser.
+In case this error is unexpected for you, please report it in https://github.com/prisma/prisma/issues`,
+)}
+Prisma.Decimal = Decimal
 
 /**
  * Re-export of sql-template-tag
  */
 
 Prisma.sql = () => {
-    throw new Error(`sqltag is unable to be run in the browser.
-In case this error is unexpected for you, please report it in https://github.com/prisma/prisma/issues`);
-};
+  throw new Error(`sqltag is unable to be run in the browser.
+In case this error is unexpected for you, please report it in https://github.com/prisma/prisma/issues`,
+)}
 Prisma.empty = () => {
-    throw new Error(`empty is unable to be run in the browser.
-In case this error is unexpected for you, please report it in https://github.com/prisma/prisma/issues`);
-};
+  throw new Error(`empty is unable to be run in the browser.
+In case this error is unexpected for you, please report it in https://github.com/prisma/prisma/issues`,
+)}
 Prisma.join = () => {
-    throw new Error(`join is unable to be run in the browser.
-In case this error is unexpected for you, please report it in https://github.com/prisma/prisma/issues`);
-};
+  throw new Error(`join is unable to be run in the browser.
+In case this error is unexpected for you, please report it in https://github.com/prisma/prisma/issues`,
+)}
 Prisma.raw = () => {
-    throw new Error(`raw is unable to be run in the browser.
-In case this error is unexpected for you, please report it in https://github.com/prisma/prisma/issues`);
-};
+  throw new Error(`raw is unable to be run in the browser.
+In case this error is unexpected for you, please report it in https://github.com/prisma/prisma/issues`,
+)}
 
 /**
  * Enums
  */
 // Based on
 // https://github.com/microsoft/TypeScript/issues/3192#issuecomment-261720275
-function makeEnum(x) {
-    return x;
-}
+function makeEnum(x) { return x; }
 
 exports.Prisma.OrganizationScalarFieldEnum = makeEnum({
-    id: 'id',
-    name: 'name',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
+  id: 'id',
+  name: 'name',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 });
 
 exports.Prisma.ParlourScalarFieldEnum = makeEnum({
-    id: 'id',
-    name: 'name',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-    organizationId: 'organizationId',
+  id: 'id',
+  name: 'name',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  organizationId: 'organizationId'
 });
 
 exports.Prisma.StaffScalarFieldEnum = makeEnum({
-    id: 'id',
-    username: 'username',
-    password: 'password',
-    lastName: 'lastName',
-    firstName: 'firstName',
-    GENDER: 'GENDER',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-    organizationId: 'organizationId',
+  id: 'id',
+  username: 'username',
+  password: 'password',
+  lastName: 'lastName',
+  firstName: 'firstName',
+  GENDER: 'GENDER',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  organizationId: 'organizationId'
 });
 
 exports.Prisma.GuestScalarFieldEnum = makeEnum({
-    id: 'id',
-    lastName: 'lastName',
-    firstName: 'firstName',
-    GENDER: 'GENDER',
-    email: 'email',
-    address: 'address',
-    rewardPoints: 'rewardPoints',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-    organizationId: 'organizationId',
+  id: 'id',
+  lastName: 'lastName',
+  firstName: 'firstName',
+  GENDER: 'GENDER',
+  email: 'email',
+  address: 'address',
+  rewardPoints: 'rewardPoints',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  organizationId: 'organizationId'
 });
 
 exports.Prisma.TableScalarFieldEnum = makeEnum({
-    id: 'id',
-    name: 'name',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-    parlourId: 'parlourId',
+  id: 'id',
+  name: 'name',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  parlourId: 'parlourId'
 });
 
 exports.Prisma.GameScalarFieldEnum = makeEnum({
-    id: 'id',
-    firstDealer: 'firstDealer',
-    startAt: 'startAt',
-    endAt: 'endAt',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
+  id: 'id',
+  firstDealer: 'firstDealer',
+  startAt: 'startAt',
+  endAt: 'endAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 });
 
 exports.Prisma.PlayerScalarFieldEnum = makeEnum({
-    id: 'id',
-    SEAT: 'SEAT',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-    gameId: 'gameId',
-    guestId: 'guestId',
-    staffId: 'staffId',
+  id: 'id',
+  SEAT: 'SEAT',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  gameId: 'gameId',
+  guestId: 'guestId',
+  staffId: 'staffId'
 });
 
 exports.Prisma.GameResultScalarFieldEnum = makeEnum({
-    id: 'id',
-    rank: 'rank',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-    playerId: 'playerId',
+  id: 'id',
+  rank: 'rank',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  playerId: 'playerId'
 });
 
 exports.Prisma.SortOrder = makeEnum({
-    asc: 'asc',
-    desc: 'desc',
+  asc: 'asc',
+  desc: 'desc'
 });
 
 exports.Prisma.QueryMode = makeEnum({
-    default: 'default',
-    insensitive: 'insensitive',
+  default: 'default',
+  insensitive: 'insensitive'
 });
 exports.GENDER = makeEnum({
-    MALE: 'MALE',
-    FEMALE: 'FEMALE',
+  MALE: 'MALE',
+  FEMALE: 'FEMALE'
 });
 
 exports.SEAT = makeEnum({
-    FIRST: 'FIRST',
-    SECONDE: 'SECONDE',
-    THIRD: 'THIRD',
-    FORTH: 'FORTH',
+  FIRST: 'FIRST',
+  SECONDE: 'SECONDE',
+  THIRD: 'THIRD',
+  FORTH: 'FORTH'
 });
 
 exports.Prisma.ModelName = makeEnum({
-    Organization: 'Organization',
-    Parlour: 'Parlour',
-    Staff: 'Staff',
-    Guest: 'Guest',
-    Table: 'Table',
-    Game: 'Game',
-    Player: 'Player',
-    GameResult: 'GameResult',
+  Organization: 'Organization',
+  Parlour: 'Parlour',
+  Staff: 'Staff',
+  Guest: 'Guest',
+  Table: 'Table',
+  Game: 'Game',
+  Player: 'Player',
+  GameResult: 'GameResult'
 });
 
 /**
  * Create the Client
  */
 class PrismaClient {
-    constructor() {
-        throw new Error(
-            `PrismaClient is unable to be run in the browser.
-In case this error is unexpected for you, please report it in https://github.com/prisma/prisma-client-js/issues`
-        );
-    }
+  constructor() {
+    throw new Error(
+      `PrismaClient is unable to be run in the browser.
+In case this error is unexpected for you, please report it in https://github.com/prisma/prisma-client-js/issues`,
+    )
+  }
 }
-exports.PrismaClient = PrismaClient;
+exports.PrismaClient = PrismaClient
 
-Object.assign(exports, Prisma);
+Object.assign(exports, Prisma)

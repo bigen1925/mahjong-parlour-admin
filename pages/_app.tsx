@@ -1,6 +1,7 @@
 import { AppProps } from "next/app";
 import { createMuiTheme, CssBaseline, ThemeProvider } from "@material-ui/core";
 import { green, lightBlue } from "@material-ui/core/colors";
+import React from "react";
 
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   const theme = createMuiTheme({
@@ -12,11 +13,23 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
         main: lightBlue["A200"],
       },
     },
+    typography: {
+      fontFamily: ["Noto Sans JP", "sans-serif"],
+    },
   });
+
+  React.useEffect(() => {
+    // Remove the server-side injected CSS.
+    const jssStyles = document.querySelector("#jss-server-side");
+    if (jssStyles) {
+      jssStyles.parentElement?.removeChild(jssStyles);
+    }
+  }, []);
+
   return (
     <>
-      <CssBaseline />
       <ThemeProvider theme={theme}>
+        <CssBaseline />
         <Component {...pageProps} />
       </ThemeProvider>
     </>

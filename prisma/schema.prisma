@@ -2,10 +2,127 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
 }
 
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
+    output   = "./client"
+}
+
+// 組織
+model Organization {
+    id              String      @id @default(uuid())
+    name            String
+
+    createdAt       DateTime    @default(now())
+    updatedAt       DateTime    @updatedAt
+}
+
+// 店舗
+model Parlour {
+    id              String      @id @default(uuid())
+    name            String
+
+    organization    Organization
+    staffs          Staff[]
+    guests          Guest[]
+
+    createdAt       DateTime    @default(now())
+    updatedAt       DateTime    @updatedAt
+}
+
+// 従業員
+model Staff {
+    id              String      @id @default(uuid())
+    username        String      // ログインID
+    password        String      // ログインパスワード
+    lastName        String      // 姓
+    firstName       String      // 名
+    GENDER          GENDER      // 性別
+
+    organization    Organization
+    parlours        Parlour[]
+
+    createdAt       DateTime    @default(now())
+    updatedAt       DateTime    @updatedAt
+}
+
+// 客
+model Guest {
+    id              String      @id @default(uuid())
+    lastName        String      // 姓
+    firstName       String      // 名
+    GENDER          GENDER      // 性別
+    email           String?     // メールアドレス
+    address         String?     // 住所
+    rewardPoints    Int         // ポイント
+
+    organization    Organization
+    parlours        Parlour[]
+
+    createdAt       DateTime    @default(now())
+    updatedAt       DateTime    @updatedAt
+}
+
+// 卓
+model Table {
+    id              String      @id @default(uuid())
+    name            String
+
+    parlour         Parlour
+
+    createdAt       DateTime    @default(now())
+    updatedAt       DateTime    @updatedAt
+}
+
+// 対局
+model Game {
+    id              String      @id @default(uuid())
+    firstDealer     SEAT        // 起家
+    startAt         DateTime    // 開始時刻
+    endAt           DateTime    // 終了時刻
+
+    players         Player[]
+
+    createdAt       DateTime    @default(now())
+    updatedAt       DateTime    @updatedAt
+}
+
+// プレイヤー
+model Player {
+    id              String      @id @default(uuid())
+    SEAT            SEAT        // 座席
+
+    game            Game
+    guest           Guest?
+    staff           Staff?
+
+    createdAt       DateTime    @default(now())
+    updatedAt       DateTime    @updatedAt
+}
+
+// 対局結果
+model GameResult {
+    id              String      @id @default(uuid())
+    rank            Int         // 着順
+
+    player          Player      // 対局者
+
+    createdAt       DateTime    @default(now())
+    updatedAt       DateTime    @updatedAt
+}
+
+enum SEAT {
+    FIRST
+    SECONDE
+    THIRD
+    FORTH
+}
+
+
+enum GENDER {
+    MALE
+    FEMALE
 }

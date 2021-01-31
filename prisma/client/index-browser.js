@@ -90,7 +90,7 @@ exports.Prisma.StaffScalarFieldEnum = makeEnum({
   password: 'password',
   lastName: 'lastName',
   firstName: 'firstName',
-  GENDER: 'GENDER',
+  gender: 'gender',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   organizationId: 'organizationId'
@@ -100,7 +100,7 @@ exports.Prisma.GuestScalarFieldEnum = makeEnum({
   id: 'id',
   lastName: 'lastName',
   firstName: 'firstName',
-  GENDER: 'GENDER',
+  gender: 'gender',
   email: 'email',
   address: 'address',
   rewardPoints: 'rewardPoints',
@@ -128,7 +128,7 @@ exports.Prisma.GameScalarFieldEnum = makeEnum({
 
 exports.Prisma.PlayerScalarFieldEnum = makeEnum({
   id: 'id',
-  SEAT: 'SEAT',
+  seat: 'seat',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   gameId: 'gameId',
@@ -153,17 +153,7 @@ exports.Prisma.QueryMode = makeEnum({
   default: 'default',
   insensitive: 'insensitive'
 });
-exports.GENDER = makeEnum({
-  MALE: 'MALE',
-  FEMALE: 'FEMALE'
-});
 
-exports.SEAT = makeEnum({
-  FIRST: 'FIRST',
-  SECONDE: 'SECONDE',
-  THIRD: 'THIRD',
-  FORTH: 'FORTH'
-});
 
 exports.Prisma.ModelName = makeEnum({
   Organization: 'Organization',

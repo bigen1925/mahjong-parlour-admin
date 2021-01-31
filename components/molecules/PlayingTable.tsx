@@ -15,14 +15,7 @@ import { Guest } from '../../prisma/client';
 import { useEffect, useState } from 'react';
 import { DataGrid, RowParams } from '@material-ui/data-grid';
 import modalStyles from '../../styles/modal.module.css';
-
-const SEAT = {
-    FIRST: 0,
-    SECOND: 1,
-    THIRD: 2,
-    FOURTH: 3,
-} as const;
-type SEAT = typeof SEAT[keyof typeof SEAT];
+import { SEAT } from '../../prisma/constants';
 
 const useStyle = makeStyles({
     // 1席左上
@@ -69,10 +62,10 @@ interface PlayingTableProps {
 }
 
 export default function PlayingTable(props: PlayingTableProps): JSX.Element {
-    const [players, setPlayers] = useState<Guest[]>([]);
+    const [players, setPlayers] = useState<Map<SEAT, Guest>>(new Map());
     const [firstDealer, setFirstDealer] = useState<SEAT | null>(null);
     const [isOpenPlayerAdditionModal, setIsOpenPlayerAdditionModal] = useState(false);
-    const [playerAdditionTarget, setPlayerAdditionTarget] = useState<number | null>(null);
+    const [playerAdditionTarget, setPlayerAdditionTarget] = useState<SEAT | null>(null);
     const [isOpenGameStartingModal, setIsOpenGameStartingModal] = useState(false);
     const [isOpenGameFinishingModal, setIsOpenGameFinishingModal] = useState(false);
     const [startedAt, setStartedAt] = useState<Date | null>(null);
@@ -81,10 +74,9 @@ export default function PlayingTable(props: PlayingTableProps): JSX.Element {
     useEffect(() => console.log(ranking), [ranking]);
 
     function removePlayer(target: SEAT) {
-        props.addWaitingGuest(players[target]);
-        const newPlayers = [...players];
-        delete newPlayers[target];
-        setPlayers(newPlayers);
+        props.addWaitingGuest(players.get(target)!);
+        players.delete(target);
+        setPlayers(players);
     }
 
     function openPlayerAdditionModal(target: SEAT) {
@@ -103,9 +95,9 @@ export default function PlayingTable(props: PlayingTableProps): JSX.Element {
                     {/* 席 */}
                     {Object.values(SEAT).map((seat) => (
                         <Box key={seat} className={styles[seat]}>
-                            {players[seat] ? (
+                            {players.has(seat) ? (
                                 <Box onClick={() => removePlayer(seat)}>
-                                    <NamedPerson name={players[seat].lastName} iconSize={iconSize} />
+                                    <NamedPerson name={players.get(seat)!.lastName} iconSize={iconSize} />
                                 </Box>
                             ) : (
                                 <Box onClick={() => openPlayerAdditionModal(seat)}>
@@ -155,9 +147,8 @@ export default function PlayingTable(props: PlayingTableProps): JSX.Element {
                             }
                             props.removeWaitingGuest(guest);
 
-                            const newPlayers = [...players];
-                            newPlayers[playerAdditionTarget] = guest;
-                            setPlayers(newPlayers);
+                            players.set(playerAdditionTarget, guest);
+                            setPlayers(players);
 
                             return setIsOpenPlayerAdditionModal(false);
                         }}
@@ -181,10 +172,10 @@ export default function PlayingTable(props: PlayingTableProps): JSX.Element {
                             {/* 席 */}
                             {Object.values(SEAT).map((seat) => (
                                 <Box key={seat} className={styles[seat]}>
-                                    {players[seat] ? (
+                                    {players.has(seat) ? (
                                         <Box onClick={() => setFirstDealer(seat)}>
                                             <NamedPerson
-                                                name={players[seat].lastName}
+                                                name={players.get(seat)!.lastName}
                                                 iconSize={iconSize}
                                                 color={seat === firstDealer ? 'primary' : undefined}
                                             />
@@ -233,7 +224,7 @@ export default function PlayingTable(props: PlayingTableProps): JSX.Element {
                         <Box style={{ position: 'relative', height: 150, width: 150 }}>
                             {/* 席 */}
                             {Object.values(SEAT).map((seat) => {
-                                const guest = players[seat];
+                                const guest = players.get(seat);
                                 return (
                                     <Box key={seat} className={styles[seat]}>
                                         {guest ? (
@@ -246,7 +237,7 @@ export default function PlayingTable(props: PlayingTableProps): JSX.Element {
                                                     }
                                                 }}
                                             >
-                                                <NamedPerson name={players[seat].lastName} iconSize={iconSize} />
+                                                <NamedPerson name={players.get(seat)!.lastName} iconSize={iconSize} />
                                                 {ranking.indexOf(guest) + 1 + '位'}
                                             </Box>
                                         ) : (
@@ -266,8 +257,9 @@ export default function PlayingTable(props: PlayingTableProps): JSX.Element {
                         variant="outlined"
                         color="secondary"
                         onClick={() => {
-                            if (players.filter((x) => x).length !== ranking.length) {
-                                alert('');
+                            if (players.size !== ranking.length) {
+                                alert('順位が入力されていないプレイヤーがいます。');
+                                return;
                             }
                             setRanking([]);
                             setStartedAt(null);

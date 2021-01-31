@@ -39,7 +39,7 @@ export type Staff = {
   password: string
   lastName: string
   firstName: string
-  GENDER: GENDER
+  gender: number
   createdAt: Date
   updatedAt: Date
   organizationId: string
@@ -53,7 +53,7 @@ export type Guest = {
   id: string
   lastName: string
   firstName: string
-  GENDER: GENDER
+  gender: number
   email: string | null
   address: string | null
   rewardPoints: number
@@ -80,7 +80,7 @@ export type Table = {
 
 export type Game = {
   id: string
-  firstDealer: SEAT
+  firstDealer: number
   startAt: Date
   endAt: Date
   createdAt: Date
@@ -93,7 +93,7 @@ export type Game = {
 
 export type Player = {
   id: string
-  SEAT: SEAT
+  seat: number
   createdAt: Date
   updatedAt: Date
   gameId: string
@@ -112,31 +112,6 @@ export type GameResult = {
   updatedAt: Date
   playerId: string
 }
-
-
-/**
- * Enums
- */
-
-// Based on
-// https://github.com/microsoft/TypeScript/issues/3192#issuecomment-261720275
-
-export const GENDER: {
-  MALE: 'MALE',
-  FEMALE: 'FEMALE'
-};
-
-export type GENDER = (typeof GENDER)[keyof typeof GENDER]
-
-
-export const SEAT: {
-  FIRST: 'FIRST',
-  SECONDE: 'SECONDE',
-  THIRD: 'THIRD',
-  FORTH: 'FORTH'
-};
-
-export type SEAT = (typeof SEAT)[keyof typeof SEAT]
 
 
 /**
@@ -2152,8 +2127,18 @@ export namespace Prisma {
 
   export type AggregateStaff = {
     count: StaffCountAggregateOutputType | null
+    avg: StaffAvgAggregateOutputType | null
+    sum: StaffSumAggregateOutputType | null
     min: StaffMinAggregateOutputType | null
     max: StaffMaxAggregateOutputType | null
+  }
+
+  export type StaffAvgAggregateOutputType = {
+    gender: number
+  }
+
+  export type StaffSumAggregateOutputType = {
+    gender: number
   }
 
   export type StaffMinAggregateOutputType = {
@@ -2162,7 +2147,7 @@ export namespace Prisma {
     password: string | null
     lastName: string | null
     firstName: string | null
-    GENDER: GENDER | null
+    gender: number
     createdAt: Date | null
     updatedAt: Date | null
     organizationId: string | null
@@ -2174,7 +2159,7 @@ export namespace Prisma {
     password: string | null
     lastName: string | null
     firstName: string | null
-    GENDER: GENDER | null
+    gender: number
     createdAt: Date | null
     updatedAt: Date | null
     organizationId: string | null
@@ -2186,7 +2171,7 @@ export namespace Prisma {
     password: number | null
     lastName: number | null
     firstName: number | null
-    GENDER: number | null
+    gender: number
     createdAt: number | null
     updatedAt: number | null
     organizationId: number | null
@@ -2194,13 +2179,21 @@ export namespace Prisma {
   }
 
 
+  export type StaffAvgAggregateInputType = {
+    gender?: true
+  }
+
+  export type StaffSumAggregateInputType = {
+    gender?: true
+  }
+
   export type StaffMinAggregateInputType = {
     id?: true
     username?: true
     password?: true
     lastName?: true
     firstName?: true
-    GENDER?: true
+    gender?: true
     createdAt?: true
     updatedAt?: true
     organizationId?: true
@@ -2212,7 +2205,7 @@ export namespace Prisma {
     password?: true
     lastName?: true
     firstName?: true
-    GENDER?: true
+    gender?: true
     createdAt?: true
     updatedAt?: true
     organizationId?: true
@@ -2224,7 +2217,7 @@ export namespace Prisma {
     password?: true
     lastName?: true
     firstName?: true
-    GENDER?: true
+    gender?: true
     createdAt?: true
     updatedAt?: true
     organizationId?: true
@@ -2269,6 +2262,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    avg?: StaffAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    sum?: StaffSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     min?: StaffMinAggregateInputType
@@ -2296,7 +2301,7 @@ export namespace Prisma {
     password?: boolean
     lastName?: boolean
     firstName?: boolean
-    GENDER?: boolean
+    gender?: boolean
     organization?: boolean | OrganizationArgs
     parlours?: boolean | ParlourFindManyArgs
     createdAt?: boolean
@@ -2862,10 +2867,12 @@ export namespace Prisma {
   }
 
   export type GuestAvgAggregateOutputType = {
+    gender: number
     rewardPoints: number
   }
 
   export type GuestSumAggregateOutputType = {
+    gender: number
     rewardPoints: number
   }
 
@@ -2873,7 +2880,7 @@ export namespace Prisma {
     id: string | null
     lastName: string | null
     firstName: string | null
-    GENDER: GENDER | null
+    gender: number
     email: string | null
     address: string | null
     rewardPoints: number
@@ -2886,7 +2893,7 @@ export namespace Prisma {
     id: string | null
     lastName: string | null
     firstName: string | null
-    GENDER: GENDER | null
+    gender: number
     email: string | null
     address: string | null
     rewardPoints: number
@@ -2899,7 +2906,7 @@ export namespace Prisma {
     id: number | null
     lastName: number | null
     firstName: number | null
-    GENDER: number | null
+    gender: number
     email: number | null
     address: number | null
     rewardPoints: number
@@ -2911,10 +2918,12 @@ export namespace Prisma {
 
 
   export type GuestAvgAggregateInputType = {
+    gender?: true
     rewardPoints?: true
   }
 
   export type GuestSumAggregateInputType = {
+    gender?: true
     rewardPoints?: true
   }
 
@@ -2922,7 +2931,7 @@ export namespace Prisma {
     id?: true
     lastName?: true
     firstName?: true
-    GENDER?: true
+    gender?: true
     email?: true
     address?: true
     rewardPoints?: true
@@ -2935,7 +2944,7 @@ export namespace Prisma {
     id?: true
     lastName?: true
     firstName?: true
-    GENDER?: true
+    gender?: true
     email?: true
     address?: true
     rewardPoints?: true
@@ -2948,7 +2957,7 @@ export namespace Prisma {
     id?: true
     lastName?: true
     firstName?: true
-    GENDER?: true
+    gender?: true
     email?: true
     address?: true
     rewardPoints?: true
@@ -3033,7 +3042,7 @@ export namespace Prisma {
     id?: boolean
     lastName?: boolean
     firstName?: boolean
-    GENDER?: boolean
+    gender?: boolean
     email?: boolean
     address?: boolean
     rewardPoints?: boolean
@@ -4254,13 +4263,23 @@ export namespace Prisma {
 
   export type AggregateGame = {
     count: GameCountAggregateOutputType | null
+    avg: GameAvgAggregateOutputType | null
+    sum: GameSumAggregateOutputType | null
     min: GameMinAggregateOutputType | null
     max: GameMaxAggregateOutputType | null
   }
 
+  export type GameAvgAggregateOutputType = {
+    firstDealer: number
+  }
+
+  export type GameSumAggregateOutputType = {
+    firstDealer: number
+  }
+
   export type GameMinAggregateOutputType = {
     id: string | null
-    firstDealer: SEAT | null
+    firstDealer: number
     startAt: Date | null
     endAt: Date | null
     createdAt: Date | null
@@ -4269,7 +4288,7 @@ export namespace Prisma {
 
   export type GameMaxAggregateOutputType = {
     id: string | null
-    firstDealer: SEAT | null
+    firstDealer: number
     startAt: Date | null
     endAt: Date | null
     createdAt: Date | null
@@ -4278,7 +4297,7 @@ export namespace Prisma {
 
   export type GameCountAggregateOutputType = {
     id: number | null
-    firstDealer: number | null
+    firstDealer: number
     startAt: number | null
     endAt: number | null
     createdAt: number | null
@@ -4286,6 +4305,14 @@ export namespace Prisma {
     _all: number
   }
 
+
+  export type GameAvgAggregateInputType = {
+    firstDealer?: true
+  }
+
+  export type GameSumAggregateInputType = {
+    firstDealer?: true
+  }
 
   export type GameMinAggregateInputType = {
     id?: true
@@ -4350,6 +4377,18 @@ export namespace Prisma {
      * Count returned Games
     **/
     count?: true | GameCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    avg?: GameAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    sum?: GameSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
@@ -4920,13 +4959,23 @@ export namespace Prisma {
 
   export type AggregatePlayer = {
     count: PlayerCountAggregateOutputType | null
+    avg: PlayerAvgAggregateOutputType | null
+    sum: PlayerSumAggregateOutputType | null
     min: PlayerMinAggregateOutputType | null
     max: PlayerMaxAggregateOutputType | null
   }
 
+  export type PlayerAvgAggregateOutputType = {
+    seat: number
+  }
+
+  export type PlayerSumAggregateOutputType = {
+    seat: number
+  }
+
   export type PlayerMinAggregateOutputType = {
     id: string | null
-    SEAT: SEAT | null
+    seat: number
     createdAt: Date | null
     updatedAt: Date | null
     gameId: string | null
@@ -4936,7 +4985,7 @@ export namespace Prisma {
 
   export type PlayerMaxAggregateOutputType = {
     id: string | null
-    SEAT: SEAT | null
+    seat: number
     createdAt: Date | null
     updatedAt: Date | null
     gameId: string | null
@@ -4946,7 +4995,7 @@ export namespace Prisma {
 
   export type PlayerCountAggregateOutputType = {
     id: number | null
-    SEAT: number | null
+    seat: number
     createdAt: number | null
     updatedAt: number | null
     gameId: number | null
@@ -4956,9 +5005,17 @@ export namespace Prisma {
   }
 
 
+  export type PlayerAvgAggregateInputType = {
+    seat?: true
+  }
+
+  export type PlayerSumAggregateInputType = {
+    seat?: true
+  }
+
   export type PlayerMinAggregateInputType = {
     id?: true
-    SEAT?: true
+    seat?: true
     createdAt?: true
     updatedAt?: true
     gameId?: true
@@ -4968,7 +5025,7 @@ export namespace Prisma {
 
   export type PlayerMaxAggregateInputType = {
     id?: true
-    SEAT?: true
+    seat?: true
     createdAt?: true
     updatedAt?: true
     gameId?: true
@@ -4978,7 +5035,7 @@ export namespace Prisma {
 
   export type PlayerCountAggregateInputType = {
     id?: true
-    SEAT?: true
+    seat?: true
     createdAt?: true
     updatedAt?: true
     gameId?: true
@@ -5025,6 +5082,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    avg?: PlayerAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    sum?: PlayerSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     min?: PlayerMinAggregateInputType
@@ -5048,7 +5117,7 @@ export namespace Prisma {
 
   export type PlayerSelect = {
     id?: boolean
-    SEAT?: boolean
+    seat?: boolean
     game?: boolean | GameArgs
     guest?: boolean | GuestArgs
     staff?: boolean | StaffArgs
@@ -6333,7 +6402,7 @@ export namespace Prisma {
     password: 'password',
     lastName: 'lastName',
     firstName: 'firstName',
-    GENDER: 'GENDER',
+    gender: 'gender',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     organizationId: 'organizationId'
@@ -6346,7 +6415,7 @@ export namespace Prisma {
     id: 'id',
     lastName: 'lastName',
     firstName: 'firstName',
-    GENDER: 'GENDER',
+    gender: 'gender',
     email: 'email',
     address: 'address',
     rewardPoints: 'rewardPoints',
@@ -6383,7 +6452,7 @@ export namespace Prisma {
 
   export const PlayerScalarFieldEnum: {
     id: 'id',
-    SEAT: 'SEAT',
+    seat: 'seat',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     gameId: 'gameId',
@@ -6486,7 +6555,7 @@ export namespace Prisma {
     password?: StringFilter | string
     lastName?: StringFilter | string
     firstName?: StringFilter | string
-    GENDER?: EnumGENDERFilter | GENDER
+    gender?: IntFilter | number
     organization?: XOR<OrganizationWhereInput, OrganizationRelationFilter>
     parlours?: ParlourListRelationFilter
     createdAt?: DateTimeFilter | Date | string
@@ -6501,7 +6570,7 @@ export namespace Prisma {
     password?: SortOrder
     lastName?: SortOrder
     firstName?: SortOrder
-    GENDER?: SortOrder
+    gender?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     organizationId?: SortOrder
@@ -6518,7 +6587,7 @@ export namespace Prisma {
     id?: StringFilter | string
     lastName?: StringFilter | string
     firstName?: StringFilter | string
-    GENDER?: EnumGENDERFilter | GENDER
+    gender?: IntFilter | number
     email?: StringNullableFilter | string | null
     address?: StringNullableFilter | string | null
     rewardPoints?: IntFilter | number
@@ -6534,7 +6603,7 @@ export namespace Prisma {
     id?: SortOrder
     lastName?: SortOrder
     firstName?: SortOrder
-    GENDER?: SortOrder
+    gender?: SortOrder
     email?: SortOrder
     address?: SortOrder
     rewardPoints?: SortOrder
@@ -6576,7 +6645,7 @@ export namespace Prisma {
     OR?: Enumerable<GameWhereInput>
     NOT?: Enumerable<GameWhereInput>
     id?: StringFilter | string
-    firstDealer?: EnumSEATFilter | SEAT
+    firstDealer?: IntFilter | number
     startAt?: DateTimeFilter | Date | string
     endAt?: DateTimeFilter | Date | string
     players?: PlayerListRelationFilter
@@ -6602,7 +6671,7 @@ export namespace Prisma {
     OR?: Enumerable<PlayerWhereInput>
     NOT?: Enumerable<PlayerWhereInput>
     id?: StringFilter | string
-    SEAT?: EnumSEATFilter | SEAT
+    seat?: IntFilter | number
     game?: XOR<GameWhereInput, GameRelationFilter>
     guest?: XOR<GuestWhereInput, GuestRelationFilter> | null
     staff?: XOR<StaffWhereInput, StaffRelationFilter> | null
@@ -6616,7 +6685,7 @@ export namespace Prisma {
 
   export type PlayerOrderByInput = {
     id?: SortOrder
-    SEAT?: SortOrder
+    seat?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     gameId?: SortOrder
@@ -6767,7 +6836,7 @@ export namespace Prisma {
     password: string
     lastName: string
     firstName: string
-    GENDER: GENDER
+    gender: number
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateOneWithoutStaffInput
@@ -6781,7 +6850,7 @@ export namespace Prisma {
     password: string
     lastName: string
     firstName: string
-    GENDER: GENDER
+    gender: number
     createdAt?: Date | string
     updatedAt?: Date | string
     organizationId: string
@@ -6794,7 +6863,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    GENDER?: EnumGENDERFieldUpdateOperationsInput | GENDER
+    gender?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutStaffInput
@@ -6808,7 +6877,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    GENDER?: EnumGENDERFieldUpdateOperationsInput | GENDER
+    gender?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organizationId?: StringFieldUpdateOperationsInput | string
@@ -6821,7 +6890,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    GENDER?: EnumGENDERFieldUpdateOperationsInput | GENDER
+    gender?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -6832,7 +6901,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    GENDER?: EnumGENDERFieldUpdateOperationsInput | GENDER
+    gender?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organizationId?: StringFieldUpdateOperationsInput | string
@@ -6842,10 +6911,10 @@ export namespace Prisma {
     id?: string
     lastName: string
     firstName: string
-    GENDER: GENDER
+    gender: number
     email?: string | null
     address?: string | null
-    rewardPoints: number
+    rewardPoints?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateOneWithoutGuestInput
@@ -6857,10 +6926,10 @@ export namespace Prisma {
     id?: string
     lastName: string
     firstName: string
-    GENDER: GENDER
+    gender: number
     email?: string | null
     address?: string | null
-    rewardPoints: number
+    rewardPoints?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     organizationId: string
@@ -6871,7 +6940,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    GENDER?: EnumGENDERFieldUpdateOperationsInput | GENDER
+    gender?: IntFieldUpdateOperationsInput | number
     email?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     rewardPoints?: IntFieldUpdateOperationsInput | number
@@ -6886,7 +6955,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    GENDER?: EnumGENDERFieldUpdateOperationsInput | GENDER
+    gender?: IntFieldUpdateOperationsInput | number
     email?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     rewardPoints?: IntFieldUpdateOperationsInput | number
@@ -6900,7 +6969,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    GENDER?: EnumGENDERFieldUpdateOperationsInput | GENDER
+    gender?: IntFieldUpdateOperationsInput | number
     email?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     rewardPoints?: IntFieldUpdateOperationsInput | number
@@ -6912,7 +6981,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    GENDER?: EnumGENDERFieldUpdateOperationsInput | GENDER
+    gender?: IntFieldUpdateOperationsInput | number
     email?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     rewardPoints?: IntFieldUpdateOperationsInput | number
@@ -6970,7 +7039,7 @@ export namespace Prisma {
 
   export type GameCreateInput = {
     id?: string
-    firstDealer: SEAT
+    firstDealer: number
     startAt: Date | string
     endAt: Date | string
     createdAt?: Date | string
@@ -6980,7 +7049,7 @@ export namespace Prisma {
 
   export type GameUncheckedCreateInput = {
     id?: string
-    firstDealer: SEAT
+    firstDealer: number
     startAt: Date | string
     endAt: Date | string
     createdAt?: Date | string
@@ -6990,7 +7059,7 @@ export namespace Prisma {
 
   export type GameUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    firstDealer?: EnumSEATFieldUpdateOperationsInput | SEAT
+    firstDealer?: IntFieldUpdateOperationsInput | number
     startAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7000,7 +7069,7 @@ export namespace Prisma {
 
   export type GameUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    firstDealer?: EnumSEATFieldUpdateOperationsInput | SEAT
+    firstDealer?: IntFieldUpdateOperationsInput | number
     startAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7010,7 +7079,7 @@ export namespace Prisma {
 
   export type GameUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    firstDealer?: EnumSEATFieldUpdateOperationsInput | SEAT
+    firstDealer?: IntFieldUpdateOperationsInput | number
     startAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7019,7 +7088,7 @@ export namespace Prisma {
 
   export type GameUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    firstDealer?: EnumSEATFieldUpdateOperationsInput | SEAT
+    firstDealer?: IntFieldUpdateOperationsInput | number
     startAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7028,7 +7097,7 @@ export namespace Prisma {
 
   export type PlayerCreateInput = {
     id?: string
-    SEAT: SEAT
+    seat: number
     createdAt?: Date | string
     updatedAt?: Date | string
     game: GameCreateOneWithoutPlayersInput
@@ -7039,7 +7108,7 @@ export namespace Prisma {
 
   export type PlayerUncheckedCreateInput = {
     id?: string
-    SEAT: SEAT
+    seat: number
     createdAt?: Date | string
     updatedAt?: Date | string
     gameId: string
@@ -7050,7 +7119,7 @@ export namespace Prisma {
 
   export type PlayerUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    SEAT?: EnumSEATFieldUpdateOperationsInput | SEAT
+    seat?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     game?: GameUpdateOneRequiredWithoutPlayersInput
@@ -7061,7 +7130,7 @@ export namespace Prisma {
 
   export type PlayerUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    SEAT?: EnumSEATFieldUpdateOperationsInput | SEAT
+    seat?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     gameId?: StringFieldUpdateOperationsInput | string
@@ -7072,14 +7141,14 @@ export namespace Prisma {
 
   export type PlayerUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    SEAT?: EnumSEATFieldUpdateOperationsInput | SEAT
+    seat?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PlayerUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    SEAT?: EnumSEATFieldUpdateOperationsInput | SEAT
+    seat?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     gameId?: StringFieldUpdateOperationsInput | string
@@ -7189,11 +7258,15 @@ export namespace Prisma {
     none?: TableWhereInput
   }
 
-  export type EnumGENDERFilter = {
-    equals?: GENDER
-    in?: Enumerable<GENDER>
-    notIn?: Enumerable<GENDER>
-    not?: NestedEnumGENDERFilter | GENDER
+  export type IntFilter = {
+    equals?: number
+    in?: Enumerable<number>
+    notIn?: Enumerable<number>
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntFilter | number
   }
 
   export type PlayerListRelationFilter = {
@@ -7217,27 +7290,9 @@ export namespace Prisma {
     not?: NestedStringNullableFilter | string | null
   }
 
-  export type IntFilter = {
-    equals?: number
-    in?: Enumerable<number>
-    notIn?: Enumerable<number>
-    lt?: number
-    lte?: number
-    gt?: number
-    gte?: number
-    not?: NestedIntFilter | number
-  }
-
   export type ParlourRelationFilter = {
     is?: ParlourWhereInput
     isNot?: ParlourWhereInput
-  }
-
-  export type EnumSEATFilter = {
-    equals?: SEAT
-    in?: Enumerable<SEAT>
-    notIn?: Enumerable<SEAT>
-    not?: NestedEnumSEATFilter | SEAT
   }
 
   export type GameRelationFilter = {
@@ -7502,8 +7557,12 @@ export namespace Prisma {
     connectOrCreate?: Enumerable<PlayerCreateOrConnectWithoutstaffInput>
   }
 
-  export type EnumGENDERFieldUpdateOperationsInput = {
-    set?: GENDER
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type OrganizationUpdateOneRequiredWithoutStaffInput = {
@@ -7581,14 +7640,6 @@ export namespace Prisma {
     set?: string | null
   }
 
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type OrganizationUpdateOneRequiredWithoutGuestInput = {
     create?: XOR<OrganizationUncheckedCreateWithoutGuestInput, OrganizationCreateWithoutGuestInput>
     connect?: OrganizationWhereUniqueInput
@@ -7660,10 +7711,6 @@ export namespace Prisma {
     create?: XOR<Enumerable<PlayerUncheckedCreateWithoutGameInput>, Enumerable<PlayerCreateWithoutGameInput>>
     connect?: Enumerable<PlayerWhereUniqueInput>
     connectOrCreate?: Enumerable<PlayerCreateOrConnectWithoutgameInput>
-  }
-
-  export type EnumSEATFieldUpdateOperationsInput = {
-    set?: SEAT
   }
 
   export type PlayerUpdateManyWithoutGameInput = {
@@ -7815,11 +7862,15 @@ export namespace Prisma {
     not?: NestedDateTimeFilter | Date | string
   }
 
-  export type NestedEnumGENDERFilter = {
-    equals?: GENDER
-    in?: Enumerable<GENDER>
-    notIn?: Enumerable<GENDER>
-    not?: NestedEnumGENDERFilter | GENDER
+  export type NestedIntFilter = {
+    equals?: number
+    in?: Enumerable<number>
+    notIn?: Enumerable<number>
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntFilter | number
   }
 
   export type NestedStringNullableFilter = {
@@ -7834,24 +7885,6 @@ export namespace Prisma {
     startsWith?: string
     endsWith?: string
     not?: NestedStringNullableFilter | string | null
-  }
-
-  export type NestedIntFilter = {
-    equals?: number
-    in?: Enumerable<number>
-    notIn?: Enumerable<number>
-    lt?: number
-    lte?: number
-    gt?: number
-    gte?: number
-    not?: NestedIntFilter | number
-  }
-
-  export type NestedEnumSEATFilter = {
-    equals?: SEAT
-    in?: Enumerable<SEAT>
-    notIn?: Enumerable<SEAT>
-    not?: NestedEnumSEATFilter | SEAT
   }
 
   export type ParlourCreateWithoutOrganizationInput = {
@@ -7883,7 +7916,7 @@ export namespace Prisma {
     password: string
     lastName: string
     firstName: string
-    GENDER: GENDER
+    gender: number
     createdAt?: Date | string
     updatedAt?: Date | string
     parlours?: ParlourCreateManyWithoutStaffsInput
@@ -7896,7 +7929,7 @@ export namespace Prisma {
     password: string
     lastName: string
     firstName: string
-    GENDER: GENDER
+    gender: number
     createdAt?: Date | string
     updatedAt?: Date | string
     Player?: PlayerUncheckedCreateManyWithoutStaffInput
@@ -7911,10 +7944,10 @@ export namespace Prisma {
     id?: string
     lastName: string
     firstName: string
-    GENDER: GENDER
+    gender: number
     email?: string | null
     address?: string | null
-    rewardPoints: number
+    rewardPoints?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     parlours?: ParlourCreateManyWithoutGuestsInput
@@ -7925,10 +7958,10 @@ export namespace Prisma {
     id?: string
     lastName: string
     firstName: string
-    GENDER: GENDER
+    gender: number
     email?: string | null
     address?: string | null
-    rewardPoints: number
+    rewardPoints?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     Player?: PlayerUncheckedCreateManyWithoutGuestInput
@@ -7985,7 +8018,7 @@ export namespace Prisma {
     password?: StringFilter | string
     lastName?: StringFilter | string
     firstName?: StringFilter | string
-    GENDER?: EnumGENDERFilter | GENDER
+    gender?: IntFilter | number
     createdAt?: DateTimeFilter | Date | string
     updatedAt?: DateTimeFilter | Date | string
     organizationId?: StringFilter | string
@@ -8014,7 +8047,7 @@ export namespace Prisma {
     id?: StringFilter | string
     lastName?: StringFilter | string
     firstName?: StringFilter | string
-    GENDER?: EnumGENDERFilter | GENDER
+    gender?: IntFilter | number
     email?: StringNullableFilter | string | null
     address?: StringNullableFilter | string | null
     rewardPoints?: IntFilter | number
@@ -8058,7 +8091,7 @@ export namespace Prisma {
     password: string
     lastName: string
     firstName: string
-    GENDER: GENDER
+    gender: number
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateOneWithoutStaffInput
@@ -8071,7 +8104,7 @@ export namespace Prisma {
     password: string
     lastName: string
     firstName: string
-    GENDER: GENDER
+    gender: number
     createdAt?: Date | string
     updatedAt?: Date | string
     organizationId: string
@@ -8087,10 +8120,10 @@ export namespace Prisma {
     id?: string
     lastName: string
     firstName: string
-    GENDER: GENDER
+    gender: number
     email?: string | null
     address?: string | null
-    rewardPoints: number
+    rewardPoints?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateOneWithoutGuestInput
@@ -8101,10 +8134,10 @@ export namespace Prisma {
     id?: string
     lastName: string
     firstName: string
-    GENDER: GENDER
+    gender: number
     email?: string | null
     address?: string | null
-    rewardPoints: number
+    rewardPoints?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     organizationId: string
@@ -8266,7 +8299,7 @@ export namespace Prisma {
 
   export type PlayerCreateWithoutStaffInput = {
     id?: string
-    SEAT: SEAT
+    seat: number
     createdAt?: Date | string
     updatedAt?: Date | string
     game: GameCreateOneWithoutPlayersInput
@@ -8276,7 +8309,7 @@ export namespace Prisma {
 
   export type PlayerUncheckedCreateWithoutStaffInput = {
     id?: string
-    SEAT: SEAT
+    seat: number
     createdAt?: Date | string
     updatedAt?: Date | string
     gameId: string
@@ -8343,7 +8376,7 @@ export namespace Prisma {
     OR?: Enumerable<PlayerScalarWhereInput>
     NOT?: Enumerable<PlayerScalarWhereInput>
     id?: StringFilter | string
-    SEAT?: EnumSEATFilter | SEAT
+    seat?: IntFilter | number
     createdAt?: DateTimeFilter | Date | string
     updatedAt?: DateTimeFilter | Date | string
     gameId?: StringFilter | string
@@ -8406,7 +8439,7 @@ export namespace Prisma {
 
   export type PlayerCreateWithoutGuestInput = {
     id?: string
-    SEAT: SEAT
+    seat: number
     createdAt?: Date | string
     updatedAt?: Date | string
     game: GameCreateOneWithoutPlayersInput
@@ -8416,7 +8449,7 @@ export namespace Prisma {
 
   export type PlayerUncheckedCreateWithoutGuestInput = {
     id?: string
-    SEAT: SEAT
+    seat: number
     createdAt?: Date | string
     updatedAt?: Date | string
     gameId: string
@@ -8532,7 +8565,7 @@ export namespace Prisma {
 
   export type PlayerCreateWithoutGameInput = {
     id?: string
-    SEAT: SEAT
+    seat: number
     createdAt?: Date | string
     updatedAt?: Date | string
     guest?: GuestCreateOneWithoutPlayerInput
@@ -8542,7 +8575,7 @@ export namespace Prisma {
 
   export type PlayerUncheckedCreateWithoutGameInput = {
     id?: string
-    SEAT: SEAT
+    seat: number
     createdAt?: Date | string
     updatedAt?: Date | string
     guestId?: string | null
@@ -8573,7 +8606,7 @@ export namespace Prisma {
 
   export type GameCreateWithoutPlayersInput = {
     id?: string
-    firstDealer: SEAT
+    firstDealer: number
     startAt: Date | string
     endAt: Date | string
     createdAt?: Date | string
@@ -8582,7 +8615,7 @@ export namespace Prisma {
 
   export type GameUncheckedCreateWithoutPlayersInput = {
     id?: string
-    firstDealer: SEAT
+    firstDealer: number
     startAt: Date | string
     endAt: Date | string
     createdAt?: Date | string
@@ -8598,10 +8631,10 @@ export namespace Prisma {
     id?: string
     lastName: string
     firstName: string
-    GENDER: GENDER
+    gender: number
     email?: string | null
     address?: string | null
-    rewardPoints: number
+    rewardPoints?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateOneWithoutGuestInput
@@ -8612,10 +8645,10 @@ export namespace Prisma {
     id?: string
     lastName: string
     firstName: string
-    GENDER: GENDER
+    gender: number
     email?: string | null
     address?: string | null
-    rewardPoints: number
+    rewardPoints?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     organizationId: string
@@ -8632,7 +8665,7 @@ export namespace Prisma {
     password: string
     lastName: string
     firstName: string
-    GENDER: GENDER
+    gender: number
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateOneWithoutStaffInput
@@ -8645,7 +8678,7 @@ export namespace Prisma {
     password: string
     lastName: string
     firstName: string
-    GENDER: GENDER
+    gender: number
     createdAt?: Date | string
     updatedAt?: Date | string
     organizationId: string
@@ -8677,7 +8710,7 @@ export namespace Prisma {
 
   export type GameUpdateWithoutPlayersInput = {
     id?: StringFieldUpdateOperationsInput | string
-    firstDealer?: EnumSEATFieldUpdateOperationsInput | SEAT
+    firstDealer?: IntFieldUpdateOperationsInput | number
     startAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8686,7 +8719,7 @@ export namespace Prisma {
 
   export type GameUncheckedUpdateWithoutPlayersInput = {
     id?: StringFieldUpdateOperationsInput | string
-    firstDealer?: EnumSEATFieldUpdateOperationsInput | SEAT
+    firstDealer?: IntFieldUpdateOperationsInput | number
     startAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8702,7 +8735,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    GENDER?: EnumGENDERFieldUpdateOperationsInput | GENDER
+    gender?: IntFieldUpdateOperationsInput | number
     email?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     rewardPoints?: IntFieldUpdateOperationsInput | number
@@ -8716,7 +8749,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    GENDER?: EnumGENDERFieldUpdateOperationsInput | GENDER
+    gender?: IntFieldUpdateOperationsInput | number
     email?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     rewardPoints?: IntFieldUpdateOperationsInput | number
@@ -8736,7 +8769,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    GENDER?: EnumGENDERFieldUpdateOperationsInput | GENDER
+    gender?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutStaffInput
@@ -8749,7 +8782,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    GENDER?: EnumGENDERFieldUpdateOperationsInput | GENDER
+    gender?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organizationId?: StringFieldUpdateOperationsInput | string
@@ -8789,7 +8822,7 @@ export namespace Prisma {
 
   export type PlayerCreateWithoutGameResultInput = {
     id?: string
-    SEAT: SEAT
+    seat: number
     createdAt?: Date | string
     updatedAt?: Date | string
     game: GameCreateOneWithoutPlayersInput
@@ -8799,7 +8832,7 @@ export namespace Prisma {
 
   export type PlayerUncheckedCreateWithoutGameResultInput = {
     id?: string
-    SEAT: SEAT
+    seat: number
     createdAt?: Date | string
     updatedAt?: Date | string
     gameId: string
@@ -8814,7 +8847,7 @@ export namespace Prisma {
 
   export type PlayerUpdateWithoutGameResultInput = {
     id?: StringFieldUpdateOperationsInput | string
-    SEAT?: EnumSEATFieldUpdateOperationsInput | SEAT
+    seat?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     game?: GameUpdateOneRequiredWithoutPlayersInput
@@ -8824,7 +8857,7 @@ export namespace Prisma {
 
   export type PlayerUncheckedUpdateWithoutGameResultInput = {
     id?: StringFieldUpdateOperationsInput | string
-    SEAT?: EnumSEATFieldUpdateOperationsInput | SEAT
+    seat?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     gameId?: StringFieldUpdateOperationsInput | string
@@ -8868,7 +8901,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    GENDER?: EnumGENDERFieldUpdateOperationsInput | GENDER
+    gender?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     parlours?: ParlourUpdateManyWithoutStaffsInput
@@ -8881,7 +8914,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    GENDER?: EnumGENDERFieldUpdateOperationsInput | GENDER
+    gender?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     Player?: PlayerUncheckedUpdateManyWithoutStaffInput
@@ -8893,7 +8926,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    GENDER?: EnumGENDERFieldUpdateOperationsInput | GENDER
+    gender?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -8902,7 +8935,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    GENDER?: EnumGENDERFieldUpdateOperationsInput | GENDER
+    gender?: IntFieldUpdateOperationsInput | number
     email?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     rewardPoints?: IntFieldUpdateOperationsInput | number
@@ -8916,7 +8949,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    GENDER?: EnumGENDERFieldUpdateOperationsInput | GENDER
+    gender?: IntFieldUpdateOperationsInput | number
     email?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     rewardPoints?: IntFieldUpdateOperationsInput | number
@@ -8929,7 +8962,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    GENDER?: EnumGENDERFieldUpdateOperationsInput | GENDER
+    gender?: IntFieldUpdateOperationsInput | number
     email?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     rewardPoints?: IntFieldUpdateOperationsInput | number
@@ -8943,7 +8976,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    GENDER?: EnumGENDERFieldUpdateOperationsInput | GENDER
+    gender?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutStaffInput
@@ -8956,7 +8989,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    GENDER?: EnumGENDERFieldUpdateOperationsInput | GENDER
+    gender?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organizationId?: StringFieldUpdateOperationsInput | string
@@ -8969,7 +9002,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    GENDER?: EnumGENDERFieldUpdateOperationsInput | GENDER
+    gender?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organizationId?: StringFieldUpdateOperationsInput | string
@@ -8979,7 +9012,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    GENDER?: EnumGENDERFieldUpdateOperationsInput | GENDER
+    gender?: IntFieldUpdateOperationsInput | number
     email?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     rewardPoints?: IntFieldUpdateOperationsInput | number
@@ -8993,7 +9026,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    GENDER?: EnumGENDERFieldUpdateOperationsInput | GENDER
+    gender?: IntFieldUpdateOperationsInput | number
     email?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     rewardPoints?: IntFieldUpdateOperationsInput | number
@@ -9007,7 +9040,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    GENDER?: EnumGENDERFieldUpdateOperationsInput | GENDER
+    gender?: IntFieldUpdateOperationsInput | number
     email?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     rewardPoints?: IntFieldUpdateOperationsInput | number
@@ -9066,7 +9099,7 @@ export namespace Prisma {
 
   export type PlayerUpdateWithoutStaffInput = {
     id?: StringFieldUpdateOperationsInput | string
-    SEAT?: EnumSEATFieldUpdateOperationsInput | SEAT
+    seat?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     game?: GameUpdateOneRequiredWithoutPlayersInput
@@ -9076,7 +9109,7 @@ export namespace Prisma {
 
   export type PlayerUncheckedUpdateWithoutStaffInput = {
     id?: StringFieldUpdateOperationsInput | string
-    SEAT?: EnumSEATFieldUpdateOperationsInput | SEAT
+    seat?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     gameId?: StringFieldUpdateOperationsInput | string
@@ -9086,7 +9119,7 @@ export namespace Prisma {
 
   export type PlayerUncheckedUpdateManyWithoutPlayerInput = {
     id?: StringFieldUpdateOperationsInput | string
-    SEAT?: EnumSEATFieldUpdateOperationsInput | SEAT
+    seat?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     gameId?: StringFieldUpdateOperationsInput | string
@@ -9114,7 +9147,7 @@ export namespace Prisma {
 
   export type PlayerUpdateWithoutGuestInput = {
     id?: StringFieldUpdateOperationsInput | string
-    SEAT?: EnumSEATFieldUpdateOperationsInput | SEAT
+    seat?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     game?: GameUpdateOneRequiredWithoutPlayersInput
@@ -9124,7 +9157,7 @@ export namespace Prisma {
 
   export type PlayerUncheckedUpdateWithoutGuestInput = {
     id?: StringFieldUpdateOperationsInput | string
-    SEAT?: EnumSEATFieldUpdateOperationsInput | SEAT
+    seat?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     gameId?: StringFieldUpdateOperationsInput | string
@@ -9134,7 +9167,7 @@ export namespace Prisma {
 
   export type PlayerUpdateWithoutGameInput = {
     id?: StringFieldUpdateOperationsInput | string
-    SEAT?: EnumSEATFieldUpdateOperationsInput | SEAT
+    seat?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     guest?: GuestUpdateOneWithoutPlayerInput
@@ -9144,7 +9177,7 @@ export namespace Prisma {
 
   export type PlayerUncheckedUpdateWithoutGameInput = {
     id?: StringFieldUpdateOperationsInput | string
-    SEAT?: EnumSEATFieldUpdateOperationsInput | SEAT
+    seat?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     guestId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -9154,7 +9187,7 @@ export namespace Prisma {
 
   export type PlayerUncheckedUpdateManyWithoutPlayersInput = {
     id?: StringFieldUpdateOperationsInput | string
-    SEAT?: EnumSEATFieldUpdateOperationsInput | SEAT
+    seat?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     guestId?: NullableStringFieldUpdateOperationsInput | string | null

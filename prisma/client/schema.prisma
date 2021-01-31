@@ -40,7 +40,7 @@ model Staff {
     password        String      // ログインパスワード
     lastName        String      // 姓
     firstName       String      // 名
-    GENDER          GENDER      // 性別
+    gender          Int      // 性別
 
     organization    Organization
     parlours        Parlour[]
@@ -54,10 +54,10 @@ model Guest {
     id              String      @id @default(uuid())
     lastName        String      // 姓
     firstName       String      // 名
-    GENDER          GENDER      // 性別
+    gender          Int      // 性別
     email           String?     // メールアドレス
     address         String?     // 住所
-    rewardPoints    Int         // ポイント
+    rewardPoints    Int         @default(0) // ポイント
 
     organization    Organization
     parlours        Parlour[]
@@ -80,7 +80,7 @@ model Table {
 // 対局
 model Game {
     id              String      @id @default(uuid())
-    firstDealer     SEAT        // 起家
+    firstDealer     Int        // 起家
     startAt         DateTime    // 開始時刻
     endAt           DateTime    // 終了時刻
 
@@ -93,7 +93,7 @@ model Game {
 // プレイヤー
 model Player {
     id              String      @id @default(uuid())
-    SEAT            SEAT        // 座席
+    seat            Int        // 座席
 
     game            Game
     guest           Guest?
@@ -114,15 +114,3 @@ model GameResult {
     updatedAt       DateTime    @updatedAt
 }
 
-enum SEAT {
-    FIRST
-    SECONDE
-    THIRD
-    FORTH
-}
-
-
-enum GENDER {
-    MALE
-    FEMALE
-}

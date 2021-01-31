@@ -32,7 +32,8 @@
         "typescript": "^4.1.3"
     },
     "eslintIgnore": [
-        "/.eslintrc"
+        "/.eslintrc",
+        "/next.config.js"
     ],
     "prettier": {
         "singleQuote": true,

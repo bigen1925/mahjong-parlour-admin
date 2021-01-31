@@ -266,6 +266,9 @@ export default function PlayingTable(props: PlayingTableProps): JSX.Element {
                         variant="outlined"
                         color="secondary"
                         onClick={() => {
+                            if (players.filter((x) => x).length !== ranking.length) {
+                                alert('');
+                            }
                             setRanking([]);
                             setStartedAt(null);
                             setIsOpenGameFinishingModal(false);

@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { Guest } from '../../prisma/client';
 import { api } from '../../helpers/api';
 
-export default function Main(): JSX.Element {
+export default function TablesAdmin(): JSX.Element {
     const tables = [
         { id: '1', players: [] },
         { id: '2', players: [] },
@@ -28,12 +28,12 @@ export default function Main(): JSX.Element {
     }, []);
 
     return (
-        <Box component="main">
+        <>
             {/* 待ち席 */}
             <Box mt={5}>
                 <Grid container justify="flex-end">
                     <Grid item xs={6}>
-                        waiting...
+                        waiting guests
                         <WaitingQueue
                             enterableGuests={enterableGuests}
                             addEnterableGuest={addEnterableGuest}
@@ -62,6 +62,6 @@ export default function Main(): JSX.Element {
                     </Grid>
                 </Container>
             </Box>
-        </Box>
+        </>
     );
 }

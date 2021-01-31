@@ -3,10 +3,10 @@ import DefaultFooter from '../organisms/DefaultFooter';
 import DefaultHeader from '../organisms/DefaultHeader';
 import { FC } from 'react';
 
-export const BaseTemplate: FC = (props) => {
+export const DefaultTemplate: FC = (props) => {
     return (
         <Box width="100%">
-            <Box component="header" boxShadow={2} height={65} width="100%" bgcolor="primary.light">
+            <Box component="header" boxShadow={2} height={65} bgcolor="primary.light">
                 <DefaultHeader />
             </Box>
 

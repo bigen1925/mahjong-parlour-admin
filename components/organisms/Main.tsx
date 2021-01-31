@@ -6,30 +6,20 @@ import { Guest } from '../../prisma/client';
 import { api } from '../../helpers/api';
 
 export default function Main(): JSX.Element {
-    const yamada = { id: '1', lastName: '山田', firstName: '太郎' };
-    const suzuki = { id: '2', lastName: '鈴木', firstName: '花子' };
     const tables = [
-        { id: '1', players: [yamada, yamada, suzuki, suzuki] },
-        { id: '2', players: [yamada, yamada, suzuki, suzuki] },
-        { id: '3', players: [yamada, suzuki] },
+        { id: '1', players: [] },
+        { id: '2', players: [] },
+        { id: '3', players: [] },
         { id: '4', players: [] },
     ];
 
     const [enterableGuests, setEnterableGuests] = useState<Guest[]>([]);
-    const addEnterableGuests = (guest: Guest) => {
-        setEnterableGuests([...enterableGuests, guest]);
-    };
-    const removeEnterableGuests = (guest: Guest) => {
-        setEnterableGuests(enterableGuests.filter((x) => x.id !== guest.id));
-    };
+    const addEnterableGuest = (guest: Guest) => setEnterableGuests([...enterableGuests, guest]);
+    const removeEnterableGuest = (guest: Guest) => setEnterableGuests(enterableGuests.filter((x) => x.id !== guest.id));
 
     const [waitingGuests, setWaitingGuests] = useState<Guest[]>([]);
-    const addWaitingGuests = (guest: Guest) => {
-        setWaitingGuests([...waitingGuests, guest]);
-    };
-    const removeWaitingGuests = (guest: Guest) => {
-        setWaitingGuests(waitingGuests.filter((x) => x.id !== guest.id));
-    };
+    const addWaitingGuest = (guest: Guest) => setWaitingGuests([...waitingGuests, guest]);
+    const removeWaitingGuest = (guest: Guest) => setWaitingGuests(waitingGuests.filter((x) => x.id !== guest.id));
 
     useEffect(() => {
         api('/guests').then((guests) => {
@@ -46,21 +36,27 @@ export default function Main(): JSX.Element {
                         waiting...
                         <WaitingQueue
                             enterableGuests={enterableGuests}
-                            addEnterableGuests={addEnterableGuests}
-                            removeEnterableGuests={removeEnterableGuests}
+                            addEnterableGuest={addEnterableGuest}
+                            removeEnterableGuest={removeEnterableGuest}
                             waitingGuests={waitingGuests}
-                            addWaitingGuests={addWaitingGuests}
-                            removeWaitingGuests={removeWaitingGuests}
+                            addWaitingGuest={addWaitingGuest}
+                            removeWaitingGuest={removeWaitingGuest}
                         />
                     </Grid>
                 </Grid>
             </Box>
+
+            {/* 卓 */}
             <Box mt={5}>
                 <Container>
                     <Grid container>
                         {tables.map((table) => (
                             <Grid item xs={3} key={table.id}>
-                                <PlayingTable players={table.players} />
+                                <PlayingTable
+                                    waitingGuests={waitingGuests}
+                                    addWaitingGuest={addWaitingGuest}
+                                    removeWaitingGuest={removeWaitingGuest}
+                                />
                             </Grid>
                         ))}
                     </Grid>

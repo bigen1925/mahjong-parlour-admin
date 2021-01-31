@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Modal, Paper } from '@material-ui/core';
+import { Box, Button, Dialog, Grid } from '@material-ui/core';
 import { DataGrid, RowParams } from '@material-ui/data-grid';
 import { useState } from 'react';
 import NamedPerson from '../atoms/NamedPerson';
@@ -6,11 +6,11 @@ import { Guest } from '../../prisma/client';
 
 interface WaitingQueueProps {
     waitingGuests: Guest[];
-    addWaitingGuests: (guest: Guest) => void;
-    removeWaitingGuests: (guest: Guest) => void;
+    addWaitingGuest: (guest: Guest) => void;
+    removeWaitingGuest: (guest: Guest) => void;
     enterableGuests: Guest[];
-    addEnterableGuests: (guest: Guest) => void;
-    removeEnterableGuests: (guest: Guest) => void;
+    addEnterableGuest: (guest: Guest) => void;
+    removeEnterableGuest: (guest: Guest) => void;
 }
 
 export default function WaitingQueue(props: WaitingQueueProps): JSX.Element {
@@ -25,8 +25,8 @@ export default function WaitingQueue(props: WaitingQueueProps): JSX.Element {
                         xs={1}
                         key={guest.id}
                         onClick={() => {
-                            props.removeWaitingGuests(guest);
-                            props.addEnterableGuests(guest);
+                            props.removeWaitingGuest(guest);
+                            props.addEnterableGuest(guest);
                         }}
                     >
                         <NamedPerson name={guest.lastName} iconSize={50} />
@@ -51,19 +51,8 @@ export default function WaitingQueue(props: WaitingQueueProps): JSX.Element {
                 </Grid>
             </Grid>
 
-            <Modal open={open} onClose={() => setOpen(false)}>
-                <Paper
-                    style={{
-                        width: 400,
-                        height: 500,
-                        position: 'absolute',
-                        top: 0,
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        margin: 'auto',
-                    }}
-                >
+            <Dialog open={open} onClose={() => setOpen(false)}>
+                <Box height={500} width={400}>
                     <DataGrid
                         rows={props.enterableGuests}
                         columns={[
@@ -72,14 +61,19 @@ export default function WaitingQueue(props: WaitingQueueProps): JSX.Element {
                             { field: 'firstName', width: 200 },
                         ]}
                         onRowClick={(row: RowParams) => {
-                            const guest = props.enterableGuests.find((guest) => guest.id === row.getValue('id'))!;
-                            props.addWaitingGuests(guest);
-                            props.removeEnterableGuests(guest);
-                            setOpen(false);
+                            const guest = props.enterableGuests.find((guest) => guest.id === row.getValue('id'));
+                            if (!guest) {
+                                alert('ゲストが入店可能な状態ではありません');
+                                return setOpen(false);
+                            }
+
+                            props.addWaitingGuest(guest);
+                            props.removeEnterableGuest(guest);
+                            return setOpen(false);
                         }}
                     />
-                </Paper>
-            </Modal>
+                </Box>
+            </Dialog>
         </Box>
     );
 }

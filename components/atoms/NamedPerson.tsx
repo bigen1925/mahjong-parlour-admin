@@ -1,17 +1,17 @@
 import { Box } from '@material-ui/core';
 import PersonIcon from '@material-ui/icons/Person';
 
-interface NamedPersonProps {
+type NamedPersonProps = {
     name: string;
     iconSize?: number;
-    className?: string;
-}
+    color?: 'inherit' | 'primary' | 'secondary' | 'action' | 'disabled' | 'error';
+};
 
 export default function NamedPerson(props: NamedPersonProps): JSX.Element {
     return (
-        <Box className={props.className} style={{ textAlign: 'center' }}>
+        <Box style={{ textAlign: 'center' }}>
             <Box>
-                <PersonIcon style={{ fontSize: props.iconSize }} />
+                <PersonIcon style={{ fontSize: props.iconSize }} color={props.color} />
             </Box>
             <Box m={-1}>{props.name}</Box>
         </Box>

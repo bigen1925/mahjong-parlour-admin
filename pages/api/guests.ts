@@ -6,10 +6,9 @@ import { PrismaClient } from '../../prisma/client';
 const prisma = new PrismaClient();
 
 export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
-    return res.json([
-        { id: '1', lastName: '山田', firstName: '太郎' },
-        { id: '2', lastName: '鈴木', firstName: '花子' },
-        { id: '3', lastName: 'Doe', firstName: 'John' },
-        { id: '4', lastName: 'Doe', firstName: 'Jane' },
-    ]);
+    const guests = [];
+    for (let id = 1; id < 20; id++) {
+        guests.push({ id: id + '', lastName: 'お客様' + id, firstName: 'さん' });
+    }
+    return res.json(guests);
 };

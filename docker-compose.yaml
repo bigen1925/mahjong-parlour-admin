@@ -15,6 +15,7 @@ services:
             - 3000:3000
         environment:
             - DATABASE_URL=postgresql://mpa:password@database:5432/mpa
+            - NEXT_PUBLIC_API_URL_BASE=http://localhost:3000/api
 
     database:
         image: postgres:13.1

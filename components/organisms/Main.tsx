@@ -1,6 +1,9 @@
 import { Box, Container, Grid } from '@material-ui/core';
 import PlayingTable from '../molecules/PlayingTable';
 import WaitingQueue from '../molecules/WaitingQueue';
+import { useEffect, useState } from 'react';
+import { Guest } from '../../prisma/client';
+import { api } from '../../helpers/api';
 
 export default function Main(): JSX.Element {
     const yamada = { id: '1', lastName: '山田', firstName: '太郎' };
@@ -12,6 +15,28 @@ export default function Main(): JSX.Element {
         { id: '4', players: [] },
     ];
 
+    const [enterableGuests, setEnterableGuests] = useState<Guest[]>([]);
+    const addEnterableGuests = (guest: Guest) => {
+        setEnterableGuests([...enterableGuests, guest]);
+    };
+    const removeEnterableGuests = (guest: Guest) => {
+        setEnterableGuests(enterableGuests.filter((x) => x.id !== guest.id));
+    };
+
+    const [waitingGuests, setWaitingGuests] = useState<Guest[]>([]);
+    const addWaitingGuests = (guest: Guest) => {
+        setWaitingGuests([...waitingGuests, guest]);
+    };
+    const removeWaitingGuests = (guest: Guest) => {
+        setWaitingGuests(waitingGuests.filter((x) => x.id !== guest.id));
+    };
+
+    useEffect(() => {
+        api('/guests').then((guests) => {
+            setEnterableGuests(guests);
+        });
+    }, []);
+
     return (
         <Box component="main">
             {/* 待ち席 */}
@@ -19,7 +44,14 @@ export default function Main(): JSX.Element {
                 <Grid container justify="flex-end">
                     <Grid item xs={6}>
                         waiting...
-                        <WaitingQueue />
+                        <WaitingQueue
+                            enterableGuests={enterableGuests}
+                            addEnterableGuests={addEnterableGuests}
+                            removeEnterableGuests={removeEnterableGuests}
+                            waitingGuests={waitingGuests}
+                            addWaitingGuests={addWaitingGuests}
+                            removeWaitingGuests={removeWaitingGuests}
+                        />
                     </Grid>
                 </Grid>
             </Box>

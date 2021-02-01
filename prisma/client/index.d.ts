@@ -85,6 +85,7 @@ export type Game = {
   endAt: Date
   createdAt: Date
   updatedAt: Date
+  tableId: string
 }
 
 /**
@@ -3722,6 +3723,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     parlour?: boolean | ParlourArgs
+    games?: boolean | GameFindManyArgs
     createdAt?: boolean
     updatedAt?: boolean
     parlourId?: boolean
@@ -3729,6 +3731,7 @@ export namespace Prisma {
 
   export type TableInclude = {
     parlour?: boolean | ParlourArgs
+    games?: boolean | GameFindManyArgs
   }
 
   export type TableGetPayload<
@@ -3743,14 +3746,18 @@ export namespace Prisma {
     ? Table  & {
     [P in TrueKeys<S['include']>]: 
           P extends 'parlour'
-        ? ParlourGetPayload<S['include'][P]> : never
+        ? ParlourGetPayload<S['include'][P]> :
+        P extends 'games'
+        ? Array < GameGetPayload<S['include'][P]>>  : never
   } 
     : 'select' extends U
     ? {
     [P in TrueKeys<S['select']>]: P extends keyof Table ?Table [P]
   : 
           P extends 'parlour'
-        ? ParlourGetPayload<S['select'][P]> : never
+        ? ParlourGetPayload<S['select'][P]> :
+        P extends 'games'
+        ? Array < GameGetPayload<S['select'][P]>>  : never
   } 
     : Table
   : Table
@@ -3989,6 +3996,8 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: 'PrismaClientPromise';
 
     parlour<T extends ParlourArgs = {}>(args?: Subset<T, ParlourArgs>): CheckSelect<T, Prisma__ParlourClient<Parlour | null>, Prisma__ParlourClient<ParlourGetPayload<T> | null>>;
+
+    games<T extends GameFindManyArgs = {}>(args?: Subset<T, GameFindManyArgs>): CheckSelect<T, Promise<Array<Game>>, Promise<Array<GameGetPayload<T>>>>;
 
     private get _document();
     /**
@@ -4284,6 +4293,7 @@ export namespace Prisma {
     endAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
+    tableId: string | null
   }
 
   export type GameMaxAggregateOutputType = {
@@ -4293,6 +4303,7 @@ export namespace Prisma {
     endAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
+    tableId: string | null
   }
 
   export type GameCountAggregateOutputType = {
@@ -4302,6 +4313,7 @@ export namespace Prisma {
     endAt: number | null
     createdAt: number | null
     updatedAt: number | null
+    tableId: number | null
     _all: number
   }
 
@@ -4321,6 +4333,7 @@ export namespace Prisma {
     endAt?: true
     createdAt?: true
     updatedAt?: true
+    tableId?: true
   }
 
   export type GameMaxAggregateInputType = {
@@ -4330,6 +4343,7 @@ export namespace Prisma {
     endAt?: true
     createdAt?: true
     updatedAt?: true
+    tableId?: true
   }
 
   export type GameCountAggregateInputType = {
@@ -4339,6 +4353,7 @@ export namespace Prisma {
     endAt?: true
     createdAt?: true
     updatedAt?: true
+    tableId?: true
     _all?: true
   }
 
@@ -4418,12 +4433,15 @@ export namespace Prisma {
     firstDealer?: boolean
     startAt?: boolean
     endAt?: boolean
+    table?: boolean | TableArgs
     players?: boolean | PlayerFindManyArgs
     createdAt?: boolean
     updatedAt?: boolean
+    tableId?: boolean
   }
 
   export type GameInclude = {
+    table?: boolean | TableArgs
     players?: boolean | PlayerFindManyArgs
   }
 
@@ -4438,14 +4456,18 @@ export namespace Prisma {
     ?'include' extends U
     ? Game  & {
     [P in TrueKeys<S['include']>]: 
-          P extends 'players'
+          P extends 'table'
+        ? TableGetPayload<S['include'][P]> :
+        P extends 'players'
         ? Array < PlayerGetPayload<S['include'][P]>>  : never
   } 
     : 'select' extends U
     ? {
     [P in TrueKeys<S['select']>]: P extends keyof Game ?Game [P]
   : 
-          P extends 'players'
+          P extends 'table'
+        ? TableGetPayload<S['select'][P]> :
+        P extends 'players'
         ? Array < PlayerGetPayload<S['select'][P]>>  : never
   } 
     : Game
@@ -4683,6 +4705,8 @@ export namespace Prisma {
     private _requestPromise?;
     constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
     readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+
+    table<T extends TableArgs = {}>(args?: Subset<T, TableArgs>): CheckSelect<T, Prisma__TableClient<Table | null>, Prisma__TableClient<TableGetPayload<T> | null>>;
 
     players<T extends PlayerFindManyArgs = {}>(args?: Subset<T, PlayerFindManyArgs>): CheckSelect<T, Promise<Array<Player>>, Promise<Array<PlayerGetPayload<T>>>>;
 
@@ -6444,7 +6468,8 @@ export namespace Prisma {
     startAt: 'startAt',
     endAt: 'endAt',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    tableId: 'tableId'
   };
 
   export type GameScalarFieldEnum = (typeof GameScalarFieldEnum)[keyof typeof GameScalarFieldEnum]
@@ -6623,6 +6648,7 @@ export namespace Prisma {
     id?: StringFilter | string
     name?: StringFilter | string
     parlour?: XOR<ParlourWhereInput, ParlourRelationFilter>
+    games?: GameListRelationFilter
     createdAt?: DateTimeFilter | Date | string
     updatedAt?: DateTimeFilter | Date | string
     parlourId?: StringFilter | string
@@ -6648,9 +6674,11 @@ export namespace Prisma {
     firstDealer?: IntFilter | number
     startAt?: DateTimeFilter | Date | string
     endAt?: DateTimeFilter | Date | string
+    table?: XOR<TableWhereInput, TableRelationFilter>
     players?: PlayerListRelationFilter
     createdAt?: DateTimeFilter | Date | string
     updatedAt?: DateTimeFilter | Date | string
+    tableId?: StringFilter | string
   }
 
   export type GameOrderByInput = {
@@ -6660,6 +6688,7 @@ export namespace Prisma {
     endAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    tableId?: SortOrder
   }
 
   export type GameWhereUniqueInput = {
@@ -6996,6 +7025,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     parlour: ParlourCreateOneWithoutTableInput
+    games?: GameCreateManyWithoutTableInput
   }
 
   export type TableUncheckedCreateInput = {
@@ -7004,6 +7034,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     parlourId: string
+    games?: GameUncheckedCreateManyWithoutTableInput
   }
 
   export type TableUpdateInput = {
@@ -7012,6 +7043,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     parlour?: ParlourUpdateOneRequiredWithoutTableInput
+    games?: GameUpdateManyWithoutTableInput
   }
 
   export type TableUncheckedUpdateInput = {
@@ -7020,6 +7052,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     parlourId?: StringFieldUpdateOperationsInput | string
+    games?: GameUncheckedUpdateManyWithoutTableInput
   }
 
   export type TableUpdateManyMutationInput = {
@@ -7044,6 +7077,7 @@ export namespace Prisma {
     endAt: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
+    table: TableCreateOneWithoutGamesInput
     players?: PlayerCreateManyWithoutGameInput
   }
 
@@ -7054,6 +7088,7 @@ export namespace Prisma {
     endAt: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
+    tableId: string
     players?: PlayerUncheckedCreateManyWithoutGameInput
   }
 
@@ -7064,6 +7099,7 @@ export namespace Prisma {
     endAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    table?: TableUpdateOneRequiredWithoutGamesInput
     players?: PlayerUpdateManyWithoutGameInput
   }
 
@@ -7074,6 +7110,7 @@ export namespace Prisma {
     endAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tableId?: StringFieldUpdateOperationsInput | string
     players?: PlayerUncheckedUpdateManyWithoutGameInput
   }
 
@@ -7093,6 +7130,7 @@ export namespace Prisma {
     endAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tableId?: StringFieldUpdateOperationsInput | string
   }
 
   export type PlayerCreateInput = {
@@ -7293,6 +7331,17 @@ export namespace Prisma {
   export type ParlourRelationFilter = {
     is?: ParlourWhereInput
     isNot?: ParlourWhereInput
+  }
+
+  export type GameListRelationFilter = {
+    every?: GameWhereInput
+    some?: GameWhereInput
+    none?: GameWhereInput
+  }
+
+  export type TableRelationFilter = {
+    is?: TableWhereInput
+    isNot?: TableWhereInput
   }
 
   export type GameRelationFilter = {
@@ -7693,12 +7742,56 @@ export namespace Prisma {
     connectOrCreate?: ParlourCreateOrConnectWithoutTableInput
   }
 
+  export type GameCreateManyWithoutTableInput = {
+    create?: XOR<Enumerable<GameUncheckedCreateWithoutTableInput>, Enumerable<GameCreateWithoutTableInput>>
+    connect?: Enumerable<GameWhereUniqueInput>
+    connectOrCreate?: Enumerable<GameCreateOrConnectWithouttableInput>
+  }
+
+  export type GameUncheckedCreateManyWithoutTableInput = {
+    create?: XOR<Enumerable<GameUncheckedCreateWithoutTableInput>, Enumerable<GameCreateWithoutTableInput>>
+    connect?: Enumerable<GameWhereUniqueInput>
+    connectOrCreate?: Enumerable<GameCreateOrConnectWithouttableInput>
+  }
+
   export type ParlourUpdateOneRequiredWithoutTableInput = {
     create?: XOR<ParlourUncheckedCreateWithoutTableInput, ParlourCreateWithoutTableInput>
     connect?: ParlourWhereUniqueInput
     update?: XOR<ParlourUncheckedUpdateWithoutTableInput, ParlourUpdateWithoutTableInput>
     upsert?: ParlourUpsertWithoutTableInput
     connectOrCreate?: ParlourCreateOrConnectWithoutTableInput
+  }
+
+  export type GameUpdateManyWithoutTableInput = {
+    create?: XOR<Enumerable<GameUncheckedCreateWithoutTableInput>, Enumerable<GameCreateWithoutTableInput>>
+    connect?: Enumerable<GameWhereUniqueInput>
+    set?: Enumerable<GameWhereUniqueInput>
+    disconnect?: Enumerable<GameWhereUniqueInput>
+    delete?: Enumerable<GameWhereUniqueInput>
+    update?: Enumerable<GameUpdateWithWhereUniqueWithoutTableInput>
+    updateMany?: Enumerable<GameUpdateManyWithWhereWithoutTableInput>
+    deleteMany?: Enumerable<GameScalarWhereInput>
+    upsert?: Enumerable<GameUpsertWithWhereUniqueWithoutTableInput>
+    connectOrCreate?: Enumerable<GameCreateOrConnectWithouttableInput>
+  }
+
+  export type GameUncheckedUpdateManyWithoutTableInput = {
+    create?: XOR<Enumerable<GameUncheckedCreateWithoutTableInput>, Enumerable<GameCreateWithoutTableInput>>
+    connect?: Enumerable<GameWhereUniqueInput>
+    set?: Enumerable<GameWhereUniqueInput>
+    disconnect?: Enumerable<GameWhereUniqueInput>
+    delete?: Enumerable<GameWhereUniqueInput>
+    update?: Enumerable<GameUpdateWithWhereUniqueWithoutTableInput>
+    updateMany?: Enumerable<GameUpdateManyWithWhereWithoutTableInput>
+    deleteMany?: Enumerable<GameScalarWhereInput>
+    upsert?: Enumerable<GameUpsertWithWhereUniqueWithoutTableInput>
+    connectOrCreate?: Enumerable<GameCreateOrConnectWithouttableInput>
+  }
+
+  export type TableCreateOneWithoutGamesInput = {
+    create?: XOR<TableUncheckedCreateWithoutGamesInput, TableCreateWithoutGamesInput>
+    connect?: TableWhereUniqueInput
+    connectOrCreate?: TableCreateOrConnectWithoutgamesInput
   }
 
   export type PlayerCreateManyWithoutGameInput = {
@@ -7711,6 +7804,14 @@ export namespace Prisma {
     create?: XOR<Enumerable<PlayerUncheckedCreateWithoutGameInput>, Enumerable<PlayerCreateWithoutGameInput>>
     connect?: Enumerable<PlayerWhereUniqueInput>
     connectOrCreate?: Enumerable<PlayerCreateOrConnectWithoutgameInput>
+  }
+
+  export type TableUpdateOneRequiredWithoutGamesInput = {
+    create?: XOR<TableUncheckedCreateWithoutGamesInput, TableCreateWithoutGamesInput>
+    connect?: TableWhereUniqueInput
+    update?: XOR<TableUncheckedUpdateWithoutGamesInput, TableUpdateWithoutGamesInput>
+    upsert?: TableUpsertWithoutGamesInput
+    connectOrCreate?: TableCreateOrConnectWithoutgamesInput
   }
 
   export type PlayerUpdateManyWithoutGameInput = {
@@ -8154,6 +8255,7 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    games?: GameCreateManyWithoutTableInput
   }
 
   export type TableUncheckedCreateWithoutParlourInput = {
@@ -8161,6 +8263,7 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    games?: GameUncheckedCreateManyWithoutTableInput
   }
 
   export type TableCreateOrConnectWithoutparlourInput = {
@@ -8540,6 +8643,31 @@ export namespace Prisma {
     create: XOR<ParlourUncheckedCreateWithoutTableInput, ParlourCreateWithoutTableInput>
   }
 
+  export type GameCreateWithoutTableInput = {
+    id?: string
+    firstDealer: number
+    startAt: Date | string
+    endAt: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    players?: PlayerCreateManyWithoutGameInput
+  }
+
+  export type GameUncheckedCreateWithoutTableInput = {
+    id?: string
+    firstDealer: number
+    startAt: Date | string
+    endAt: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    players?: PlayerUncheckedCreateManyWithoutGameInput
+  }
+
+  export type GameCreateOrConnectWithouttableInput = {
+    where: GameWhereUniqueInput
+    create: XOR<GameUncheckedCreateWithoutTableInput, GameCreateWithoutTableInput>
+  }
+
   export type ParlourUpdateWithoutTableInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -8561,6 +8689,56 @@ export namespace Prisma {
   export type ParlourUpsertWithoutTableInput = {
     update: XOR<ParlourUncheckedUpdateWithoutTableInput, ParlourUpdateWithoutTableInput>
     create: XOR<ParlourUncheckedCreateWithoutTableInput, ParlourCreateWithoutTableInput>
+  }
+
+  export type GameUpdateWithWhereUniqueWithoutTableInput = {
+    where: GameWhereUniqueInput
+    data: XOR<GameUncheckedUpdateWithoutTableInput, GameUpdateWithoutTableInput>
+  }
+
+  export type GameUpdateManyWithWhereWithoutTableInput = {
+    where: GameScalarWhereInput
+    data: XOR<GameUncheckedUpdateManyWithoutGamesInput, GameUpdateManyMutationInput>
+  }
+
+  export type GameScalarWhereInput = {
+    AND?: Enumerable<GameScalarWhereInput>
+    OR?: Enumerable<GameScalarWhereInput>
+    NOT?: Enumerable<GameScalarWhereInput>
+    id?: StringFilter | string
+    firstDealer?: IntFilter | number
+    startAt?: DateTimeFilter | Date | string
+    endAt?: DateTimeFilter | Date | string
+    createdAt?: DateTimeFilter | Date | string
+    updatedAt?: DateTimeFilter | Date | string
+    tableId?: StringFilter | string
+  }
+
+  export type GameUpsertWithWhereUniqueWithoutTableInput = {
+    where: GameWhereUniqueInput
+    update: XOR<GameUncheckedUpdateWithoutTableInput, GameUpdateWithoutTableInput>
+    create: XOR<GameUncheckedCreateWithoutTableInput, GameCreateWithoutTableInput>
+  }
+
+  export type TableCreateWithoutGamesInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    parlour: ParlourCreateOneWithoutTableInput
+  }
+
+  export type TableUncheckedCreateWithoutGamesInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    parlourId: string
+  }
+
+  export type TableCreateOrConnectWithoutgamesInput = {
+    where: TableWhereUniqueInput
+    create: XOR<TableUncheckedCreateWithoutGamesInput, TableCreateWithoutGamesInput>
   }
 
   export type PlayerCreateWithoutGameInput = {
@@ -8588,6 +8766,27 @@ export namespace Prisma {
     create: XOR<PlayerUncheckedCreateWithoutGameInput, PlayerCreateWithoutGameInput>
   }
 
+  export type TableUpdateWithoutGamesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parlour?: ParlourUpdateOneRequiredWithoutTableInput
+  }
+
+  export type TableUncheckedUpdateWithoutGamesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parlourId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type TableUpsertWithoutGamesInput = {
+    update: XOR<TableUncheckedUpdateWithoutGamesInput, TableUpdateWithoutGamesInput>
+    create: XOR<TableUncheckedCreateWithoutGamesInput, TableCreateWithoutGamesInput>
+  }
+
   export type PlayerUpdateWithWhereUniqueWithoutGameInput = {
     where: PlayerWhereUniqueInput
     data: XOR<PlayerUncheckedUpdateWithoutGameInput, PlayerUpdateWithoutGameInput>
@@ -8611,6 +8810,7 @@ export namespace Prisma {
     endAt: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
+    table: TableCreateOneWithoutGamesInput
   }
 
   export type GameUncheckedCreateWithoutPlayersInput = {
@@ -8620,6 +8820,7 @@ export namespace Prisma {
     endAt: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
+    tableId: string
   }
 
   export type GameCreateOrConnectWithoutplayersInput = {
@@ -8715,6 +8916,7 @@ export namespace Prisma {
     endAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    table?: TableUpdateOneRequiredWithoutGamesInput
   }
 
   export type GameUncheckedUpdateWithoutPlayersInput = {
@@ -8724,6 +8926,7 @@ export namespace Prisma {
     endAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tableId?: StringFieldUpdateOperationsInput | string
   }
 
   export type GameUpsertWithoutPlayersInput = {
@@ -9054,6 +9257,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    games?: GameUpdateManyWithoutTableInput
   }
 
   export type TableUncheckedUpdateWithoutParlourInput = {
@@ -9061,6 +9265,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    games?: GameUncheckedUpdateManyWithoutTableInput
   }
 
   export type TableUncheckedUpdateManyWithoutTableInput = {
@@ -9163,6 +9368,35 @@ export namespace Prisma {
     gameId?: StringFieldUpdateOperationsInput | string
     staffId?: NullableStringFieldUpdateOperationsInput | string | null
     GameResult?: GameResultUncheckedUpdateManyWithoutPlayerInput
+  }
+
+  export type GameUpdateWithoutTableInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstDealer?: IntFieldUpdateOperationsInput | number
+    startAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    players?: PlayerUpdateManyWithoutGameInput
+  }
+
+  export type GameUncheckedUpdateWithoutTableInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstDealer?: IntFieldUpdateOperationsInput | number
+    startAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    players?: PlayerUncheckedUpdateManyWithoutGameInput
+  }
+
+  export type GameUncheckedUpdateManyWithoutGamesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstDealer?: IntFieldUpdateOperationsInput | number
+    startAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PlayerUpdateWithoutGameInput = {

@@ -72,6 +72,7 @@ model Table {
     name            String
 
     parlour         Parlour
+    games           Game[]
 
     createdAt       DateTime    @default(now())
     updatedAt       DateTime    @updatedAt
@@ -84,6 +85,7 @@ model Game {
     startAt         DateTime    // 開始時刻
     endAt           DateTime    // 終了時刻
 
+    table           Table
     players         Player[]
 
     createdAt       DateTime    @default(now())

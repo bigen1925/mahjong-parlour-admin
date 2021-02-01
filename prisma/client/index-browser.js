@@ -123,7 +123,8 @@ exports.Prisma.GameScalarFieldEnum = makeEnum({
   startAt: 'startAt',
   endAt: 'endAt',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  tableId: 'tableId'
 });
 
 exports.Prisma.PlayerScalarFieldEnum = makeEnum({

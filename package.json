@@ -33,7 +33,8 @@
     },
     "eslintIgnore": [
         "/.eslintrc",
-        "/next.config.js"
+        "/next.config.js",
+        "/prisma/seed.ts"
     ],
     "prettier": {
         "singleQuote": true,

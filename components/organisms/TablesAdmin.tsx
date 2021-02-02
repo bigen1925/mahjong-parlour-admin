@@ -1,12 +1,13 @@
-import { Box, Container, Grid } from '@material-ui/core';
-import PlayingTable from '../molecules/PlayingTable';
+import { Box, CircularProgress, Container, Grid } from '@material-ui/core';
+import PlayingTables from '../molecules/PlayingTables';
 import WaitingQueue from '../molecules/WaitingQueue';
-import { useEffect, useState } from 'react';
-import { Guest, Table } from '../../prisma/client';
+import { FC, useEffect, useState } from 'react';
+import { Guest } from '../../prisma/client';
 import { getGuests, getTables } from '../../helpers/api';
+import { TableWithPlayers } from '../../prisma/types';
 
-export default function TablesAdmin(): JSX.Element {
-    const [tables, setTables] = useState<Table[]>([]);
+const TablesAdmin: FC = () => {
+    const [tables, setTables] = useState<TableWithPlayers[] | null>(null);
 
     const [enterableGuests, setEnterableGuests] = useState<Guest[] | null>(null);
     const addEnterableGuest = (guest: Guest) => enterableGuests && setEnterableGuests([...enterableGuests, guest]);
@@ -53,19 +54,28 @@ export default function TablesAdmin(): JSX.Element {
             {/* 卓 */}
             <Box mt={5}>
                 <Container>
-                    <Grid container>
-                        {tables.map((table) => (
-                            <Grid item xs={3} key={table.id}>
-                                <PlayingTable
-                                    waitingGuests={waitingGuests}
-                                    addWaitingGuest={addWaitingGuest}
-                                    removeWaitingGuest={removeWaitingGuest}
-                                />
-                            </Grid>
-                        ))}
-                    </Grid>
+                    {!tables ? (
+                        <Box>
+                            <CircularProgress color="secondary" />
+                        </Box>
+                    ) : (
+                        <Grid container>
+                            {tables.map((table) => (
+                                <Grid item xs={3} key={table.id}>
+                                    <PlayingTables
+                                        table={table}
+                                        waitingGuests={waitingGuests}
+                                        addWaitingGuest={addWaitingGuest}
+                                        removeWaitingGuest={removeWaitingGuest}
+                                    />
+                                </Grid>
+                            ))}
+                        </Grid>
+                    )}
                 </Container>
             </Box>
         </>
     );
-}
+};
+
+export default TablesAdmin;

@@ -16,7 +16,5 @@ export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> 
             },
         },
     });
-    console.log(tables);
-
     return res.json(tables);
 };

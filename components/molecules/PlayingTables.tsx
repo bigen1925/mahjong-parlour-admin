@@ -16,6 +16,7 @@ import { useState } from 'react';
 import { DataGrid, RowParams } from '@material-ui/data-grid';
 import modalStyles from '../../styles/modal.module.css';
 import { SEAT } from '../../prisma/constants';
+import { PlayerWithPerson, TableWithPlayers } from '../../prisma/types';
 
 const useStyle = makeStyles({
     // 1席左上
@@ -56,25 +57,34 @@ const useStyle = makeStyles({
 });
 
 interface PlayingTableProps {
+    table: TableWithPlayers;
     waitingGuests: Guest[];
     removeWaitingGuest: (guest: Guest) => void;
     addWaitingGuest: (guest: Guest) => void;
 }
 
-export default function PlayingTable(props: PlayingTableProps): JSX.Element {
-    const [players, setPlayers] = useState<Map<SEAT, Guest>>(new Map());
+export default function PlayingTables(props: PlayingTableProps): JSX.Element {
+    const initialPlayersMap = new Map(props.table.players.map((player) => [player.seat, player]));
+    console.log('inimap', initialPlayersMap);
+    const [playersMap, setPlayersMap] = useState<Map<SEAT, PlayerWithPerson>>(initialPlayersMap);
     const [firstDealer, setFirstDealer] = useState<SEAT | null>(null);
     const [isOpenPlayerAdditionModal, setIsOpenPlayerAdditionModal] = useState(false);
     const [playerAdditionTarget, setPlayerAdditionTarget] = useState<SEAT | null>(null);
     const [isOpenGameStartingModal, setIsOpenGameStartingModal] = useState(false);
     const [isOpenGameFinishingModal, setIsOpenGameFinishingModal] = useState(false);
     const [startedAt, setStartedAt] = useState<Date | null>(null);
-    const [ranking, setRanking] = useState<Guest[]>([]);
+    const [ranking, setRanking] = useState<PlayerWithPerson[]>([]);
 
-    function removePlayer(target: SEAT) {
-        props.addWaitingGuest(players.get(target)!);
-        players.delete(target);
-        setPlayers(players);
+    function removePlayer(seat: SEAT) {
+        const player = playersMap.get(seat)!;
+
+        if (!player.guest) {
+            return;
+        }
+
+        props.addWaitingGuest(player.guest);
+        playersMap.delete(seat);
+        setPlayersMap(playersMap);
     }
 
     function openPlayerAdditionModal(target: SEAT) {
@@ -91,19 +101,23 @@ export default function PlayingTable(props: PlayingTableProps): JSX.Element {
             <Box style={{ textAlign: 'center' }}>
                 <Box style={{ position: 'relative', height: 150, width: 150 }} mx="auto">
                     {/* 席 */}
-                    {Object.values(SEAT).map((seat) => (
-                        <Box key={seat} className={styles[seat]}>
-                            {players.has(seat) ? (
-                                <Box onClick={() => removePlayer(seat)}>
-                                    <NamedPerson name={players.get(seat)!.lastName} iconSize={iconSize} />
-                                </Box>
-                            ) : (
-                                <Box onClick={() => openPlayerAdditionModal(seat)}>
+                    {Object.values(SEAT).map((seat) => {
+                        console.log('seat', seat);
+                        if (!playersMap.has(seat)) {
+                            return (
+                                <Box key={seat} className={styles[seat]} onClick={() => openPlayerAdditionModal(seat)}>
                                     <AddCircleOutlineRoundedIcon style={{ fontSize: iconSize }} />
                                 </Box>
-                            )}
-                        </Box>
-                    ))}
+                            );
+                        }
+                        const player = playersMap.get(seat)!;
+                        const person = (player.guest || player.staff)!;
+                        return (
+                            <Box key={seat} className={styles[seat]} onClick={() => removePlayer(seat)}>
+                                <NamedPerson name={person.lastName} iconSize={iconSize} />
+                            </Box>
+                        );
+                    })}
 
                     {/* 中央のテーブル */}
                     <Box
@@ -145,8 +159,11 @@ export default function PlayingTable(props: PlayingTableProps): JSX.Element {
                             }
                             props.removeWaitingGuest(guest);
 
-                            players.set(playerAdditionTarget, guest);
-                            setPlayers(players);
+                            // FIXME
+                            const player = { guest: guest } as PlayerWithPerson;
+
+                            playersMap.set(playerAdditionTarget, player);
+                            setPlayersMap(playersMap);
 
                             return setIsOpenPlayerAdditionModal(false);
                         }}
@@ -168,21 +185,26 @@ export default function PlayingTable(props: PlayingTableProps): JSX.Element {
                     <Box display="flex" justifyContent="center" mb={5}>
                         <Box style={{ position: 'relative', height: 150, width: 150 }}>
                             {/* 席 */}
-                            {Object.values(SEAT).map((seat) => (
-                                <Box key={seat} className={styles[seat]}>
-                                    {players.has(seat) ? (
-                                        <Box onClick={() => setFirstDealer(seat)}>
-                                            <NamedPerson
-                                                name={players.get(seat)!.lastName}
-                                                iconSize={iconSize}
-                                                color={seat === firstDealer ? 'primary' : undefined}
-                                            />
+                            {Object.values(SEAT).map((seat) => {
+                                if (!playersMap.has(seat)) {
+                                    return (
+                                        <Box key={seat} className={styles[seat]}>
+                                            <AddCircleOutlineRoundedIcon style={{ fontSize: iconSize }} />
                                         </Box>
-                                    ) : (
-                                        <AddCircleOutlineRoundedIcon style={{ fontSize: iconSize }} />
-                                    )}
-                                </Box>
-                            ))}
+                                    );
+                                }
+                                return (
+                                    <Box key={seat} className={styles[seat]} onClick={() => setFirstDealer(seat)}>
+                                        <NamedPerson
+                                            name={
+                                                (playersMap.get(seat)!.guest || playersMap.get(seat)!.staff)!.lastName
+                                            }
+                                            iconSize={iconSize}
+                                            color={seat === firstDealer ? 'primary' : undefined}
+                                        />
+                                    </Box>
+                                );
+                            })}
 
                             {/* 中央のテーブル */}
                             <CheckBoxOutlineBlankIcon display="block" className={styles.table} />
@@ -222,21 +244,27 @@ export default function PlayingTable(props: PlayingTableProps): JSX.Element {
                         <Box style={{ position: 'relative', height: 150, width: 150 }}>
                             {/* 席 */}
                             {Object.values(SEAT).map((seat) => {
-                                const guest = players.get(seat);
+                                const player = playersMap.get(seat);
                                 return (
                                     <Box key={seat} className={styles[seat]}>
-                                        {guest ? (
+                                        {player ? (
                                             <Box
                                                 onClick={() => {
-                                                    if (ranking.indexOf(guest) !== -1) {
-                                                        setRanking(ranking.filter((x) => x !== guest));
+                                                    if (ranking.indexOf(player) !== -1) {
+                                                        setRanking(ranking.filter((x) => x !== player));
                                                     } else {
-                                                        setRanking([...ranking, guest]);
+                                                        setRanking([...ranking, player]);
                                                     }
                                                 }}
                                             >
-                                                <NamedPerson name={players.get(seat)!.lastName} iconSize={iconSize} />
-                                                {ranking.indexOf(guest) + 1 + '位'}
+                                                <NamedPerson
+                                                    name={
+                                                        (playersMap.get(seat)!.guest || playersMap.get(seat)!.staff)!
+                                                            .lastName
+                                                    }
+                                                    iconSize={iconSize}
+                                                />
+                                                {ranking.indexOf(player) + 1 + '位'}
                                             </Box>
                                         ) : (
                                             <AddCircleOutlineRoundedIcon style={{ fontSize: iconSize }} />
@@ -255,7 +283,7 @@ export default function PlayingTable(props: PlayingTableProps): JSX.Element {
                         variant="outlined"
                         color="secondary"
                         onClick={() => {
-                            if (players.size !== ranking.length) {
+                            if (playersMap.size !== ranking.length) {
                                 alert('順位が入力されていないプレイヤーがいます。');
                                 return;
                             }

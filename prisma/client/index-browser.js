@@ -117,6 +117,16 @@ exports.Prisma.TableScalarFieldEnum = makeEnum({
   parlourId: 'parlourId'
 });
 
+exports.Prisma.PlayerScalarFieldEnum = makeEnum({
+  id: 'id',
+  seat: 'seat',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  tableId: 'tableId',
+  guestId: 'guestId',
+  staffId: 'staffId'
+});
+
 exports.Prisma.GameScalarFieldEnum = makeEnum({
   id: 'id',
   firstDealer: 'firstDealer',
@@ -127,21 +137,12 @@ exports.Prisma.GameScalarFieldEnum = makeEnum({
   tableId: 'tableId'
 });
 
-exports.Prisma.PlayerScalarFieldEnum = makeEnum({
-  id: 'id',
-  seat: 'seat',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  gameId: 'gameId',
-  guestId: 'guestId',
-  staffId: 'staffId'
-});
-
 exports.Prisma.GameResultScalarFieldEnum = makeEnum({
   id: 'id',
   rank: 'rank',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  gameId: 'gameId',
   playerId: 'playerId'
 });
 
@@ -162,8 +163,8 @@ exports.Prisma.ModelName = makeEnum({
   Staff: 'Staff',
   Guest: 'Guest',
   Table: 'Table',
-  Game: 'Game',
   Player: 'Player',
+  Game: 'Game',
   GameResult: 'GameResult'
 });
 

@@ -2,28 +2,32 @@ import { Box, Container, Grid } from '@material-ui/core';
 import PlayingTable from '../molecules/PlayingTable';
 import WaitingQueue from '../molecules/WaitingQueue';
 import { useEffect, useState } from 'react';
-import { Guest } from '../../prisma/client';
-import { api } from '../../helpers/api';
+import { Guest, Table } from '../../prisma/client';
+import { getGuests, getTables } from '../../helpers/api';
 
 export default function TablesAdmin(): JSX.Element {
-    const tables = [
-        { id: '1', players: [] },
-        { id: '2', players: [] },
-        { id: '3', players: [] },
-        { id: '4', players: [] },
-    ];
+    const [tables, setTables] = useState<Table[]>([]);
 
-    const [enterableGuests, setEnterableGuests] = useState<Guest[]>([]);
-    const addEnterableGuest = (guest: Guest) => setEnterableGuests([...enterableGuests, guest]);
-    const removeEnterableGuest = (guest: Guest) => setEnterableGuests(enterableGuests.filter((x) => x.id !== guest.id));
+    const [enterableGuests, setEnterableGuests] = useState<Guest[] | null>(null);
+    const addEnterableGuest = (guest: Guest) => enterableGuests && setEnterableGuests([...enterableGuests, guest]);
+    const removeEnterableGuest = (guest: Guest) =>
+        enterableGuests && setEnterableGuests(enterableGuests.filter((x) => x.id !== guest.id));
 
     const [waitingGuests, setWaitingGuests] = useState<Guest[]>([]);
     const addWaitingGuest = (guest: Guest) => setWaitingGuests([...waitingGuests, guest]);
     const removeWaitingGuest = (guest: Guest) => setWaitingGuests(waitingGuests.filter((x) => x.id !== guest.id));
 
     useEffect(() => {
-        api('/guests').then((guests) => {
+        getGuests().then((guests) => {
+            console.log(guests);
             setEnterableGuests(guests);
+        });
+    }, []);
+
+    useEffect(() => {
+        getTables().then((tables) => {
+            console.log(tables);
+            setTables(tables);
         });
     }, []);
 

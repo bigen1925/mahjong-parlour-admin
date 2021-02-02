@@ -6,7 +6,17 @@ import { PrismaClient } from '../../prisma/client';
 const prisma = new PrismaClient();
 
 export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
-    const guests = await prisma.guest.findMany();
+    const tables = await prisma.table.findMany({
+        include: {
+            players: {
+                include: {
+                    guest: true,
+                    staff: true,
+                },
+            },
+        },
+    });
+    console.log(tables);
 
-    return res.json(guests);
+    return res.json(tables);
 };

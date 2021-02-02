@@ -54,9 +54,9 @@ model Guest {
     id              String      @id @default(uuid())
     lastName        String      // 姓
     firstName       String      // 名
-    gender          Int      // 性別
-    email           String?     // メールアドレス
-    address         String?     // 住所
+    gender          Int         // 性別
+    email           String      @default("") // メールアドレス
+    address         String      @default("") // 住所
     rewardPoints    Int         @default(0) // ポイント
 
     organization    Organization
@@ -72,7 +72,20 @@ model Table {
     name            String
 
     parlour         Parlour
-    games           Game[]
+    players         Player[]
+
+    createdAt       DateTime    @default(now())
+    updatedAt       DateTime    @updatedAt
+}
+
+// プレイヤー
+model Player {
+    id              String      @id @default(uuid())
+    seat            Int        // 座席
+
+    table           Table
+    guest           Guest?
+    staff           Staff?
 
     createdAt       DateTime    @default(now())
     updatedAt       DateTime    @updatedAt
@@ -86,20 +99,6 @@ model Game {
     endAt           DateTime    // 終了時刻
 
     table           Table
-    players         Player[]
-
-    createdAt       DateTime    @default(now())
-    updatedAt       DateTime    @updatedAt
-}
-
-// プレイヤー
-model Player {
-    id              String      @id @default(uuid())
-    seat            Int        // 座席
-
-    game            Game
-    guest           Guest?
-    staff           Staff?
 
     createdAt       DateTime    @default(now())
     updatedAt       DateTime    @updatedAt
@@ -110,6 +109,7 @@ model GameResult {
     id              String      @id @default(uuid())
     rank            Int         // 着順
 
+    game            Game        // 対局
     player          Player      // 対局者
 
     createdAt       DateTime    @default(now())

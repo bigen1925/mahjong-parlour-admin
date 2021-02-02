@@ -12,7 +12,7 @@ import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import AddCircleOutlineRoundedIcon from '@material-ui/icons/AddCircleOutlineRounded';
 import NamedPerson from '../atoms/NamedPerson';
 import { Guest } from '../../prisma/client';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { DataGrid, RowParams } from '@material-ui/data-grid';
 import modalStyles from '../../styles/modal.module.css';
 import { SEAT } from '../../prisma/constants';
@@ -70,8 +70,6 @@ export default function PlayingTable(props: PlayingTableProps): JSX.Element {
     const [isOpenGameFinishingModal, setIsOpenGameFinishingModal] = useState(false);
     const [startedAt, setStartedAt] = useState<Date | null>(null);
     const [ranking, setRanking] = useState<Guest[]>([]);
-
-    useEffect(() => console.log(ranking), [ranking]);
 
     function removePlayer(target: SEAT) {
         props.addWaitingGuest(players.get(target)!);

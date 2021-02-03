@@ -2,12 +2,11 @@ import { Box, CircularProgress, Container, Grid } from '@material-ui/core';
 import PlayingTables from '../molecules/PlayingTables';
 import WaitingQueue from '../molecules/WaitingQueue';
 import { FC, useEffect, useState } from 'react';
-import { Guest } from '../../prisma/client';
 import { getGuests, getTables } from '../../helpers/api';
-import { TableWithPlayers } from '../../prisma/types';
+import { Guest, Table } from '../../domains/models';
 
 const TablesAdmin: FC = () => {
-    const [tables, setTables] = useState<TableWithPlayers[] | null>(null);
+    const [tables, setTables] = useState<Table[] | null>(null);
 
     const [enterableGuests, setEnterableGuests] = useState<Guest[] | null>(null);
     const addEnterableGuest = (guest: Guest) => enterableGuests && setEnterableGuests([...enterableGuests, guest]);

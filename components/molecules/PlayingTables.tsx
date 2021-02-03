@@ -11,12 +11,11 @@ import {
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import AddCircleOutlineRoundedIcon from '@material-ui/icons/AddCircleOutlineRounded';
 import NamedPerson from '../atoms/NamedPerson';
-import { Guest } from '../../prisma/client';
 import { useState } from 'react';
 import { DataGrid, RowParams } from '@material-ui/data-grid';
 import modalStyles from '../../styles/modal.module.css';
-import { SEAT } from '../../prisma/constants';
-import { PlayerWithPerson, TableWithPlayers } from '../../prisma/types';
+import { SEAT } from '../../domains/constants';
+import { Guest, Player, Table } from '../../domains/models';
 
 const useStyle = makeStyles({
     // 1席左上
@@ -57,7 +56,7 @@ const useStyle = makeStyles({
 });
 
 interface PlayingTableProps {
-    table: TableWithPlayers;
+    table: Table;
     waitingGuests: Guest[];
     removeWaitingGuest: (guest: Guest) => void;
     addWaitingGuest: (guest: Guest) => void;
@@ -66,14 +65,14 @@ interface PlayingTableProps {
 export default function PlayingTables(props: PlayingTableProps): JSX.Element {
     const initialPlayersMap = new Map(props.table.players.map((player) => [player.seat, player]));
     console.log('inimap', initialPlayersMap);
-    const [playersMap, setPlayersMap] = useState<Map<SEAT, PlayerWithPerson>>(initialPlayersMap);
+    const [playersMap, setPlayersMap] = useState<Map<SEAT, Player>>(initialPlayersMap);
     const [firstDealer, setFirstDealer] = useState<SEAT | null>(null);
     const [isOpenPlayerAdditionModal, setIsOpenPlayerAdditionModal] = useState(false);
     const [playerAdditionTarget, setPlayerAdditionTarget] = useState<SEAT | null>(null);
     const [isOpenGameStartingModal, setIsOpenGameStartingModal] = useState(false);
     const [isOpenGameFinishingModal, setIsOpenGameFinishingModal] = useState(false);
     const [startedAt, setStartedAt] = useState<Date | null>(null);
-    const [ranking, setRanking] = useState<PlayerWithPerson[]>([]);
+    const [ranking, setRanking] = useState<Player[]>([]);
 
     function removePlayer(seat: SEAT) {
         const player = playersMap.get(seat)!;
@@ -160,7 +159,7 @@ export default function PlayingTables(props: PlayingTableProps): JSX.Element {
                             props.removeWaitingGuest(guest);
 
                             // FIXME
-                            const player = { guest: guest } as PlayerWithPerson;
+                            const player = { guest: guest } as Player;
 
                             playersMap.set(playerAdditionTarget, player);
                             setPlayersMap(playersMap);

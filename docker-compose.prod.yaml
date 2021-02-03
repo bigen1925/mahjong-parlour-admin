@@ -3,7 +3,7 @@ version: '3'
 services:
     server:
         build:
-            context: .
+            context: ./front
             dockerfile: ./docker/Dockerfile.prod
         image: mpa-server-prod
         container_name: mpa-server-prod

@@ -1,9 +1,9 @@
 version: '3'
 
 services:
-  web:
+  front:
     build:
-      context: .
+      context: ./front/
       dockerfile: ./docker/Dockerfile.dev
     image: mpa-server-dev
     container_name: mpa-server-dev
@@ -11,7 +11,7 @@ services:
     volumes:
       - /app/.next
       - /app/node_modules
-      - ./:/app:cached
+      - ./front:/app:cached
     ports:
       - 3000:3000
     environment:

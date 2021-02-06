@@ -2,15 +2,11 @@ FROM node:15.7-buster-slim
 
 WORKDIR /app
 
-RUN apt-get -qy update && apt-get -qy install openssl
-
-COPY package*.json ./
+COPY package.json .
+COPY package-lock.json .
 
 RUN npm ci
 
-COPY ./docker/entry-point.sh /entry-point.sh
-RUN chmod +x /entry-point.sh
-
-COPY . .
-
 CMD ["npm", "run", "dev"]
+
+EXPOSE 3000

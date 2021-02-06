@@ -1,20 +1,22 @@
 # ==== builder stage ====
-FROM node:15.5-alpine as builder
+FROM node:15.7-buster-slim as builder
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY package.json .
+COPY package-lock.json .
 RUN npm ci
 
 COPY . .
 RUN npm run build
 
 # ==== server stage ====
-FROM node:15.5-alpine as server
+FROM node:15.7-buster-slim as server
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY package.json .
+COPY package-lock.json .
 RUN npm ci --production
 
 COPY --from=builder /app/.next ./.next

@@ -1,0 +1,15 @@
+
+FROM node:15.7-buster-slim as server
+
+WORKDIR /app
+
+COPY package.json .
+COPY package-lock.json .
+RUN npm ci --production
+
+COPY ./docker/entry-point.sh /entry-point.sh
+RUN chmod +x /entry-point.sh
+
+CMD ["npm", "run", "start"]
+
+EXPOSE 3000

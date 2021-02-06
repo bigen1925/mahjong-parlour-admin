@@ -13,13 +13,29 @@ services:
       - /app/node_modules
       - ./front:/app:cached
     ports:
+      - 3333:3000
+    environment:
+      - NEXT_PUBLIC_API_URL_BASE=http://localhost:3000/
+  
+  api:
+    build:
+      context: ./api/
+      dockerfile: ./docker/Dockerfile.dev
+    image: mpa-api-dev
+    container_name: mpa-api-dev
+    working_dir: /app
+    volumes:
+      - /app/build/build
+      - /app/build/src
+      - /app/node_modules
+      - ./api:/app:cached
+    ports:
       - 3000:3000
     environment:
       - DATABASE_URL=postgresql://mpa:password@database:5432/mpa
-      - NEXT_PUBLIC_API_URL_BASE=http://localhost:3000/api
 
   database:
-    image: postgres:13.1
+    image: postgres:13.1-alpine
     container_name: mpa-database-dev
     volumes:
       - /var/lib/postgresql/data

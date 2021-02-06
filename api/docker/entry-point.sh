@@ -2,6 +2,6 @@
 set -e
 
 # マイグレーションを行う
-npm run migrate
+#npm run migrate
 
 exec "$@"

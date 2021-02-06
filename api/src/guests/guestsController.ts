@@ -2,7 +2,7 @@
 import { Controller, Get, Route } from 'tsoa';
 import { prisma } from '../app';
 
-interface Guest {
+interface GuestX {
   id: string;
   lastName: string;
   firstName: string;
@@ -11,7 +11,7 @@ interface Guest {
 @Route('guests')
 export class GuestsController extends Controller {
   @Get()
-  public async index(): Promise<Guest[]> {
+  public async index(): Promise<GuestX[]> {
     return await prisma.guest.findMany();
   }
 }

@@ -1,5 +1,6 @@
 // src/users/usersController.ts
 import { Controller, Get, Route } from 'tsoa';
+import { prisma } from '../app';
 
 interface Guest {
   id: string;
@@ -11,14 +12,6 @@ interface Guest {
 export class GuestsController extends Controller {
   @Get()
   public async index(): Promise<Guest[]> {
-    const guests = [];
-    for (let i = 0; i < 20; i++) {
-      guests.push({
-        id: i.toString(),
-        lastName: 'お客様' + i,
-        firstName: 'さん',
-      });
-    }
-    return guests;
+    return await prisma.guest.findMany();
   }
 }

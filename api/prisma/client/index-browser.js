@@ -87,7 +87,7 @@ exports.Prisma.ParlourScalarFieldEnum = makeEnum({
 
 exports.Prisma.StaffScalarFieldEnum = makeEnum({
   id: 'id',
-  username: 'username',
+  loginId: 'loginId',
   password: 'password',
   lastName: 'lastName',
   firstName: 'firstName',

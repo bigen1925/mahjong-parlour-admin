@@ -1,5 +1,5 @@
 // src/users/usersController.ts
-import { Body, Controller, Get, Post, Route, SuccessResponse } from 'tsoa';
+import { Body, Controller, Get, Post, Route, SuccessResponse, Tags } from 'tsoa';
 
 interface ParlourX {
   id: string;
@@ -10,6 +10,7 @@ interface ParlourCreateInput {
   name: string;
 }
 
+@Tags('parlours')
 @Route('parlours')
 export class ParloursController extends Controller {
   @Get()

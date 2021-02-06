@@ -35,7 +35,7 @@ export type Parlour = {
 
 export type Staff = {
   id: string
-  username: string
+  loginId: string
   password: string
   lastName: string
   firstName: string
@@ -2203,7 +2203,7 @@ export namespace Prisma {
 
   export type StaffMinAggregateOutputType = {
     id: string | null
-    username: string | null
+    loginId: string | null
     password: string | null
     lastName: string | null
     firstName: string | null
@@ -2215,7 +2215,7 @@ export namespace Prisma {
 
   export type StaffMaxAggregateOutputType = {
     id: string | null
-    username: string | null
+    loginId: string | null
     password: string | null
     lastName: string | null
     firstName: string | null
@@ -2227,7 +2227,7 @@ export namespace Prisma {
 
   export type StaffCountAggregateOutputType = {
     id: number | null
-    username: number | null
+    loginId: number | null
     password: number | null
     lastName: number | null
     firstName: number | null
@@ -2249,7 +2249,7 @@ export namespace Prisma {
 
   export type StaffMinAggregateInputType = {
     id?: true
-    username?: true
+    loginId?: true
     password?: true
     lastName?: true
     firstName?: true
@@ -2261,7 +2261,7 @@ export namespace Prisma {
 
   export type StaffMaxAggregateInputType = {
     id?: true
-    username?: true
+    loginId?: true
     password?: true
     lastName?: true
     firstName?: true
@@ -2273,7 +2273,7 @@ export namespace Prisma {
 
   export type StaffCountAggregateInputType = {
     id?: true
-    username?: true
+    loginId?: true
     password?: true
     lastName?: true
     firstName?: true
@@ -2357,7 +2357,7 @@ export namespace Prisma {
 
   export type StaffSelect = {
     id?: boolean
-    username?: boolean
+    loginId?: boolean
     password?: boolean
     lastName?: boolean
     firstName?: boolean
@@ -6504,7 +6504,7 @@ export namespace Prisma {
 
   export const StaffScalarFieldEnum: {
     id: 'id',
-    username: 'username',
+    loginId: 'loginId',
     password: 'password',
     lastName: 'lastName',
     firstName: 'firstName',
@@ -6660,7 +6660,7 @@ export namespace Prisma {
     OR?: Enumerable<StaffWhereInput>
     NOT?: Enumerable<StaffWhereInput>
     id?: StringFilter | string
-    username?: StringFilter | string
+    loginId?: StringFilter | string
     password?: StringFilter | string
     lastName?: StringFilter | string
     firstName?: StringFilter | string
@@ -6675,7 +6675,7 @@ export namespace Prisma {
 
   export type StaffOrderByInput = {
     id?: SortOrder
-    username?: SortOrder
+    loginId?: SortOrder
     password?: SortOrder
     lastName?: SortOrder
     firstName?: SortOrder
@@ -6688,6 +6688,7 @@ export namespace Prisma {
 
   export type StaffWhereUniqueInput = {
     id?: string
+    loginId?: string
   }
 
   export type GuestWhereInput = {
@@ -6958,7 +6959,7 @@ export namespace Prisma {
 
   export type StaffCreateInput = {
     id?: string
-    username: string
+    loginId: string
     password: string
     lastName: string
     firstName: string
@@ -6972,7 +6973,7 @@ export namespace Prisma {
 
   export type StaffUncheckedCreateInput = {
     id?: string
-    username: string
+    loginId: string
     password: string
     lastName: string
     firstName: string
@@ -6985,7 +6986,7 @@ export namespace Prisma {
 
   export type StaffUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    username?: StringFieldUpdateOperationsInput | string
+    loginId?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
@@ -6999,7 +7000,7 @@ export namespace Prisma {
 
   export type StaffUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    username?: StringFieldUpdateOperationsInput | string
+    loginId?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
@@ -7012,7 +7013,7 @@ export namespace Prisma {
 
   export type StaffUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    username?: StringFieldUpdateOperationsInput | string
+    loginId?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
@@ -7023,7 +7024,7 @@ export namespace Prisma {
 
   export type StaffUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    username?: StringFieldUpdateOperationsInput | string
+    loginId?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
@@ -8171,7 +8172,7 @@ export namespace Prisma {
 
   export type StaffCreateWithoutOrganizationInput = {
     id?: string
-    username: string
+    loginId: string
     password: string
     lastName: string
     firstName: string
@@ -8184,7 +8185,7 @@ export namespace Prisma {
 
   export type StaffUncheckedCreateWithoutOrganizationInput = {
     id?: string
-    username: string
+    loginId: string
     password: string
     lastName: string
     firstName: string
@@ -8279,7 +8280,7 @@ export namespace Prisma {
     OR?: Enumerable<StaffScalarWhereInput>
     NOT?: Enumerable<StaffScalarWhereInput>
     id?: StringFilter | string
-    username?: StringFilter | string
+    loginId?: StringFilter | string
     password?: StringFilter | string
     lastName?: StringFilter | string
     firstName?: StringFilter | string
@@ -8346,7 +8347,7 @@ export namespace Prisma {
 
   export type StaffCreateWithoutParloursInput = {
     id?: string
-    username: string
+    loginId: string
     password: string
     lastName: string
     firstName: string
@@ -8359,7 +8360,7 @@ export namespace Prisma {
 
   export type StaffUncheckedCreateWithoutParloursInput = {
     id?: string
-    username: string
+    loginId: string
     password: string
     lastName: string
     firstName: string
@@ -8978,7 +8979,7 @@ export namespace Prisma {
 
   export type StaffCreateWithoutPlayerInput = {
     id?: string
-    username: string
+    loginId: string
     password: string
     lastName: string
     firstName: string
@@ -8991,7 +8992,7 @@ export namespace Prisma {
 
   export type StaffUncheckedCreateWithoutPlayerInput = {
     id?: string
-    username: string
+    loginId: string
     password: string
     lastName: string
     firstName: string
@@ -9089,7 +9090,7 @@ export namespace Prisma {
 
   export type StaffUpdateWithoutPlayerInput = {
     id?: StringFieldUpdateOperationsInput | string
-    username?: StringFieldUpdateOperationsInput | string
+    loginId?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
@@ -9102,7 +9103,7 @@ export namespace Prisma {
 
   export type StaffUncheckedUpdateWithoutPlayerInput = {
     id?: StringFieldUpdateOperationsInput | string
-    username?: StringFieldUpdateOperationsInput | string
+    loginId?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
@@ -9350,7 +9351,7 @@ export namespace Prisma {
 
   export type StaffUpdateWithoutOrganizationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    username?: StringFieldUpdateOperationsInput | string
+    loginId?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
@@ -9363,7 +9364,7 @@ export namespace Prisma {
 
   export type StaffUncheckedUpdateWithoutOrganizationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    username?: StringFieldUpdateOperationsInput | string
+    loginId?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
@@ -9375,7 +9376,7 @@ export namespace Prisma {
 
   export type StaffUncheckedUpdateManyWithoutStaffInput = {
     id?: StringFieldUpdateOperationsInput | string
-    username?: StringFieldUpdateOperationsInput | string
+    loginId?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
@@ -9425,7 +9426,7 @@ export namespace Prisma {
 
   export type StaffUpdateWithoutParloursInput = {
     id?: StringFieldUpdateOperationsInput | string
-    username?: StringFieldUpdateOperationsInput | string
+    loginId?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
@@ -9438,7 +9439,7 @@ export namespace Prisma {
 
   export type StaffUncheckedUpdateWithoutParloursInput = {
     id?: StringFieldUpdateOperationsInput | string
-    username?: StringFieldUpdateOperationsInput | string
+    loginId?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
@@ -9451,7 +9452,7 @@ export namespace Prisma {
 
   export type StaffUncheckedUpdateManyWithoutStaffsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    username?: StringFieldUpdateOperationsInput | string
+    loginId?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string

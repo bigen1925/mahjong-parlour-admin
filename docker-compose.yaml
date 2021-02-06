@@ -5,8 +5,8 @@ services:
     build:
       context: ./front/
       dockerfile: ./docker/Dockerfile.dev
-    image: mpa-server-dev
-    container_name: mpa-server-dev
+    image: mpa-front-dev
+    container_name: mpa-front-dev
     working_dir: /app
     volumes:
       - /app/.next

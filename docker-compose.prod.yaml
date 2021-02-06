@@ -5,8 +5,8 @@ services:
     build:
       context: ./front/
       dockerfile: ./docker/Dockerfile.prod
-    image: mpa-server-prod
-    container_name: mpa-server-prod
+    image: mpa-front-prod
+    container_name: mpa-front-prod
     working_dir: /app
     volumes:
       - /app/.next

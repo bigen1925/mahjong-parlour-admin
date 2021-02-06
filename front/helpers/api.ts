@@ -1,13 +1,31 @@
-import { Guest, Table } from '../domains/models';
+import axios, { AxiosRequestConfig } from 'axios';
 import { SEAT } from '../domains/constants';
+import { Guest, Table } from '../domains/models';
 
-export function fetchApi(path: string, init: RequestInit = {}): Promise<unknown> {
-    const url = process.env.NEXT_PUBLIC_API_URL_BASE + path;
-    return fetch(url, init).then((res) => res.json());
+const client = axios.create({
+    baseURL: process.env.NEXT_PUBLIC_API_URL_BASE,
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});
+
+export function fetchApi(config: AxiosRequestConfig): Promise<unknown> {
+    return client(config);
+}
+
+interface AuthenticateResponse {
+    token: string;
+}
+export async function authenticate(loginId: string, password: string): Promise<AuthenticateResponse> {
+    return (await fetchApi({
+        url: '/authenticate',
+        method: 'post',
+        data: { loginId, password },
+    })) as AuthenticateResponse;
 }
 
 export async function getGuests(): Promise<Guest[]> {
-    return (await fetchApi('guests')) as Guest[];
+    return (await fetchApi({ url: '/guests' })) as Guest[];
 }
 
 export async function getTables(): Promise<Table[]> {

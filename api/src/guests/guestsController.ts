@@ -1,5 +1,5 @@
 // src/users/usersController.ts
-import { Controller, Get, Route } from 'tsoa';
+import { Controller, Get, Route, Tags } from 'tsoa';
 import { prisma } from '../app';
 
 interface GuestX {
@@ -8,6 +8,7 @@ interface GuestX {
   firstName: string;
 }
 
+@Tags('guests')
 @Route('guests')
 export class GuestsController extends Controller {
   @Get()

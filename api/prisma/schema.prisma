@@ -33,7 +33,7 @@ model Parlour {
 // 従業員
 model Staff {
     id              String      @id @default(uuid())
-    username        String      // ログインID
+    loginId         String      @unique // ログインID
     password        String      // ログインパスワード
     lastName        String      // 姓
     firstName       String      // 名

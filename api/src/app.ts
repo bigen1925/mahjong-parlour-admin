@@ -1,6 +1,7 @@
 import { ValidateError } from '@tsoa/runtime';
 import cors from 'cors';
 import express, { NextFunction, Request, Response } from 'express';
+import bearerToken from 'express-bearer-token';
 import swaggerUi from 'swagger-ui-express';
 import { RegisterRoutes } from '../build/routes';
 import swaggerDocument from '../build/swagger.json';
@@ -17,11 +18,17 @@ app.use(
 );
 app.use(express.json());
 
+// CORS
 app.use(cors());
 
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// Token
+app.use(bearerToken());
 
+// tsoa routes
 RegisterRoutes(app);
+
+// Swagger UI
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Error Handlers
 app.use(function (err: unknown, req: Request, res: Response, next: NextFunction): Response | void {

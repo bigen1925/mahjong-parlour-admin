@@ -1,6 +1,6 @@
 // src/users/usersController.ts
-import { Controller, Get, Route, Tags } from 'tsoa';
-import { prisma } from '../app';
+import { Controller, Get, Route, Security, Tags } from 'tsoa';
+import { prisma } from '../../app';
 
 interface GuestX {
   id: string;
@@ -8,8 +8,9 @@ interface GuestX {
   firstName: string;
 }
 
-@Tags('guests')
 @Route('guests')
+@Tags('guests')
+@Security('jwt', ['read'])
 export class GuestsController extends Controller {
   @Get()
   public async index(): Promise<GuestX[]> {

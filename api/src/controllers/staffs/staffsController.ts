@@ -1,7 +1,7 @@
 // src/users/usersController.ts
 import { Body, Controller, Post, Route, Tags } from 'tsoa';
-import { prisma } from '../app';
-import { hash } from '../helpers/hash';
+import { prisma } from '../../app';
+import { hash } from '../../helpers/hash';
 
 interface StaffResponse {
   id: string;

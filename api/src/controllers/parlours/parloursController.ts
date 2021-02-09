@@ -1,5 +1,4 @@
-// src/users/usersController.ts
-import { Body, Controller, Get, Post, Route, SuccessResponse, Tags } from 'tsoa';
+import { Body, Controller, Get, Post, Route, Security, SuccessResponse, Tags } from 'tsoa';
 
 interface ParlourX {
   id: string;
@@ -12,6 +11,7 @@ interface ParlourCreateInput {
 
 @Tags('parlours')
 @Route('parlours')
+@Security('jwt', ['read'])
 export class ParloursController extends Controller {
   @Get()
   public async index(): Promise<ParlourX> {

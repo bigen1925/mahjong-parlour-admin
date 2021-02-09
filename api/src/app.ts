@@ -6,6 +6,7 @@ import swaggerUi from 'swagger-ui-express';
 import { RegisterRoutes } from '../build/routes';
 import swaggerDocument from '../build/swagger.json';
 import { PrismaClient } from '../prisma/client';
+import { HttpError } from './exceptions/HttpError';
 
 export const app = express();
 export const prisma = new PrismaClient();
@@ -37,6 +38,13 @@ app.use(function (err: unknown, req: Request, res: Response, next: NextFunction)
     return res.status(422).json({
       message: 'Validation Failed',
       details: err?.fields,
+    });
+  }
+
+  if (err instanceof HttpError) {
+    return res.status(err.statusCode).json({
+      message: err.message,
+      detail: err.detail,
     });
   }
 

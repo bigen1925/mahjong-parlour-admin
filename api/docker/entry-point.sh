@@ -22,6 +22,6 @@ node <<EOF
 EOF
 
 # マイグレーションを行う
-npm run migrate:dev
+npm run migrate
 
 exec "$@"

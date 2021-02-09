@@ -1,5 +1,4 @@
 import axios, { AxiosRequestConfig } from 'axios';
-import { SEAT } from '../domains/constants';
 import { Guest, Table } from '../domains/models';
 
 const client = axios.create({
@@ -10,7 +9,7 @@ const client = axios.create({
 });
 
 export function fetchApi(config: AxiosRequestConfig): Promise<unknown> {
-    return client(config);
+    return client(config).then((res) => res.data);
 }
 
 interface AuthenticateResponse {
@@ -29,20 +28,6 @@ export async function getGuests(): Promise<Guest[]> {
 }
 
 export async function getTables(): Promise<Table[]> {
-    const tables = [
-        {
-            id: '1',
-            players: [
-                {
-                    seat: SEAT.FIRST,
-                    guest: { id: '101', lastName: 'プレイヤー1', firstName: 'さん' },
-                },
-                {
-                    seat: SEAT.FIRST,
-                    guest: { id: '102', lastName: 'プレイヤー2', firstName: 'さん' },
-                },
-            ],
-        },
-    ];
-    return tables;
+    console.log('tables', await fetchApi({ url: '/tables' }));
+    return (await fetchApi({ url: '/tables' })) as Table[];
 }

@@ -1,4 +1,3 @@
-// src/users/usersController.ts
 import jwt from 'jsonwebtoken';
 import { Body, Controller, Post, Route, Tags } from 'tsoa';
 import { config } from '../../../config';

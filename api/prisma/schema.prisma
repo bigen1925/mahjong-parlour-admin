@@ -15,6 +15,7 @@ generator client {
 model Organization {
     id              String      @id @default(uuid())
     name            String
+
     createdAt       DateTime    @default(now())
     updatedAt       DateTime    @updatedAt
 }
@@ -23,9 +24,11 @@ model Organization {
 model Parlour {
     id              String      @id @default(uuid())
     name            String
+
     organization    Organization
     staffs          Staff[]
     guests          Guest[]
+
     createdAt       DateTime    @default(now())
     updatedAt       DateTime    @updatedAt
 }
@@ -38,8 +41,12 @@ model Staff {
     lastName        String      // 姓
     firstName       String      // 名
     gender          Int      // 性別
+
     organization    Organization
     parlours        Parlour[]
+    player          Player      @relation(fields: [playerId], references: [id])
+    playerId        String
+
     createdAt       DateTime    @default(now())
     updatedAt       DateTime    @updatedAt
 }
@@ -53,8 +60,25 @@ model Guest {
     email           String      @default("") // メールアドレス
     address         String      @default("") // 住所
     rewardPoints    Int         @default(0) // ポイント
+
     organization    Organization
     parlours        Parlour[]
+    waitingGuest    WaitingGuest?
+    player          Player      @relation(fields: [playerId], references: [id])
+    playerId        String
+
+    createdAt       DateTime    @default(now())
+    updatedAt       DateTime    @updatedAt
+}
+
+// 待ち客
+
+model WaitingGuest {
+    id              String      @id @default(uuid())
+
+    guest           Guest       @relation(fields: [guestId], references: [id])
+    guestId         String      @unique
+
     createdAt       DateTime    @default(now())
     updatedAt       DateTime    @updatedAt
 }
@@ -63,8 +87,10 @@ model Guest {
 model Table {
     id              String      @id @default(uuid())
     name            String
+
     parlour         Parlour
     players         Player[]
+
     createdAt       DateTime    @default(now())
     updatedAt       DateTime    @updatedAt
 }
@@ -72,10 +98,12 @@ model Table {
 // プレイヤー
 model Player {
     id              String      @id @default(uuid())
-    seat            Int        // 座席
-    table           Table
+    seat            Int?        // 座席
+
+    table           Table?
     guest           Guest?
     staff           Staff?
+
     createdAt       DateTime    @default(now())
     updatedAt       DateTime    @updatedAt
 }
@@ -86,7 +114,9 @@ model Game {
     firstDealer     Int        // 起家
     startAt         DateTime    // 開始時刻
     endAt           DateTime    // 終了時刻
+
     table           Table
+
     createdAt       DateTime    @default(now())
     updatedAt       DateTime    @updatedAt
 }
@@ -95,8 +125,10 @@ model Game {
 model GameResult {
     id              String      @id @default(uuid())
     rank            Int         // 着順
+
     game            Game        // 対局
     player          Player      // 対局者
+
     createdAt       DateTime    @default(now())
     updatedAt       DateTime    @updatedAt
 }

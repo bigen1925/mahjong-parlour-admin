@@ -1,9 +1,9 @@
 import { Box, CircularProgress, Container, Grid } from '@material-ui/core';
+import { FC, useEffect, useState } from 'react';
+import { Guest, Table } from '../../domains/models';
+import { getGuests, getTables } from '../../helpers/api';
 import PlayingTables from '../molecules/PlayingTables';
 import WaitingQueue from '../molecules/WaitingQueue';
-import { FC, useEffect, useState } from 'react';
-import { getGuests, getTables } from '../../helpers/api';
-import { Guest, Table } from '../../domains/models';
 
 const TablesAdmin: FC = () => {
     const [tables, setTables] = useState<Table[] | null>(null);
@@ -18,15 +18,19 @@ const TablesAdmin: FC = () => {
     const removeWaitingGuest = (guest: Guest) => setWaitingGuests(waitingGuests.filter((x) => x.id !== guest.id));
 
     useEffect(() => {
-        getGuests().then((guests) => {
-            console.log(guests);
+        getGuests(false, false).then((guests) => {
             setEnterableGuests(guests);
         });
     }, []);
 
     useEffect(() => {
+        getGuests(true, false).then((waiting) => {
+            setWaitingGuests(waiting);
+        });
+    }, []);
+
+    useEffect(() => {
         getTables().then((tables) => {
-            console.log(tables);
             setTables(tables);
         });
     }, []);

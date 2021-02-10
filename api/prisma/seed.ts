@@ -1,5 +1,4 @@
 import { PrismaClient } from './client';
-import { GENDER } from './constants';
 
 const prisma = new PrismaClient();
 
@@ -26,58 +25,70 @@ async function main() {
     where: { id: 'ccddec22-3309-426d-b9d9-aa0aa78267c3' },
   });
 
-  const [guests, tables] = await Promise.all([
-    Promise.all(
-      rangeTo(20).map((i) =>
-        prisma.guest.upsert({
-          create: {
-            id: 'ac4430b9-fd05-4443-8de1-32c719e543' + ('0' + i).slice(-2),
-            lastName: 'お客様' + i,
-            firstName: 'さん',
-            gender: i % 2 ? GENDER.MALE : GENDER.FEMALE,
-            organization: {
-              connect: { id: org.id },
-            },
-            parlours: {
-              connect: { id: parlour.id },
-            },
-          },
-          update: {},
-          where: {
-            id: 'ac4430b9-fd05-4443-8de1-32c719e543' + ('0' + i).slice(-2),
-          },
-        })
-      )
-    ),
-    Promise.all(
-      rangeTo(4).map((i) =>
-        prisma.table.upsert({
-          create: {
-            id: 'c8de113d-7f05-4664-b505-1411511fd40' + i,
-            name: i + '卓',
-            parlour: { connect: { id: parlour.id } },
-          },
-          update: {},
-          where: {
-            id: 'c8de113d-7f05-4664-b505-1411511fd40' + i,
-          },
-        })
-      )
-    ),
-  ]);
-
-  await Promise.all(
-    rangeTo(6).map((i) =>
-      prisma.player.upsert({
+  const tables = await Promise.all(
+    rangeTo(4).map((i) =>
+      prisma.table.upsert({
         create: {
-          id: '8fe51527-8c93-487b-9ec3-ce51fa4435a' + i,
-          seat: (i % 4) + 1,
-          table: { connect: { id: tables[(i / 4) | 0].id } },
-          guest: { connect: { id: guests[i].id } },
+          id: 'c8de113d-7f05-4664-b505-1411511fd40' + i,
+          name: i + '卓',
+          parlour: { connect: { id: parlour.id } },
         },
         update: {},
         where: {
-          id: '8fe51527-8c93-487b-9ec3-ce51fa4435a' + i,
+          id: 'c8de113d-7f05-4664-b505-1411511fd40' + i,
+        },
+      })
+    )
+  );
+
+  const players = await Promise.all(
+    rangeTo(20).map((i) =>
+      prisma.player.upsert({
+        create: {
+          id: '44762a66-573c-4576-9b24-cc66f39afc' + ('0' + i).slice(-2),
+          // 最初の6人はテーブルに座らせる
+          ...(i < 6 && {
+            table: { connect: { id: tables[(i / 4) | 0].id } },
+            seat: (i % 4) + 1,
+          }),
+        },
+        update: {},
+        where: {
+          id: '44762a66-573c-4576-9b24-cc66f39afc' + ('0' + i).slice(-2),
+        },
+      })
+    )
+  );
+
+  const guests = await Promise.all(
+    players.map((player, i) =>
+      prisma.guest.upsert({
+        create: {
+          id: '90a689d9-131c-40e0-8180-4d84d68daf' + ('0' + i).slice(-2),
+          lastName: 'お客様' + i,
+          firstName: 'さん',
+          gender: 0,
+          organization: { connect: { id: org.id } },
+          player: { connect: { id: player.id } },
+        },
+        update: {},
+        where: {
+          id: '90a689d9-131c-40e0-8180-4d84d68daf' + ('0' + i).slice(-2),
+        },
+      })
+    )
+  );
+
+  await Promise.all(
+    guests.slice(6, 10).map((guest, i) =>
+      prisma.waitingGuest.upsert({
+        create: {
+          id: 'fbc96cd4-2bbf-448b-a3ea-f7dda2bc7c5' + i,
+          guest: { connect: { id: guest.id } },
+        },
+        update: {},
+        where: {
+          id: 'fbc96cd4-2bbf-448b-a3ea-f7dda2bc7c5' + i,
         },
       })
     )

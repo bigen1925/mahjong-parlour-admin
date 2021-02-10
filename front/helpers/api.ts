@@ -23,8 +23,8 @@ export async function authenticate(loginId: string, password: string): Promise<A
     })) as AuthenticateResponse;
 }
 
-export async function getGuests(): Promise<Guest[]> {
-    return (await fetchApi({ url: '/guests' })) as Guest[];
+export async function getGuests(waiting?: boolean, playing?: boolean): Promise<Guest[]> {
+    return (await fetchApi({ url: '/guests', params: { waiting, playing } })) as Guest[];
 }
 
 export async function getTables(): Promise<Table[]> {

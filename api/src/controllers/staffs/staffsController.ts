@@ -30,6 +30,9 @@ export class StaffsController extends Controller {
         organization: {
           connect: { id: org?.id },
         },
+        player: {
+          create: {},
+        },
       },
     });
   }

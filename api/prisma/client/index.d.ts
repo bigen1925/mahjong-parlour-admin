@@ -40,6 +40,7 @@ export type Staff = {
   lastName: string
   firstName: string
   gender: number
+  playerId: string
   createdAt: Date
   updatedAt: Date
   organizationId: string
@@ -57,9 +58,21 @@ export type Guest = {
   email: string
   address: string
   rewardPoints: number
+  playerId: string
   createdAt: Date
   updatedAt: Date
   organizationId: string
+}
+
+/**
+ * Model WaitingGuest
+ */
+
+export type WaitingGuest = {
+  id: string
+  guestId: string
+  createdAt: Date
+  updatedAt: Date
 }
 
 /**
@@ -80,12 +93,10 @@ export type Table = {
 
 export type Player = {
   id: string
-  seat: number
+  seat: number | null
   createdAt: Date
   updatedAt: Date
-  tableId: string
-  guestId: string | null
-  staffId: string | null
+  tableId: string | null
 }
 
 /**
@@ -275,6 +286,16 @@ export class PrismaClient<
     * ```
     */
   get guest(): Prisma.GuestDelegate<GlobalReject>;
+
+  /**
+   * `prisma.waitingGuest`: Exposes CRUD operations for the **WaitingGuest** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more WaitingGuests
+    * const waitingGuests = await prisma.waitingGuest.findMany()
+    * ```
+    */
+  get waitingGuest(): Prisma.WaitingGuestDelegate<GlobalReject>;
 
   /**
    * `prisma.table`: Exposes CRUD operations for the **Table** model.
@@ -675,6 +696,7 @@ export namespace Prisma {
     Parlour: 'Parlour',
     Staff: 'Staff',
     Guest: 'Guest',
+    WaitingGuest: 'WaitingGuest',
     Table: 'Table',
     Player: 'Player',
     Game: 'Game',
@@ -2208,6 +2230,7 @@ export namespace Prisma {
     lastName: string | null
     firstName: string | null
     gender: number
+    playerId: string | null
     createdAt: Date | null
     updatedAt: Date | null
     organizationId: string | null
@@ -2220,6 +2243,7 @@ export namespace Prisma {
     lastName: string | null
     firstName: string | null
     gender: number
+    playerId: string | null
     createdAt: Date | null
     updatedAt: Date | null
     organizationId: string | null
@@ -2232,6 +2256,7 @@ export namespace Prisma {
     lastName: number | null
     firstName: number | null
     gender: number
+    playerId: number | null
     createdAt: number | null
     updatedAt: number | null
     organizationId: number | null
@@ -2254,6 +2279,7 @@ export namespace Prisma {
     lastName?: true
     firstName?: true
     gender?: true
+    playerId?: true
     createdAt?: true
     updatedAt?: true
     organizationId?: true
@@ -2266,6 +2292,7 @@ export namespace Prisma {
     lastName?: true
     firstName?: true
     gender?: true
+    playerId?: true
     createdAt?: true
     updatedAt?: true
     organizationId?: true
@@ -2278,6 +2305,7 @@ export namespace Prisma {
     lastName?: true
     firstName?: true
     gender?: true
+    playerId?: true
     createdAt?: true
     updatedAt?: true
     organizationId?: true
@@ -2364,16 +2392,17 @@ export namespace Prisma {
     gender?: boolean
     organization?: boolean | OrganizationArgs
     parlours?: boolean | ParlourFindManyArgs
+    player?: boolean | PlayerArgs
+    playerId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    Player?: boolean | PlayerFindManyArgs
     organizationId?: boolean
   }
 
   export type StaffInclude = {
     organization?: boolean | OrganizationArgs
     parlours?: boolean | ParlourFindManyArgs
-    Player?: boolean | PlayerFindManyArgs
+    player?: boolean | PlayerArgs
   }
 
   export type StaffGetPayload<
@@ -2391,8 +2420,8 @@ export namespace Prisma {
         ? OrganizationGetPayload<S['include'][P]> :
         P extends 'parlours'
         ? Array < ParlourGetPayload<S['include'][P]>>  :
-        P extends 'Player'
-        ? Array < PlayerGetPayload<S['include'][P]>>  : never
+        P extends 'player'
+        ? PlayerGetPayload<S['include'][P]> : never
   } 
     : 'select' extends U
     ? {
@@ -2402,8 +2431,8 @@ export namespace Prisma {
         ? OrganizationGetPayload<S['select'][P]> :
         P extends 'parlours'
         ? Array < ParlourGetPayload<S['select'][P]>>  :
-        P extends 'Player'
-        ? Array < PlayerGetPayload<S['select'][P]>>  : never
+        P extends 'player'
+        ? PlayerGetPayload<S['select'][P]> : never
   } 
     : Staff
   : Staff
@@ -2645,7 +2674,7 @@ export namespace Prisma {
 
     parlours<T extends ParlourFindManyArgs = {}>(args?: Subset<T, ParlourFindManyArgs>): CheckSelect<T, Promise<Array<Parlour>>, Promise<Array<ParlourGetPayload<T>>>>;
 
-    Player<T extends PlayerFindManyArgs = {}>(args?: Subset<T, PlayerFindManyArgs>): CheckSelect<T, Promise<Array<Player>>, Promise<Array<PlayerGetPayload<T>>>>;
+    player<T extends PlayerArgs = {}>(args?: Subset<T, PlayerArgs>): CheckSelect<T, Prisma__PlayerClient<Player | null >, Prisma__PlayerClient<PlayerGetPayload<T> | null >>;
 
     private get _document();
     /**
@@ -2944,6 +2973,7 @@ export namespace Prisma {
     email: string | null
     address: string | null
     rewardPoints: number
+    playerId: string | null
     createdAt: Date | null
     updatedAt: Date | null
     organizationId: string | null
@@ -2957,6 +2987,7 @@ export namespace Prisma {
     email: string | null
     address: string | null
     rewardPoints: number
+    playerId: string | null
     createdAt: Date | null
     updatedAt: Date | null
     organizationId: string | null
@@ -2970,6 +3001,7 @@ export namespace Prisma {
     email: number | null
     address: number | null
     rewardPoints: number
+    playerId: number | null
     createdAt: number | null
     updatedAt: number | null
     organizationId: number | null
@@ -2995,6 +3027,7 @@ export namespace Prisma {
     email?: true
     address?: true
     rewardPoints?: true
+    playerId?: true
     createdAt?: true
     updatedAt?: true
     organizationId?: true
@@ -3008,6 +3041,7 @@ export namespace Prisma {
     email?: true
     address?: true
     rewardPoints?: true
+    playerId?: true
     createdAt?: true
     updatedAt?: true
     organizationId?: true
@@ -3021,6 +3055,7 @@ export namespace Prisma {
     email?: true
     address?: true
     rewardPoints?: true
+    playerId?: true
     createdAt?: true
     updatedAt?: true
     organizationId?: true
@@ -3108,16 +3143,19 @@ export namespace Prisma {
     rewardPoints?: boolean
     organization?: boolean | OrganizationArgs
     parlours?: boolean | ParlourFindManyArgs
+    waitingGuest?: boolean | WaitingGuestArgs
+    player?: boolean | PlayerArgs
+    playerId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    Player?: boolean | PlayerFindManyArgs
     organizationId?: boolean
   }
 
   export type GuestInclude = {
     organization?: boolean | OrganizationArgs
     parlours?: boolean | ParlourFindManyArgs
-    Player?: boolean | PlayerFindManyArgs
+    waitingGuest?: boolean | WaitingGuestArgs
+    player?: boolean | PlayerArgs
   }
 
   export type GuestGetPayload<
@@ -3135,8 +3173,10 @@ export namespace Prisma {
         ? OrganizationGetPayload<S['include'][P]> :
         P extends 'parlours'
         ? Array < ParlourGetPayload<S['include'][P]>>  :
-        P extends 'Player'
-        ? Array < PlayerGetPayload<S['include'][P]>>  : never
+        P extends 'waitingGuest'
+        ? WaitingGuestGetPayload<S['include'][P]> | null :
+        P extends 'player'
+        ? PlayerGetPayload<S['include'][P]> : never
   } 
     : 'select' extends U
     ? {
@@ -3146,8 +3186,10 @@ export namespace Prisma {
         ? OrganizationGetPayload<S['select'][P]> :
         P extends 'parlours'
         ? Array < ParlourGetPayload<S['select'][P]>>  :
-        P extends 'Player'
-        ? Array < PlayerGetPayload<S['select'][P]>>  : never
+        P extends 'waitingGuest'
+        ? WaitingGuestGetPayload<S['select'][P]> | null :
+        P extends 'player'
+        ? PlayerGetPayload<S['select'][P]> : never
   } 
     : Guest
   : Guest
@@ -3389,7 +3431,9 @@ export namespace Prisma {
 
     parlours<T extends ParlourFindManyArgs = {}>(args?: Subset<T, ParlourFindManyArgs>): CheckSelect<T, Promise<Array<Parlour>>, Promise<Array<ParlourGetPayload<T>>>>;
 
-    Player<T extends PlayerFindManyArgs = {}>(args?: Subset<T, PlayerFindManyArgs>): CheckSelect<T, Promise<Array<Player>>, Promise<Array<PlayerGetPayload<T>>>>;
+    waitingGuest<T extends WaitingGuestArgs = {}>(args?: Subset<T, WaitingGuestArgs>): CheckSelect<T, Prisma__WaitingGuestClient<WaitingGuest | null >, Prisma__WaitingGuestClient<WaitingGuestGetPayload<T> | null >>;
+
+    player<T extends PlayerArgs = {}>(args?: Subset<T, PlayerArgs>): CheckSelect<T, Prisma__PlayerClient<Player | null >, Prisma__PlayerClient<PlayerGetPayload<T> | null >>;
 
     private get _document();
     /**
@@ -3653,6 +3697,658 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well.
     **/
     include?: GuestInclude | null
+  }
+
+
+
+  /**
+   * Model WaitingGuest
+   */
+
+
+  export type AggregateWaitingGuest = {
+    count: WaitingGuestCountAggregateOutputType | null
+    min: WaitingGuestMinAggregateOutputType | null
+    max: WaitingGuestMaxAggregateOutputType | null
+  }
+
+  export type WaitingGuestMinAggregateOutputType = {
+    id: string | null
+    guestId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type WaitingGuestMaxAggregateOutputType = {
+    id: string | null
+    guestId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type WaitingGuestCountAggregateOutputType = {
+    id: number | null
+    guestId: number | null
+    createdAt: number | null
+    updatedAt: number | null
+    _all: number
+  }
+
+
+  export type WaitingGuestMinAggregateInputType = {
+    id?: true
+    guestId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type WaitingGuestMaxAggregateInputType = {
+    id?: true
+    guestId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type WaitingGuestCountAggregateInputType = {
+    id?: true
+    guestId?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type WaitingGuestAggregateArgs = {
+    /**
+     * Filter which WaitingGuest to aggregate.
+    **/
+    where?: WaitingGuestWhereInput
+    /**
+     * @link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs
+     * 
+     * Determine the order of WaitingGuests to fetch.
+    **/
+    orderBy?: Enumerable<WaitingGuestOrderByInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+    **/
+    cursor?: WaitingGuestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WaitingGuests from the position of the cursor.
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WaitingGuests.
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned WaitingGuests
+    **/
+    count?: true | WaitingGuestCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    min?: WaitingGuestMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    max?: WaitingGuestMaxAggregateInputType
+  }
+
+  export type GetWaitingGuestAggregateType<T extends WaitingGuestAggregateArgs> = {
+    [P in keyof T & keyof AggregateWaitingGuest]: P extends 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateWaitingGuest[P]>
+      : GetScalarType<T[P], AggregateWaitingGuest[P]>
+  }
+
+
+
+  export type WaitingGuestSelect = {
+    id?: boolean
+    guest?: boolean | GuestArgs
+    guestId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type WaitingGuestInclude = {
+    guest?: boolean | GuestArgs
+  }
+
+  export type WaitingGuestGetPayload<
+    S extends boolean | null | undefined | WaitingGuestArgs,
+    U = keyof S
+      > = S extends true
+        ? WaitingGuest
+    : S extends undefined
+    ? never
+    : S extends WaitingGuestArgs | WaitingGuestFindManyArgs
+    ?'include' extends U
+    ? WaitingGuest  & {
+    [P in TrueKeys<S['include']>]: 
+          P extends 'guest'
+        ? GuestGetPayload<S['include'][P]> : never
+  } 
+    : 'select' extends U
+    ? {
+    [P in TrueKeys<S['select']>]: P extends keyof WaitingGuest ?WaitingGuest [P]
+  : 
+          P extends 'guest'
+        ? GuestGetPayload<S['select'][P]> : never
+  } 
+    : WaitingGuest
+  : WaitingGuest
+
+
+  type WaitingGuestCountArgs = Merge<
+    Omit<WaitingGuestFindManyArgs, 'select' | 'include'> & {
+      select?: WaitingGuestCountAggregateInputType | true
+    }
+  >
+
+  export interface WaitingGuestDelegate<GlobalRejectSettings> {
+    /**
+     * Find zero or one WaitingGuest that matches the filter.
+     * @param {WaitingGuestFindUniqueArgs} args - Arguments to find a WaitingGuest
+     * @example
+     * // Get one WaitingGuest
+     * const waitingGuest = await prisma.waitingGuest.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends WaitingGuestFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, WaitingGuestFindUniqueArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'WaitingGuest'> extends True ? CheckSelect<T, Prisma__WaitingGuestClient<WaitingGuest>, Prisma__WaitingGuestClient<WaitingGuestGetPayload<T>>> : CheckSelect<T, Prisma__WaitingGuestClient<WaitingGuest | null >, Prisma__WaitingGuestClient<WaitingGuestGetPayload<T> | null >>
+
+    /**
+     * Find the first WaitingGuest that matches the filter.
+     * @param {WaitingGuestFindFirstArgs} args - Arguments to find a WaitingGuest
+     * @example
+     * // Get one WaitingGuest
+     * const waitingGuest = await prisma.waitingGuest.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends WaitingGuestFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, WaitingGuestFindFirstArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'WaitingGuest'> extends True ? CheckSelect<T, Prisma__WaitingGuestClient<WaitingGuest>, Prisma__WaitingGuestClient<WaitingGuestGetPayload<T>>> : CheckSelect<T, Prisma__WaitingGuestClient<WaitingGuest | null >, Prisma__WaitingGuestClient<WaitingGuestGetPayload<T> | null >>
+
+    /**
+     * Find zero or more WaitingGuests that matches the filter.
+     * @param {WaitingGuestFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all WaitingGuests
+     * const waitingGuests = await prisma.waitingGuest.findMany()
+     * 
+     * // Get first 10 WaitingGuests
+     * const waitingGuests = await prisma.waitingGuest.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const waitingGuestWithIdOnly = await prisma.waitingGuest.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends WaitingGuestFindManyArgs>(
+      args?: SelectSubset<T, WaitingGuestFindManyArgs>
+    ): CheckSelect<T, Promise<Array<WaitingGuest>>, Promise<Array<WaitingGuestGetPayload<T>>>>
+
+    /**
+     * Create a WaitingGuest.
+     * @param {WaitingGuestCreateArgs} args - Arguments to create a WaitingGuest.
+     * @example
+     * // Create one WaitingGuest
+     * const WaitingGuest = await prisma.waitingGuest.create({
+     *   data: {
+     *     // ... data to create a WaitingGuest
+     *   }
+     * })
+     * 
+    **/
+    create<T extends WaitingGuestCreateArgs>(
+      args: SelectSubset<T, WaitingGuestCreateArgs>
+    ): CheckSelect<T, Prisma__WaitingGuestClient<WaitingGuest>, Prisma__WaitingGuestClient<WaitingGuestGetPayload<T>>>
+
+    /**
+     * Delete a WaitingGuest.
+     * @param {WaitingGuestDeleteArgs} args - Arguments to delete one WaitingGuest.
+     * @example
+     * // Delete one WaitingGuest
+     * const WaitingGuest = await prisma.waitingGuest.delete({
+     *   where: {
+     *     // ... filter to delete one WaitingGuest
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends WaitingGuestDeleteArgs>(
+      args: SelectSubset<T, WaitingGuestDeleteArgs>
+    ): CheckSelect<T, Prisma__WaitingGuestClient<WaitingGuest>, Prisma__WaitingGuestClient<WaitingGuestGetPayload<T>>>
+
+    /**
+     * Update one WaitingGuest.
+     * @param {WaitingGuestUpdateArgs} args - Arguments to update one WaitingGuest.
+     * @example
+     * // Update one WaitingGuest
+     * const waitingGuest = await prisma.waitingGuest.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends WaitingGuestUpdateArgs>(
+      args: SelectSubset<T, WaitingGuestUpdateArgs>
+    ): CheckSelect<T, Prisma__WaitingGuestClient<WaitingGuest>, Prisma__WaitingGuestClient<WaitingGuestGetPayload<T>>>
+
+    /**
+     * Delete zero or more WaitingGuests.
+     * @param {WaitingGuestDeleteManyArgs} args - Arguments to filter WaitingGuests to delete.
+     * @example
+     * // Delete a few WaitingGuests
+     * const { count } = await prisma.waitingGuest.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends WaitingGuestDeleteManyArgs>(
+      args?: SelectSubset<T, WaitingGuestDeleteManyArgs>
+    ): Promise<BatchPayload>
+
+    /**
+     * Update zero or more WaitingGuests.
+     * @param {WaitingGuestUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many WaitingGuests
+     * const waitingGuest = await prisma.waitingGuest.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends WaitingGuestUpdateManyArgs>(
+      args: SelectSubset<T, WaitingGuestUpdateManyArgs>
+    ): Promise<BatchPayload>
+
+    /**
+     * Create or update one WaitingGuest.
+     * @param {WaitingGuestUpsertArgs} args - Arguments to update or create a WaitingGuest.
+     * @example
+     * // Update or create a WaitingGuest
+     * const waitingGuest = await prisma.waitingGuest.upsert({
+     *   create: {
+     *     // ... data to create a WaitingGuest
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the WaitingGuest we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends WaitingGuestUpsertArgs>(
+      args: SelectSubset<T, WaitingGuestUpsertArgs>
+    ): CheckSelect<T, Prisma__WaitingGuestClient<WaitingGuest>, Prisma__WaitingGuestClient<WaitingGuestGetPayload<T>>>
+
+    /**
+     * Count the number of WaitingGuests.
+     * @param {WaitingGuestCountArgs} args - Arguments to filter WaitingGuests to count.
+     * @example
+     * // Count the number of WaitingGuests
+     * const count = await prisma.waitingGuest.count({
+     *   where: {
+     *     // ... the filter for the WaitingGuests we want to count
+     *   }
+     * })
+    **/
+    count<T extends WaitingGuestCountArgs>(
+      args?: Subset<T, WaitingGuestCountArgs>,
+    ): Promise<
+      T extends Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], WaitingGuestCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a WaitingGuest.
+     * @param {WaitingGuestAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends WaitingGuestAggregateArgs>(args: Subset<T, WaitingGuestAggregateArgs>): Promise<GetWaitingGuestAggregateType<T>>
+
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for WaitingGuest.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in 
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__WaitingGuestClient<T> implements Promise<T> {
+    private readonly _dmmf;
+    private readonly _fetcher;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+
+    guest<T extends GuestArgs = {}>(args?: Subset<T, GuestArgs>): CheckSelect<T, Prisma__GuestClient<Guest | null >, Prisma__GuestClient<GuestGetPayload<T> | null >>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | Promise<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | Promise<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | Promise<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+  // Custom InputTypes
+
+  /**
+   * WaitingGuest findUnique
+   */
+  export type WaitingGuestFindUniqueArgs = {
+    /**
+     * Select specific fields to fetch from the WaitingGuest
+    **/
+    select?: WaitingGuestSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+    **/
+    include?: WaitingGuestInclude | null
+    /**
+     * Throw an Error if a WaitingGuest can't be found
+    **/
+    rejectOnNotFound?: RejectOnNotFound
+    /**
+     * Filter, which WaitingGuest to fetch.
+    **/
+    where: WaitingGuestWhereUniqueInput
+  }
+
+
+  /**
+   * WaitingGuest findFirst
+   */
+  export type WaitingGuestFindFirstArgs = {
+    /**
+     * Select specific fields to fetch from the WaitingGuest
+    **/
+    select?: WaitingGuestSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+    **/
+    include?: WaitingGuestInclude | null
+    /**
+     * Throw an Error if a WaitingGuest can't be found
+    **/
+    rejectOnNotFound?: RejectOnNotFound
+    /**
+     * Filter, which WaitingGuest to fetch.
+    **/
+    where?: WaitingGuestWhereInput
+    /**
+     * @link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs
+     * 
+     * Determine the order of WaitingGuests to fetch.
+    **/
+    orderBy?: Enumerable<WaitingGuestOrderByInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WaitingGuests.
+    **/
+    cursor?: WaitingGuestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WaitingGuests from the position of the cursor.
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WaitingGuests.
+    **/
+    skip?: number
+    /**
+     * @link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs
+     * 
+     * Filter by unique combinations of WaitingGuests.
+    **/
+    distinct?: Enumerable<WaitingGuestScalarFieldEnum>
+  }
+
+
+  /**
+   * WaitingGuest findMany
+   */
+  export type WaitingGuestFindManyArgs = {
+    /**
+     * Select specific fields to fetch from the WaitingGuest
+    **/
+    select?: WaitingGuestSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+    **/
+    include?: WaitingGuestInclude | null
+    /**
+     * Filter, which WaitingGuests to fetch.
+    **/
+    where?: WaitingGuestWhereInput
+    /**
+     * @link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs
+     * 
+     * Determine the order of WaitingGuests to fetch.
+    **/
+    orderBy?: Enumerable<WaitingGuestOrderByInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing WaitingGuests.
+    **/
+    cursor?: WaitingGuestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WaitingGuests from the position of the cursor.
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WaitingGuests.
+    **/
+    skip?: number
+    distinct?: Enumerable<WaitingGuestScalarFieldEnum>
+  }
+
+
+  /**
+   * WaitingGuest create
+   */
+  export type WaitingGuestCreateArgs = {
+    /**
+     * Select specific fields to fetch from the WaitingGuest
+    **/
+    select?: WaitingGuestSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+    **/
+    include?: WaitingGuestInclude | null
+    /**
+     * The data needed to create a WaitingGuest.
+    **/
+    data: XOR<WaitingGuestUncheckedCreateInput, WaitingGuestCreateInput>
+  }
+
+
+  /**
+   * WaitingGuest update
+   */
+  export type WaitingGuestUpdateArgs = {
+    /**
+     * Select specific fields to fetch from the WaitingGuest
+    **/
+    select?: WaitingGuestSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+    **/
+    include?: WaitingGuestInclude | null
+    /**
+     * The data needed to update a WaitingGuest.
+    **/
+    data: XOR<WaitingGuestUncheckedUpdateInput, WaitingGuestUpdateInput>
+    /**
+     * Choose, which WaitingGuest to update.
+    **/
+    where: WaitingGuestWhereUniqueInput
+  }
+
+
+  /**
+   * WaitingGuest updateMany
+   */
+  export type WaitingGuestUpdateManyArgs = {
+    data: XOR<WaitingGuestUncheckedUpdateManyInput, WaitingGuestUpdateManyMutationInput>
+    where?: WaitingGuestWhereInput
+  }
+
+
+  /**
+   * WaitingGuest upsert
+   */
+  export type WaitingGuestUpsertArgs = {
+    /**
+     * Select specific fields to fetch from the WaitingGuest
+    **/
+    select?: WaitingGuestSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+    **/
+    include?: WaitingGuestInclude | null
+    /**
+     * The filter to search for the WaitingGuest to update in case it exists.
+    **/
+    where: WaitingGuestWhereUniqueInput
+    /**
+     * In case the WaitingGuest found by the `where` argument doesn't exist, create a new WaitingGuest with this data.
+    **/
+    create: XOR<WaitingGuestUncheckedCreateInput, WaitingGuestCreateInput>
+    /**
+     * In case the WaitingGuest was found with the provided `where` argument, update it with this data.
+    **/
+    update: XOR<WaitingGuestUncheckedUpdateInput, WaitingGuestUpdateInput>
+  }
+
+
+  /**
+   * WaitingGuest delete
+   */
+  export type WaitingGuestDeleteArgs = {
+    /**
+     * Select specific fields to fetch from the WaitingGuest
+    **/
+    select?: WaitingGuestSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+    **/
+    include?: WaitingGuestInclude | null
+    /**
+     * Filter which WaitingGuest to delete.
+    **/
+    where: WaitingGuestWhereUniqueInput
+  }
+
+
+  /**
+   * WaitingGuest deleteMany
+   */
+  export type WaitingGuestDeleteManyArgs = {
+    where?: WaitingGuestWhereInput
+  }
+
+
+  /**
+   * WaitingGuest without action
+   */
+  export type WaitingGuestArgs = {
+    /**
+     * Select specific fields to fetch from the WaitingGuest
+    **/
+    select?: WaitingGuestSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+    **/
+    include?: WaitingGuestInclude | null
   }
 
 
@@ -4346,41 +5042,35 @@ export namespace Prisma {
   }
 
   export type PlayerAvgAggregateOutputType = {
-    seat: number
+    seat: number | null
   }
 
   export type PlayerSumAggregateOutputType = {
-    seat: number
+    seat: number | null
   }
 
   export type PlayerMinAggregateOutputType = {
     id: string | null
-    seat: number
+    seat: number | null
     createdAt: Date | null
     updatedAt: Date | null
     tableId: string | null
-    guestId: string | null
-    staffId: string | null
   }
 
   export type PlayerMaxAggregateOutputType = {
     id: string | null
-    seat: number
+    seat: number | null
     createdAt: Date | null
     updatedAt: Date | null
     tableId: string | null
-    guestId: string | null
-    staffId: string | null
   }
 
   export type PlayerCountAggregateOutputType = {
     id: number | null
-    seat: number
+    seat: number | null
     createdAt: number | null
     updatedAt: number | null
     tableId: number | null
-    guestId: number | null
-    staffId: number | null
     _all: number
   }
 
@@ -4399,8 +5089,6 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     tableId?: true
-    guestId?: true
-    staffId?: true
   }
 
   export type PlayerMaxAggregateInputType = {
@@ -4409,8 +5097,6 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     tableId?: true
-    guestId?: true
-    staffId?: true
   }
 
   export type PlayerCountAggregateInputType = {
@@ -4419,8 +5105,6 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     tableId?: true
-    guestId?: true
-    staffId?: true
     _all?: true
   }
 
@@ -4505,8 +5189,6 @@ export namespace Prisma {
     updatedAt?: boolean
     GameResult?: boolean | GameResultFindManyArgs
     tableId?: boolean
-    guestId?: boolean
-    staffId?: boolean
   }
 
   export type PlayerInclude = {
@@ -4528,7 +5210,7 @@ export namespace Prisma {
     ? Player  & {
     [P in TrueKeys<S['include']>]: 
           P extends 'table'
-        ? TableGetPayload<S['include'][P]> :
+        ? TableGetPayload<S['include'][P]> | null :
         P extends 'guest'
         ? GuestGetPayload<S['include'][P]> | null :
         P extends 'staff'
@@ -4541,7 +5223,7 @@ export namespace Prisma {
     [P in TrueKeys<S['select']>]: P extends keyof Player ?Player [P]
   : 
           P extends 'table'
-        ? TableGetPayload<S['select'][P]> :
+        ? TableGetPayload<S['select'][P]> | null :
         P extends 'guest'
         ? GuestGetPayload<S['select'][P]> | null :
         P extends 'staff'
@@ -6509,6 +7191,7 @@ export namespace Prisma {
     lastName: 'lastName',
     firstName: 'firstName',
     gender: 'gender',
+    playerId: 'playerId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     organizationId: 'organizationId'
@@ -6525,12 +7208,23 @@ export namespace Prisma {
     email: 'email',
     address: 'address',
     rewardPoints: 'rewardPoints',
+    playerId: 'playerId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     organizationId: 'organizationId'
   };
 
   export type GuestScalarFieldEnum = (typeof GuestScalarFieldEnum)[keyof typeof GuestScalarFieldEnum]
+
+
+  export const WaitingGuestScalarFieldEnum: {
+    id: 'id',
+    guestId: 'guestId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type WaitingGuestScalarFieldEnum = (typeof WaitingGuestScalarFieldEnum)[keyof typeof WaitingGuestScalarFieldEnum]
 
 
   export const TableScalarFieldEnum: {
@@ -6549,9 +7243,7 @@ export namespace Prisma {
     seat: 'seat',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
-    tableId: 'tableId',
-    guestId: 'guestId',
-    staffId: 'staffId'
+    tableId: 'tableId'
   };
 
   export type PlayerScalarFieldEnum = (typeof PlayerScalarFieldEnum)[keyof typeof PlayerScalarFieldEnum]
@@ -6667,9 +7359,10 @@ export namespace Prisma {
     gender?: IntFilter | number
     organization?: XOR<OrganizationWhereInput, OrganizationRelationFilter>
     parlours?: ParlourListRelationFilter
+    player?: XOR<PlayerWhereInput, PlayerRelationFilter>
+    playerId?: StringFilter | string
     createdAt?: DateTimeFilter | Date | string
     updatedAt?: DateTimeFilter | Date | string
-    Player?: PlayerListRelationFilter
     organizationId?: StringFilter | string
   }
 
@@ -6681,6 +7374,8 @@ export namespace Prisma {
     firstName?: SortOrder
     gender?: SortOrder
     organization?: OrganizationOrderByInput
+    player?: PlayerOrderByInput
+    playerId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     organizationId?: SortOrder
@@ -6704,9 +7399,11 @@ export namespace Prisma {
     rewardPoints?: IntFilter | number
     organization?: XOR<OrganizationWhereInput, OrganizationRelationFilter>
     parlours?: ParlourListRelationFilter
+    waitingGuest?: XOR<WaitingGuestWhereInput, WaitingGuestRelationFilter> | null
+    player?: XOR<PlayerWhereInput, PlayerRelationFilter>
+    playerId?: StringFilter | string
     createdAt?: DateTimeFilter | Date | string
     updatedAt?: DateTimeFilter | Date | string
-    Player?: PlayerListRelationFilter
     organizationId?: StringFilter | string
   }
 
@@ -6719,6 +7416,8 @@ export namespace Prisma {
     address?: SortOrder
     rewardPoints?: SortOrder
     organization?: OrganizationOrderByInput
+    waitingGuest?: WaitingGuestOrderByInput
+    playerId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     organizationId?: SortOrder
@@ -6726,6 +7425,29 @@ export namespace Prisma {
 
   export type GuestWhereUniqueInput = {
     id?: string
+  }
+
+  export type WaitingGuestWhereInput = {
+    AND?: Enumerable<WaitingGuestWhereInput>
+    OR?: Enumerable<WaitingGuestWhereInput>
+    NOT?: Enumerable<WaitingGuestWhereInput>
+    id?: StringFilter | string
+    guest?: XOR<GuestWhereInput, GuestRelationFilter>
+    guestId?: StringFilter | string
+    createdAt?: DateTimeFilter | Date | string
+    updatedAt?: DateTimeFilter | Date | string
+  }
+
+  export type WaitingGuestOrderByInput = {
+    id?: SortOrder
+    guestId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type WaitingGuestWhereUniqueInput = {
+    id?: string
+    guestId?: string
   }
 
   export type TableWhereInput = {
@@ -6760,16 +7482,14 @@ export namespace Prisma {
     OR?: Enumerable<PlayerWhereInput>
     NOT?: Enumerable<PlayerWhereInput>
     id?: StringFilter | string
-    seat?: IntFilter | number
-    table?: XOR<TableWhereInput, TableRelationFilter>
+    seat?: IntNullableFilter | number | null
+    table?: XOR<TableWhereInput, TableRelationFilter> | null
     guest?: XOR<GuestWhereInput, GuestRelationFilter> | null
     staff?: XOR<StaffWhereInput, StaffRelationFilter> | null
     createdAt?: DateTimeFilter | Date | string
     updatedAt?: DateTimeFilter | Date | string
     GameResult?: GameResultListRelationFilter
-    tableId?: StringFilter | string
-    guestId?: StringNullableFilter | string | null
-    staffId?: StringNullableFilter | string | null
+    tableId?: StringNullableFilter | string | null
   }
 
   export type PlayerOrderByInput = {
@@ -6777,12 +7497,9 @@ export namespace Prisma {
     seat?: SortOrder
     table?: TableOrderByInput
     guest?: GuestOrderByInput
-    staff?: StaffOrderByInput
     createdAt?: SortOrder
     updatedAt?: SortOrder
     tableId?: SortOrder
-    guestId?: SortOrder
-    staffId?: SortOrder
   }
 
   export type PlayerWhereUniqueInput = {
@@ -6968,7 +7685,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutStaffInput
     parlours?: ParlourCreateNestedManyWithoutStaffsInput
-    Player?: PlayerCreateNestedManyWithoutStaffInput
+    player: PlayerCreateNestedOneWithoutStaffInput
   }
 
   export type StaffUncheckedCreateInput = {
@@ -6978,10 +7695,10 @@ export namespace Prisma {
     lastName: string
     firstName: string
     gender: number
+    playerId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     organizationId: string
-    Player?: PlayerUncheckedCreateNestedManyWithoutStaffInput
   }
 
   export type StaffUpdateInput = {
@@ -6995,7 +7712,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutStaffInput
     parlours?: ParlourUpdateManyWithoutStaffsInput
-    Player?: PlayerUpdateManyWithoutStaffInput
+    player?: PlayerUpdateOneRequiredWithoutStaffInput
   }
 
   export type StaffUncheckedUpdateInput = {
@@ -7005,10 +7722,10 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     gender?: IntFieldUpdateOperationsInput | number
+    playerId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organizationId?: StringFieldUpdateOperationsInput | string
-    Player?: PlayerUncheckedUpdateManyWithoutStaffInput
   }
 
   export type StaffUpdateManyMutationInput = {
@@ -7029,6 +7746,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     gender?: IntFieldUpdateOperationsInput | number
+    playerId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organizationId?: StringFieldUpdateOperationsInput | string
@@ -7046,7 +7764,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutGuestInput
     parlours?: ParlourCreateNestedManyWithoutGuestsInput
-    Player?: PlayerCreateNestedManyWithoutGuestInput
+    waitingGuest?: WaitingGuestCreateNestedOneWithoutGuestInput
+    player: PlayerCreateNestedOneWithoutGuestInput
   }
 
   export type GuestUncheckedCreateInput = {
@@ -7057,10 +7776,11 @@ export namespace Prisma {
     email?: string
     address?: string
     rewardPoints?: number
+    playerId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     organizationId: string
-    Player?: PlayerUncheckedCreateNestedManyWithoutGuestInput
+    waitingGuest?: WaitingGuestUncheckedCreateNestedOneWithoutGuestInput
   }
 
   export type GuestUpdateInput = {
@@ -7075,7 +7795,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutGuestInput
     parlours?: ParlourUpdateManyWithoutGuestsInput
-    Player?: PlayerUpdateManyWithoutGuestInput
+    waitingGuest?: WaitingGuestUpdateOneWithoutGuestInput
+    player?: PlayerUpdateOneRequiredWithoutGuestInput
   }
 
   export type GuestUncheckedUpdateInput = {
@@ -7086,10 +7807,11 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
     rewardPoints?: IntFieldUpdateOperationsInput | number
+    playerId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organizationId?: StringFieldUpdateOperationsInput | string
-    Player?: PlayerUncheckedUpdateManyWithoutGuestInput
+    waitingGuest?: WaitingGuestUncheckedUpdateOneWithoutGuestInput
   }
 
   export type GuestUpdateManyMutationInput = {
@@ -7112,9 +7834,51 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
     rewardPoints?: IntFieldUpdateOperationsInput | number
+    playerId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organizationId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type WaitingGuestCreateInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    guest: GuestCreateNestedOneWithoutWaitingGuestInput
+  }
+
+  export type WaitingGuestUncheckedCreateInput = {
+    id?: string
+    guestId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WaitingGuestUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    guest?: GuestUpdateOneRequiredWithoutWaitingGuestInput
+  }
+
+  export type WaitingGuestUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    guestId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WaitingGuestUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WaitingGuestUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    guestId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TableCreateInput = {
@@ -7174,10 +7938,10 @@ export namespace Prisma {
 
   export type PlayerCreateInput = {
     id?: string
-    seat: number
+    seat?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    table: TableCreateNestedOneWithoutPlayersInput
+    table?: TableCreateNestedOneWithoutPlayersInput
     guest?: GuestCreateNestedOneWithoutPlayerInput
     staff?: StaffCreateNestedOneWithoutPlayerInput
     GameResult?: GameResultCreateNestedManyWithoutPlayerInput
@@ -7185,21 +7949,21 @@ export namespace Prisma {
 
   export type PlayerUncheckedCreateInput = {
     id?: string
-    seat: number
+    seat?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    tableId: string
-    guestId?: string | null
-    staffId?: string | null
+    tableId?: string | null
+    guest?: GuestUncheckedCreateNestedOneWithoutPlayerInput
+    staff?: StaffUncheckedCreateNestedOneWithoutPlayerInput
     GameResult?: GameResultUncheckedCreateNestedManyWithoutPlayerInput
   }
 
   export type PlayerUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    seat?: IntFieldUpdateOperationsInput | number
+    seat?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    table?: TableUpdateOneRequiredWithoutPlayersInput
+    table?: TableUpdateOneWithoutPlayersInput
     guest?: GuestUpdateOneWithoutPlayerInput
     staff?: StaffUpdateOneWithoutPlayerInput
     GameResult?: GameResultUpdateManyWithoutPlayerInput
@@ -7207,30 +7971,28 @@ export namespace Prisma {
 
   export type PlayerUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    seat?: IntFieldUpdateOperationsInput | number
+    seat?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    tableId?: StringFieldUpdateOperationsInput | string
-    guestId?: NullableStringFieldUpdateOperationsInput | string | null
-    staffId?: NullableStringFieldUpdateOperationsInput | string | null
+    tableId?: NullableStringFieldUpdateOperationsInput | string | null
+    guest?: GuestUncheckedUpdateOneWithoutPlayerInput
+    staff?: StaffUncheckedUpdateOneWithoutPlayerInput
     GameResult?: GameResultUncheckedUpdateManyWithoutPlayerInput
   }
 
   export type PlayerUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    seat?: IntFieldUpdateOperationsInput | number
+    seat?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PlayerUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    seat?: IntFieldUpdateOperationsInput | number
+    seat?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    tableId?: StringFieldUpdateOperationsInput | string
-    guestId?: NullableStringFieldUpdateOperationsInput | string | null
-    staffId?: NullableStringFieldUpdateOperationsInput | string | null
+    tableId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type GameCreateInput = {
@@ -7414,15 +8176,30 @@ export namespace Prisma {
     not?: NestedIntFilter | number
   }
 
-  export type PlayerListRelationFilter = {
-    every?: PlayerWhereInput
-    some?: PlayerWhereInput
-    none?: PlayerWhereInput
+  export type PlayerRelationFilter = {
+    is?: PlayerWhereInput
+    isNot?: PlayerWhereInput
+  }
+
+  export type WaitingGuestRelationFilter = {
+    is?: WaitingGuestWhereInput | null
+    isNot?: WaitingGuestWhereInput | null
+  }
+
+  export type GuestRelationFilter = {
+    is?: GuestWhereInput
+    isNot?: GuestWhereInput
   }
 
   export type ParlourRelationFilter = {
     is?: ParlourWhereInput
     isNot?: ParlourWhereInput
+  }
+
+  export type PlayerListRelationFilter = {
+    every?: PlayerWhereInput
+    some?: PlayerWhereInput
+    none?: PlayerWhereInput
   }
 
   export type GameListRelationFilter = {
@@ -7431,14 +8208,20 @@ export namespace Prisma {
     none?: GameWhereInput
   }
 
+  export type IntNullableFilter = {
+    equals?: number | null
+    in?: Enumerable<number> | null
+    notIn?: Enumerable<number> | null
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntNullableFilter | number | null
+  }
+
   export type TableRelationFilter = {
     is?: TableWhereInput
     isNot?: TableWhereInput
-  }
-
-  export type GuestRelationFilter = {
-    is?: GuestWhereInput | null
-    isNot?: GuestWhereInput | null
   }
 
   export type StaffRelationFilter = {
@@ -7470,11 +8253,6 @@ export namespace Prisma {
   export type GameRelationFilter = {
     is?: GameWhereInput
     isNot?: GameWhereInput
-  }
-
-  export type PlayerRelationFilter = {
-    is?: PlayerWhereInput
-    isNot?: PlayerWhereInput
   }
 
   export type ParlourCreateNestedManyWithoutOrganizationInput = {
@@ -7701,16 +8479,10 @@ export namespace Prisma {
     connect?: Enumerable<ParlourWhereUniqueInput>
   }
 
-  export type PlayerCreateNestedManyWithoutStaffInput = {
-    create?: XOR<Enumerable<PlayerUncheckedCreateWithoutStaffInput>, Enumerable<PlayerCreateWithoutStaffInput>>
-    connectOrCreate?: Enumerable<PlayerCreateOrConnectWithoutstaffInput>
-    connect?: Enumerable<PlayerWhereUniqueInput>
-  }
-
-  export type PlayerUncheckedCreateNestedManyWithoutStaffInput = {
-    create?: XOR<Enumerable<PlayerUncheckedCreateWithoutStaffInput>, Enumerable<PlayerCreateWithoutStaffInput>>
-    connectOrCreate?: Enumerable<PlayerCreateOrConnectWithoutstaffInput>
-    connect?: Enumerable<PlayerWhereUniqueInput>
+  export type PlayerCreateNestedOneWithoutStaffInput = {
+    create?: XOR<PlayerUncheckedCreateWithoutStaffInput, PlayerCreateWithoutStaffInput>
+    connectOrCreate?: PlayerCreateOrConnectWithoutstaffInput
+    connect?: PlayerWhereUniqueInput
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -7742,30 +8514,12 @@ export namespace Prisma {
     deleteMany?: Enumerable<ParlourScalarWhereInput>
   }
 
-  export type PlayerUpdateManyWithoutStaffInput = {
-    create?: XOR<Enumerable<PlayerUncheckedCreateWithoutStaffInput>, Enumerable<PlayerCreateWithoutStaffInput>>
-    connectOrCreate?: Enumerable<PlayerCreateOrConnectWithoutstaffInput>
-    upsert?: Enumerable<PlayerUpsertWithWhereUniqueWithoutStaffInput>
-    connect?: Enumerable<PlayerWhereUniqueInput>
-    set?: Enumerable<PlayerWhereUniqueInput>
-    disconnect?: Enumerable<PlayerWhereUniqueInput>
-    delete?: Enumerable<PlayerWhereUniqueInput>
-    update?: Enumerable<PlayerUpdateWithWhereUniqueWithoutStaffInput>
-    updateMany?: Enumerable<PlayerUpdateManyWithWhereWithoutStaffInput>
-    deleteMany?: Enumerable<PlayerScalarWhereInput>
-  }
-
-  export type PlayerUncheckedUpdateManyWithoutStaffInput = {
-    create?: XOR<Enumerable<PlayerUncheckedCreateWithoutStaffInput>, Enumerable<PlayerCreateWithoutStaffInput>>
-    connectOrCreate?: Enumerable<PlayerCreateOrConnectWithoutstaffInput>
-    upsert?: Enumerable<PlayerUpsertWithWhereUniqueWithoutStaffInput>
-    connect?: Enumerable<PlayerWhereUniqueInput>
-    set?: Enumerable<PlayerWhereUniqueInput>
-    disconnect?: Enumerable<PlayerWhereUniqueInput>
-    delete?: Enumerable<PlayerWhereUniqueInput>
-    update?: Enumerable<PlayerUpdateWithWhereUniqueWithoutStaffInput>
-    updateMany?: Enumerable<PlayerUpdateManyWithWhereWithoutStaffInput>
-    deleteMany?: Enumerable<PlayerScalarWhereInput>
+  export type PlayerUpdateOneRequiredWithoutStaffInput = {
+    create?: XOR<PlayerUncheckedCreateWithoutStaffInput, PlayerCreateWithoutStaffInput>
+    connectOrCreate?: PlayerCreateOrConnectWithoutstaffInput
+    upsert?: PlayerUpsertWithoutStaffInput
+    connect?: PlayerWhereUniqueInput
+    update?: XOR<PlayerUncheckedUpdateWithoutStaffInput, PlayerUpdateWithoutStaffInput>
   }
 
   export type OrganizationCreateNestedOneWithoutGuestInput = {
@@ -7780,16 +8534,22 @@ export namespace Prisma {
     connect?: Enumerable<ParlourWhereUniqueInput>
   }
 
-  export type PlayerCreateNestedManyWithoutGuestInput = {
-    create?: XOR<Enumerable<PlayerUncheckedCreateWithoutGuestInput>, Enumerable<PlayerCreateWithoutGuestInput>>
-    connectOrCreate?: Enumerable<PlayerCreateOrConnectWithoutguestInput>
-    connect?: Enumerable<PlayerWhereUniqueInput>
+  export type WaitingGuestCreateNestedOneWithoutGuestInput = {
+    create?: XOR<WaitingGuestUncheckedCreateWithoutGuestInput, WaitingGuestCreateWithoutGuestInput>
+    connectOrCreate?: WaitingGuestCreateOrConnectWithoutguestInput
+    connect?: WaitingGuestWhereUniqueInput
   }
 
-  export type PlayerUncheckedCreateNestedManyWithoutGuestInput = {
-    create?: XOR<Enumerable<PlayerUncheckedCreateWithoutGuestInput>, Enumerable<PlayerCreateWithoutGuestInput>>
-    connectOrCreate?: Enumerable<PlayerCreateOrConnectWithoutguestInput>
-    connect?: Enumerable<PlayerWhereUniqueInput>
+  export type PlayerCreateNestedOneWithoutGuestInput = {
+    create?: XOR<PlayerUncheckedCreateWithoutGuestInput, PlayerCreateWithoutGuestInput>
+    connectOrCreate?: PlayerCreateOrConnectWithoutguestInput
+    connect?: PlayerWhereUniqueInput
+  }
+
+  export type WaitingGuestUncheckedCreateNestedOneWithoutGuestInput = {
+    create?: XOR<WaitingGuestUncheckedCreateWithoutGuestInput, WaitingGuestCreateWithoutGuestInput>
+    connectOrCreate?: WaitingGuestCreateOrConnectWithoutguestInput
+    connect?: WaitingGuestWhereUniqueInput
   }
 
   export type OrganizationUpdateOneRequiredWithoutGuestInput = {
@@ -7813,30 +8573,46 @@ export namespace Prisma {
     deleteMany?: Enumerable<ParlourScalarWhereInput>
   }
 
-  export type PlayerUpdateManyWithoutGuestInput = {
-    create?: XOR<Enumerable<PlayerUncheckedCreateWithoutGuestInput>, Enumerable<PlayerCreateWithoutGuestInput>>
-    connectOrCreate?: Enumerable<PlayerCreateOrConnectWithoutguestInput>
-    upsert?: Enumerable<PlayerUpsertWithWhereUniqueWithoutGuestInput>
-    connect?: Enumerable<PlayerWhereUniqueInput>
-    set?: Enumerable<PlayerWhereUniqueInput>
-    disconnect?: Enumerable<PlayerWhereUniqueInput>
-    delete?: Enumerable<PlayerWhereUniqueInput>
-    update?: Enumerable<PlayerUpdateWithWhereUniqueWithoutGuestInput>
-    updateMany?: Enumerable<PlayerUpdateManyWithWhereWithoutGuestInput>
-    deleteMany?: Enumerable<PlayerScalarWhereInput>
+  export type WaitingGuestUpdateOneWithoutGuestInput = {
+    create?: XOR<WaitingGuestUncheckedCreateWithoutGuestInput, WaitingGuestCreateWithoutGuestInput>
+    connectOrCreate?: WaitingGuestCreateOrConnectWithoutguestInput
+    upsert?: WaitingGuestUpsertWithoutGuestInput
+    connect?: WaitingGuestWhereUniqueInput
+    disconnect?: boolean
+    delete?: boolean
+    update?: XOR<WaitingGuestUncheckedUpdateWithoutGuestInput, WaitingGuestUpdateWithoutGuestInput>
   }
 
-  export type PlayerUncheckedUpdateManyWithoutGuestInput = {
-    create?: XOR<Enumerable<PlayerUncheckedCreateWithoutGuestInput>, Enumerable<PlayerCreateWithoutGuestInput>>
-    connectOrCreate?: Enumerable<PlayerCreateOrConnectWithoutguestInput>
-    upsert?: Enumerable<PlayerUpsertWithWhereUniqueWithoutGuestInput>
-    connect?: Enumerable<PlayerWhereUniqueInput>
-    set?: Enumerable<PlayerWhereUniqueInput>
-    disconnect?: Enumerable<PlayerWhereUniqueInput>
-    delete?: Enumerable<PlayerWhereUniqueInput>
-    update?: Enumerable<PlayerUpdateWithWhereUniqueWithoutGuestInput>
-    updateMany?: Enumerable<PlayerUpdateManyWithWhereWithoutGuestInput>
-    deleteMany?: Enumerable<PlayerScalarWhereInput>
+  export type PlayerUpdateOneRequiredWithoutGuestInput = {
+    create?: XOR<PlayerUncheckedCreateWithoutGuestInput, PlayerCreateWithoutGuestInput>
+    connectOrCreate?: PlayerCreateOrConnectWithoutguestInput
+    upsert?: PlayerUpsertWithoutGuestInput
+    connect?: PlayerWhereUniqueInput
+    update?: XOR<PlayerUncheckedUpdateWithoutGuestInput, PlayerUpdateWithoutGuestInput>
+  }
+
+  export type WaitingGuestUncheckedUpdateOneWithoutGuestInput = {
+    create?: XOR<WaitingGuestUncheckedCreateWithoutGuestInput, WaitingGuestCreateWithoutGuestInput>
+    connectOrCreate?: WaitingGuestCreateOrConnectWithoutguestInput
+    upsert?: WaitingGuestUpsertWithoutGuestInput
+    connect?: WaitingGuestWhereUniqueInput
+    disconnect?: boolean
+    delete?: boolean
+    update?: XOR<WaitingGuestUncheckedUpdateWithoutGuestInput, WaitingGuestUpdateWithoutGuestInput>
+  }
+
+  export type GuestCreateNestedOneWithoutWaitingGuestInput = {
+    create?: XOR<GuestUncheckedCreateWithoutWaitingGuestInput, GuestCreateWithoutWaitingGuestInput>
+    connectOrCreate?: GuestCreateOrConnectWithoutwaitingGuestInput
+    connect?: GuestWhereUniqueInput
+  }
+
+  export type GuestUpdateOneRequiredWithoutWaitingGuestInput = {
+    create?: XOR<GuestUncheckedCreateWithoutWaitingGuestInput, GuestCreateWithoutWaitingGuestInput>
+    connectOrCreate?: GuestCreateOrConnectWithoutwaitingGuestInput
+    upsert?: GuestUpsertWithoutWaitingGuestInput
+    connect?: GuestWhereUniqueInput
+    update?: XOR<GuestUncheckedUpdateWithoutWaitingGuestInput, GuestUpdateWithoutWaitingGuestInput>
   }
 
   export type ParlourCreateNestedOneWithoutTableInput = {
@@ -7937,13 +8713,13 @@ export namespace Prisma {
 
   export type GuestCreateNestedOneWithoutPlayerInput = {
     create?: XOR<GuestUncheckedCreateWithoutPlayerInput, GuestCreateWithoutPlayerInput>
-    connectOrCreate?: GuestCreateOrConnectWithoutPlayerInput
+    connectOrCreate?: GuestCreateOrConnectWithoutplayerInput
     connect?: GuestWhereUniqueInput
   }
 
   export type StaffCreateNestedOneWithoutPlayerInput = {
     create?: XOR<StaffUncheckedCreateWithoutPlayerInput, StaffCreateWithoutPlayerInput>
-    connectOrCreate?: StaffCreateOrConnectWithoutPlayerInput
+    connectOrCreate?: StaffCreateOrConnectWithoutplayerInput
     connect?: StaffWhereUniqueInput
   }
 
@@ -7953,23 +8729,45 @@ export namespace Prisma {
     connect?: Enumerable<GameResultWhereUniqueInput>
   }
 
+  export type GuestUncheckedCreateNestedOneWithoutPlayerInput = {
+    create?: XOR<GuestUncheckedCreateWithoutPlayerInput, GuestCreateWithoutPlayerInput>
+    connectOrCreate?: GuestCreateOrConnectWithoutplayerInput
+    connect?: GuestWhereUniqueInput
+  }
+
+  export type StaffUncheckedCreateNestedOneWithoutPlayerInput = {
+    create?: XOR<StaffUncheckedCreateWithoutPlayerInput, StaffCreateWithoutPlayerInput>
+    connectOrCreate?: StaffCreateOrConnectWithoutplayerInput
+    connect?: StaffWhereUniqueInput
+  }
+
   export type GameResultUncheckedCreateNestedManyWithoutPlayerInput = {
     create?: XOR<Enumerable<GameResultUncheckedCreateWithoutPlayerInput>, Enumerable<GameResultCreateWithoutPlayerInput>>
     connectOrCreate?: Enumerable<GameResultCreateOrConnectWithoutplayerInput>
     connect?: Enumerable<GameResultWhereUniqueInput>
   }
 
-  export type TableUpdateOneRequiredWithoutPlayersInput = {
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type TableUpdateOneWithoutPlayersInput = {
     create?: XOR<TableUncheckedCreateWithoutPlayersInput, TableCreateWithoutPlayersInput>
     connectOrCreate?: TableCreateOrConnectWithoutplayersInput
     upsert?: TableUpsertWithoutPlayersInput
     connect?: TableWhereUniqueInput
+    disconnect?: boolean
+    delete?: boolean
     update?: XOR<TableUncheckedUpdateWithoutPlayersInput, TableUpdateWithoutPlayersInput>
   }
 
   export type GuestUpdateOneWithoutPlayerInput = {
     create?: XOR<GuestUncheckedCreateWithoutPlayerInput, GuestCreateWithoutPlayerInput>
-    connectOrCreate?: GuestCreateOrConnectWithoutPlayerInput
+    connectOrCreate?: GuestCreateOrConnectWithoutplayerInput
     upsert?: GuestUpsertWithoutPlayerInput
     connect?: GuestWhereUniqueInput
     disconnect?: boolean
@@ -7979,7 +8777,7 @@ export namespace Prisma {
 
   export type StaffUpdateOneWithoutPlayerInput = {
     create?: XOR<StaffUncheckedCreateWithoutPlayerInput, StaffCreateWithoutPlayerInput>
-    connectOrCreate?: StaffCreateOrConnectWithoutPlayerInput
+    connectOrCreate?: StaffCreateOrConnectWithoutplayerInput
     upsert?: StaffUpsertWithoutPlayerInput
     connect?: StaffWhereUniqueInput
     disconnect?: boolean
@@ -8002,6 +8800,26 @@ export namespace Prisma {
 
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
+  }
+
+  export type GuestUncheckedUpdateOneWithoutPlayerInput = {
+    create?: XOR<GuestUncheckedCreateWithoutPlayerInput, GuestCreateWithoutPlayerInput>
+    connectOrCreate?: GuestCreateOrConnectWithoutplayerInput
+    upsert?: GuestUpsertWithoutPlayerInput
+    connect?: GuestWhereUniqueInput
+    disconnect?: boolean
+    delete?: boolean
+    update?: XOR<GuestUncheckedUpdateWithoutPlayerInput, GuestUpdateWithoutPlayerInput>
+  }
+
+  export type StaffUncheckedUpdateOneWithoutPlayerInput = {
+    create?: XOR<StaffUncheckedCreateWithoutPlayerInput, StaffCreateWithoutPlayerInput>
+    connectOrCreate?: StaffCreateOrConnectWithoutplayerInput
+    upsert?: StaffUpsertWithoutPlayerInput
+    connect?: StaffWhereUniqueInput
+    disconnect?: boolean
+    delete?: boolean
+    update?: XOR<StaffUncheckedUpdateWithoutPlayerInput, StaffUpdateWithoutPlayerInput>
   }
 
   export type GameResultUncheckedUpdateManyWithoutPlayerInput = {
@@ -8133,6 +8951,17 @@ export namespace Prisma {
     not?: NestedIntFilter | number
   }
 
+  export type NestedIntNullableFilter = {
+    equals?: number | null
+    in?: Enumerable<number> | null
+    notIn?: Enumerable<number> | null
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntNullableFilter | number | null
+  }
+
   export type NestedStringNullableFilter = {
     equals?: string | null
     in?: Enumerable<string> | null
@@ -8180,7 +9009,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     parlours?: ParlourCreateNestedManyWithoutStaffsInput
-    Player?: PlayerCreateNestedManyWithoutStaffInput
+    player: PlayerCreateNestedOneWithoutStaffInput
   }
 
   export type StaffUncheckedCreateWithoutOrganizationInput = {
@@ -8190,9 +9019,9 @@ export namespace Prisma {
     lastName: string
     firstName: string
     gender: number
+    playerId: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    Player?: PlayerUncheckedCreateNestedManyWithoutStaffInput
   }
 
   export type StaffCreateOrConnectWithoutorganizationInput = {
@@ -8211,7 +9040,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     parlours?: ParlourCreateNestedManyWithoutGuestsInput
-    Player?: PlayerCreateNestedManyWithoutGuestInput
+    waitingGuest?: WaitingGuestCreateNestedOneWithoutGuestInput
+    player: PlayerCreateNestedOneWithoutGuestInput
   }
 
   export type GuestUncheckedCreateWithoutOrganizationInput = {
@@ -8222,9 +9052,10 @@ export namespace Prisma {
     email?: string
     address?: string
     rewardPoints?: number
+    playerId: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    Player?: PlayerUncheckedCreateNestedManyWithoutGuestInput
+    waitingGuest?: WaitingGuestUncheckedCreateNestedOneWithoutGuestInput
   }
 
   export type GuestCreateOrConnectWithoutorganizationInput = {
@@ -8285,6 +9116,7 @@ export namespace Prisma {
     lastName?: StringFilter | string
     firstName?: StringFilter | string
     gender?: IntFilter | number
+    playerId?: StringFilter | string
     createdAt?: DateTimeFilter | Date | string
     updatedAt?: DateTimeFilter | Date | string
     organizationId?: StringFilter | string
@@ -8317,6 +9149,7 @@ export namespace Prisma {
     email?: StringFilter | string
     address?: StringFilter | string
     rewardPoints?: IntFilter | number
+    playerId?: StringFilter | string
     createdAt?: DateTimeFilter | Date | string
     updatedAt?: DateTimeFilter | Date | string
     organizationId?: StringFilter | string
@@ -8355,7 +9188,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutStaffInput
-    Player?: PlayerCreateNestedManyWithoutStaffInput
+    player: PlayerCreateNestedOneWithoutStaffInput
   }
 
   export type StaffUncheckedCreateWithoutParloursInput = {
@@ -8365,10 +9198,10 @@ export namespace Prisma {
     lastName: string
     firstName: string
     gender: number
+    playerId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     organizationId: string
-    Player?: PlayerUncheckedCreateNestedManyWithoutStaffInput
   }
 
   export type StaffCreateOrConnectWithoutparloursInput = {
@@ -8387,7 +9220,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutGuestInput
-    Player?: PlayerCreateNestedManyWithoutGuestInput
+    waitingGuest?: WaitingGuestCreateNestedOneWithoutGuestInput
+    player: PlayerCreateNestedOneWithoutGuestInput
   }
 
   export type GuestUncheckedCreateWithoutParloursInput = {
@@ -8398,10 +9232,11 @@ export namespace Prisma {
     email?: string
     address?: string
     rewardPoints?: number
+    playerId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     organizationId: string
-    Player?: PlayerUncheckedCreateNestedManyWithoutGuestInput
+    waitingGuest?: WaitingGuestUncheckedCreateNestedOneWithoutGuestInput
   }
 
   export type GuestCreateOrConnectWithoutparloursInput = {
@@ -8563,21 +9398,21 @@ export namespace Prisma {
 
   export type PlayerCreateWithoutStaffInput = {
     id?: string
-    seat: number
+    seat?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    table: TableCreateNestedOneWithoutPlayersInput
+    table?: TableCreateNestedOneWithoutPlayersInput
     guest?: GuestCreateNestedOneWithoutPlayerInput
     GameResult?: GameResultCreateNestedManyWithoutPlayerInput
   }
 
   export type PlayerUncheckedCreateWithoutStaffInput = {
     id?: string
-    seat: number
+    seat?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    tableId: string
-    guestId?: string | null
+    tableId?: string | null
+    guest?: GuestUncheckedCreateNestedOneWithoutPlayerInput
     GameResult?: GameResultUncheckedCreateNestedManyWithoutPlayerInput
   }
 
@@ -8625,33 +9460,29 @@ export namespace Prisma {
     data: XOR<ParlourUncheckedUpdateManyWithoutParloursInput, ParlourUpdateManyMutationInput>
   }
 
-  export type PlayerUpsertWithWhereUniqueWithoutStaffInput = {
-    where: PlayerWhereUniqueInput
+  export type PlayerUpsertWithoutStaffInput = {
     update: XOR<PlayerUncheckedUpdateWithoutStaffInput, PlayerUpdateWithoutStaffInput>
     create: XOR<PlayerUncheckedCreateWithoutStaffInput, PlayerCreateWithoutStaffInput>
   }
 
-  export type PlayerUpdateWithWhereUniqueWithoutStaffInput = {
-    where: PlayerWhereUniqueInput
-    data: XOR<PlayerUncheckedUpdateWithoutStaffInput, PlayerUpdateWithoutStaffInput>
+  export type PlayerUpdateWithoutStaffInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    seat?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    table?: TableUpdateOneWithoutPlayersInput
+    guest?: GuestUpdateOneWithoutPlayerInput
+    GameResult?: GameResultUpdateManyWithoutPlayerInput
   }
 
-  export type PlayerUpdateManyWithWhereWithoutStaffInput = {
-    where: PlayerScalarWhereInput
-    data: XOR<PlayerUncheckedUpdateManyWithoutPlayerInput, PlayerUpdateManyMutationInput>
-  }
-
-  export type PlayerScalarWhereInput = {
-    AND?: Enumerable<PlayerScalarWhereInput>
-    OR?: Enumerable<PlayerScalarWhereInput>
-    NOT?: Enumerable<PlayerScalarWhereInput>
-    id?: StringFilter | string
-    seat?: IntFilter | number
-    createdAt?: DateTimeFilter | Date | string
-    updatedAt?: DateTimeFilter | Date | string
-    tableId?: StringFilter | string
-    guestId?: StringNullableFilter | string | null
-    staffId?: StringNullableFilter | string | null
+  export type PlayerUncheckedUpdateWithoutStaffInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    seat?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tableId?: NullableStringFieldUpdateOperationsInput | string | null
+    guest?: GuestUncheckedUpdateOneWithoutPlayerInput
+    GameResult?: GameResultUncheckedUpdateManyWithoutPlayerInput
   }
 
   export type OrganizationCreateWithoutGuestInput = {
@@ -8701,23 +9532,40 @@ export namespace Prisma {
     create: XOR<ParlourUncheckedCreateWithoutGuestsInput, ParlourCreateWithoutGuestsInput>
   }
 
-  export type PlayerCreateWithoutGuestInput = {
+  export type WaitingGuestCreateWithoutGuestInput = {
     id?: string
-    seat: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    table: TableCreateNestedOneWithoutPlayersInput
+  }
+
+  export type WaitingGuestUncheckedCreateWithoutGuestInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WaitingGuestCreateOrConnectWithoutguestInput = {
+    where: WaitingGuestWhereUniqueInput
+    create: XOR<WaitingGuestUncheckedCreateWithoutGuestInput, WaitingGuestCreateWithoutGuestInput>
+  }
+
+  export type PlayerCreateWithoutGuestInput = {
+    id?: string
+    seat?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    table?: TableCreateNestedOneWithoutPlayersInput
     staff?: StaffCreateNestedOneWithoutPlayerInput
     GameResult?: GameResultCreateNestedManyWithoutPlayerInput
   }
 
   export type PlayerUncheckedCreateWithoutGuestInput = {
     id?: string
-    seat: number
+    seat?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    tableId: string
-    staffId?: string | null
+    tableId?: string | null
+    staff?: StaffUncheckedCreateNestedOneWithoutPlayerInput
     GameResult?: GameResultUncheckedCreateNestedManyWithoutPlayerInput
   }
 
@@ -8765,20 +9613,114 @@ export namespace Prisma {
     data: XOR<ParlourUncheckedUpdateManyWithoutParloursInput, ParlourUpdateManyMutationInput>
   }
 
-  export type PlayerUpsertWithWhereUniqueWithoutGuestInput = {
-    where: PlayerWhereUniqueInput
+  export type WaitingGuestUpsertWithoutGuestInput = {
+    update: XOR<WaitingGuestUncheckedUpdateWithoutGuestInput, WaitingGuestUpdateWithoutGuestInput>
+    create: XOR<WaitingGuestUncheckedCreateWithoutGuestInput, WaitingGuestCreateWithoutGuestInput>
+  }
+
+  export type WaitingGuestUpdateWithoutGuestInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WaitingGuestUncheckedUpdateWithoutGuestInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PlayerUpsertWithoutGuestInput = {
     update: XOR<PlayerUncheckedUpdateWithoutGuestInput, PlayerUpdateWithoutGuestInput>
     create: XOR<PlayerUncheckedCreateWithoutGuestInput, PlayerCreateWithoutGuestInput>
   }
 
-  export type PlayerUpdateWithWhereUniqueWithoutGuestInput = {
-    where: PlayerWhereUniqueInput
-    data: XOR<PlayerUncheckedUpdateWithoutGuestInput, PlayerUpdateWithoutGuestInput>
+  export type PlayerUpdateWithoutGuestInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    seat?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    table?: TableUpdateOneWithoutPlayersInput
+    staff?: StaffUpdateOneWithoutPlayerInput
+    GameResult?: GameResultUpdateManyWithoutPlayerInput
   }
 
-  export type PlayerUpdateManyWithWhereWithoutGuestInput = {
-    where: PlayerScalarWhereInput
-    data: XOR<PlayerUncheckedUpdateManyWithoutPlayerInput, PlayerUpdateManyMutationInput>
+  export type PlayerUncheckedUpdateWithoutGuestInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    seat?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tableId?: NullableStringFieldUpdateOperationsInput | string | null
+    staff?: StaffUncheckedUpdateOneWithoutPlayerInput
+    GameResult?: GameResultUncheckedUpdateManyWithoutPlayerInput
+  }
+
+  export type GuestCreateWithoutWaitingGuestInput = {
+    id?: string
+    lastName: string
+    firstName: string
+    gender: number
+    email?: string
+    address?: string
+    rewardPoints?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutGuestInput
+    parlours?: ParlourCreateNestedManyWithoutGuestsInput
+    player: PlayerCreateNestedOneWithoutGuestInput
+  }
+
+  export type GuestUncheckedCreateWithoutWaitingGuestInput = {
+    id?: string
+    lastName: string
+    firstName: string
+    gender: number
+    email?: string
+    address?: string
+    rewardPoints?: number
+    playerId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organizationId: string
+  }
+
+  export type GuestCreateOrConnectWithoutwaitingGuestInput = {
+    where: GuestWhereUniqueInput
+    create: XOR<GuestUncheckedCreateWithoutWaitingGuestInput, GuestCreateWithoutWaitingGuestInput>
+  }
+
+  export type GuestUpsertWithoutWaitingGuestInput = {
+    update: XOR<GuestUncheckedUpdateWithoutWaitingGuestInput, GuestUpdateWithoutWaitingGuestInput>
+    create: XOR<GuestUncheckedCreateWithoutWaitingGuestInput, GuestCreateWithoutWaitingGuestInput>
+  }
+
+  export type GuestUpdateWithoutWaitingGuestInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    gender?: IntFieldUpdateOperationsInput | number
+    email?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    rewardPoints?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutGuestInput
+    parlours?: ParlourUpdateManyWithoutGuestsInput
+    player?: PlayerUpdateOneRequiredWithoutGuestInput
+  }
+
+  export type GuestUncheckedUpdateWithoutWaitingGuestInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    gender?: IntFieldUpdateOperationsInput | number
+    email?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    rewardPoints?: IntFieldUpdateOperationsInput | number
+    playerId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organizationId?: StringFieldUpdateOperationsInput | string
   }
 
   export type ParlourCreateWithoutTableInput = {
@@ -8806,7 +9748,7 @@ export namespace Prisma {
 
   export type PlayerCreateWithoutTableInput = {
     id?: string
-    seat: number
+    seat?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     guest?: GuestCreateNestedOneWithoutPlayerInput
@@ -8816,11 +9758,11 @@ export namespace Prisma {
 
   export type PlayerUncheckedCreateWithoutTableInput = {
     id?: string
-    seat: number
+    seat?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    guestId?: string | null
-    staffId?: string | null
+    guest?: GuestUncheckedCreateNestedOneWithoutPlayerInput
+    staff?: StaffUncheckedCreateNestedOneWithoutPlayerInput
     GameResult?: GameResultUncheckedCreateNestedManyWithoutPlayerInput
   }
 
@@ -8893,6 +9835,17 @@ export namespace Prisma {
     data: XOR<PlayerUncheckedUpdateManyWithoutPlayersInput, PlayerUpdateManyMutationInput>
   }
 
+  export type PlayerScalarWhereInput = {
+    AND?: Enumerable<PlayerScalarWhereInput>
+    OR?: Enumerable<PlayerScalarWhereInput>
+    NOT?: Enumerable<PlayerScalarWhereInput>
+    id?: StringFilter | string
+    seat?: IntNullableFilter | number | null
+    createdAt?: DateTimeFilter | Date | string
+    updatedAt?: DateTimeFilter | Date | string
+    tableId?: StringNullableFilter | string | null
+  }
+
   export type GameUpsertWithWhereUniqueWithoutTableInput = {
     where: GameWhereUniqueInput
     update: XOR<GameUncheckedUpdateWithoutTableInput, GameUpdateWithoutTableInput>
@@ -8957,6 +9910,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutGuestInput
     parlours?: ParlourCreateNestedManyWithoutGuestsInput
+    waitingGuest?: WaitingGuestCreateNestedOneWithoutGuestInput
   }
 
   export type GuestUncheckedCreateWithoutPlayerInput = {
@@ -8970,9 +9924,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     organizationId: string
+    waitingGuest?: WaitingGuestUncheckedCreateNestedOneWithoutGuestInput
   }
 
-  export type GuestCreateOrConnectWithoutPlayerInput = {
+  export type GuestCreateOrConnectWithoutplayerInput = {
     where: GuestWhereUniqueInput
     create: XOR<GuestUncheckedCreateWithoutPlayerInput, GuestCreateWithoutPlayerInput>
   }
@@ -9002,7 +9957,7 @@ export namespace Prisma {
     organizationId: string
   }
 
-  export type StaffCreateOrConnectWithoutPlayerInput = {
+  export type StaffCreateOrConnectWithoutplayerInput = {
     where: StaffWhereUniqueInput
     create: XOR<StaffUncheckedCreateWithoutPlayerInput, StaffCreateWithoutPlayerInput>
   }
@@ -9068,6 +10023,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutGuestInput
     parlours?: ParlourUpdateManyWithoutGuestsInput
+    waitingGuest?: WaitingGuestUpdateOneWithoutGuestInput
   }
 
   export type GuestUncheckedUpdateWithoutPlayerInput = {
@@ -9081,6 +10037,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organizationId?: StringFieldUpdateOperationsInput | string
+    waitingGuest?: WaitingGuestUncheckedUpdateOneWithoutGuestInput
   }
 
   export type StaffUpsertWithoutPlayerInput = {
@@ -9251,22 +10208,22 @@ export namespace Prisma {
 
   export type PlayerCreateWithoutGameResultInput = {
     id?: string
-    seat: number
+    seat?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    table: TableCreateNestedOneWithoutPlayersInput
+    table?: TableCreateNestedOneWithoutPlayersInput
     guest?: GuestCreateNestedOneWithoutPlayerInput
     staff?: StaffCreateNestedOneWithoutPlayerInput
   }
 
   export type PlayerUncheckedCreateWithoutGameResultInput = {
     id?: string
-    seat: number
+    seat?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    tableId: string
-    guestId?: string | null
-    staffId?: string | null
+    tableId?: string | null
+    guest?: GuestUncheckedCreateNestedOneWithoutPlayerInput
+    staff?: StaffUncheckedCreateNestedOneWithoutPlayerInput
   }
 
   export type PlayerCreateOrConnectWithoutGameResultInput = {
@@ -9306,22 +10263,22 @@ export namespace Prisma {
 
   export type PlayerUpdateWithoutGameResultInput = {
     id?: StringFieldUpdateOperationsInput | string
-    seat?: IntFieldUpdateOperationsInput | number
+    seat?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    table?: TableUpdateOneRequiredWithoutPlayersInput
+    table?: TableUpdateOneWithoutPlayersInput
     guest?: GuestUpdateOneWithoutPlayerInput
     staff?: StaffUpdateOneWithoutPlayerInput
   }
 
   export type PlayerUncheckedUpdateWithoutGameResultInput = {
     id?: StringFieldUpdateOperationsInput | string
-    seat?: IntFieldUpdateOperationsInput | number
+    seat?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    tableId?: StringFieldUpdateOperationsInput | string
-    guestId?: NullableStringFieldUpdateOperationsInput | string | null
-    staffId?: NullableStringFieldUpdateOperationsInput | string | null
+    tableId?: NullableStringFieldUpdateOperationsInput | string | null
+    guest?: GuestUncheckedUpdateOneWithoutPlayerInput
+    staff?: StaffUncheckedUpdateOneWithoutPlayerInput
   }
 
   export type ParlourUpdateWithoutOrganizationInput = {
@@ -9359,7 +10316,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     parlours?: ParlourUpdateManyWithoutStaffsInput
-    Player?: PlayerUpdateManyWithoutStaffInput
+    player?: PlayerUpdateOneRequiredWithoutStaffInput
   }
 
   export type StaffUncheckedUpdateWithoutOrganizationInput = {
@@ -9369,9 +10326,9 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     gender?: IntFieldUpdateOperationsInput | number
+    playerId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Player?: PlayerUncheckedUpdateManyWithoutStaffInput
   }
 
   export type StaffUncheckedUpdateManyWithoutStaffInput = {
@@ -9381,6 +10338,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     gender?: IntFieldUpdateOperationsInput | number
+    playerId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9396,7 +10354,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     parlours?: ParlourUpdateManyWithoutGuestsInput
-    Player?: PlayerUpdateManyWithoutGuestInput
+    waitingGuest?: WaitingGuestUpdateOneWithoutGuestInput
+    player?: PlayerUpdateOneRequiredWithoutGuestInput
   }
 
   export type GuestUncheckedUpdateWithoutOrganizationInput = {
@@ -9407,9 +10366,10 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
     rewardPoints?: IntFieldUpdateOperationsInput | number
+    playerId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Player?: PlayerUncheckedUpdateManyWithoutGuestInput
+    waitingGuest?: WaitingGuestUncheckedUpdateOneWithoutGuestInput
   }
 
   export type GuestUncheckedUpdateManyWithoutGuestInput = {
@@ -9420,6 +10380,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
     rewardPoints?: IntFieldUpdateOperationsInput | number
+    playerId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9434,7 +10395,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutStaffInput
-    Player?: PlayerUpdateManyWithoutStaffInput
+    player?: PlayerUpdateOneRequiredWithoutStaffInput
   }
 
   export type StaffUncheckedUpdateWithoutParloursInput = {
@@ -9444,10 +10405,10 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     gender?: IntFieldUpdateOperationsInput | number
+    playerId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organizationId?: StringFieldUpdateOperationsInput | string
-    Player?: PlayerUncheckedUpdateManyWithoutStaffInput
   }
 
   export type StaffUncheckedUpdateManyWithoutStaffsInput = {
@@ -9457,6 +10418,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     gender?: IntFieldUpdateOperationsInput | number
+    playerId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organizationId?: StringFieldUpdateOperationsInput | string
@@ -9473,7 +10435,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutGuestInput
-    Player?: PlayerUpdateManyWithoutGuestInput
+    waitingGuest?: WaitingGuestUpdateOneWithoutGuestInput
+    player?: PlayerUpdateOneRequiredWithoutGuestInput
   }
 
   export type GuestUncheckedUpdateWithoutParloursInput = {
@@ -9484,10 +10447,11 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
     rewardPoints?: IntFieldUpdateOperationsInput | number
+    playerId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organizationId?: StringFieldUpdateOperationsInput | string
-    Player?: PlayerUncheckedUpdateManyWithoutGuestInput
+    waitingGuest?: WaitingGuestUncheckedUpdateOneWithoutGuestInput
   }
 
   export type GuestUncheckedUpdateManyWithoutGuestsInput = {
@@ -9498,6 +10462,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
     rewardPoints?: IntFieldUpdateOperationsInput | number
+    playerId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organizationId?: StringFieldUpdateOperationsInput | string
@@ -9555,35 +10520,6 @@ export namespace Prisma {
     organizationId?: StringFieldUpdateOperationsInput | string
   }
 
-  export type PlayerUpdateWithoutStaffInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    seat?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    table?: TableUpdateOneRequiredWithoutPlayersInput
-    guest?: GuestUpdateOneWithoutPlayerInput
-    GameResult?: GameResultUpdateManyWithoutPlayerInput
-  }
-
-  export type PlayerUncheckedUpdateWithoutStaffInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    seat?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    tableId?: StringFieldUpdateOperationsInput | string
-    guestId?: NullableStringFieldUpdateOperationsInput | string | null
-    GameResult?: GameResultUncheckedUpdateManyWithoutPlayerInput
-  }
-
-  export type PlayerUncheckedUpdateManyWithoutPlayerInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    seat?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    tableId?: StringFieldUpdateOperationsInput | string
-    guestId?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
   export type ParlourUpdateWithoutGuestsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -9603,29 +10539,9 @@ export namespace Prisma {
     Table?: TableUncheckedUpdateManyWithoutParlourInput
   }
 
-  export type PlayerUpdateWithoutGuestInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    seat?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    table?: TableUpdateOneRequiredWithoutPlayersInput
-    staff?: StaffUpdateOneWithoutPlayerInput
-    GameResult?: GameResultUpdateManyWithoutPlayerInput
-  }
-
-  export type PlayerUncheckedUpdateWithoutGuestInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    seat?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    tableId?: StringFieldUpdateOperationsInput | string
-    staffId?: NullableStringFieldUpdateOperationsInput | string | null
-    GameResult?: GameResultUncheckedUpdateManyWithoutPlayerInput
-  }
-
   export type PlayerUpdateWithoutTableInput = {
     id?: StringFieldUpdateOperationsInput | string
-    seat?: IntFieldUpdateOperationsInput | number
+    seat?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     guest?: GuestUpdateOneWithoutPlayerInput
@@ -9635,21 +10551,19 @@ export namespace Prisma {
 
   export type PlayerUncheckedUpdateWithoutTableInput = {
     id?: StringFieldUpdateOperationsInput | string
-    seat?: IntFieldUpdateOperationsInput | number
+    seat?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    guestId?: NullableStringFieldUpdateOperationsInput | string | null
-    staffId?: NullableStringFieldUpdateOperationsInput | string | null
+    guest?: GuestUncheckedUpdateOneWithoutPlayerInput
+    staff?: StaffUncheckedUpdateOneWithoutPlayerInput
     GameResult?: GameResultUncheckedUpdateManyWithoutPlayerInput
   }
 
   export type PlayerUncheckedUpdateManyWithoutPlayersInput = {
     id?: StringFieldUpdateOperationsInput | string
-    seat?: IntFieldUpdateOperationsInput | number
+    seat?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    guestId?: NullableStringFieldUpdateOperationsInput | string | null
-    staffId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type GameUpdateWithoutTableInput = {

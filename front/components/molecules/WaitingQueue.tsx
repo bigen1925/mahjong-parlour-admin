@@ -1,13 +1,13 @@
-import { Box, Button, CircularProgress, Dialog, Grid } from '@material-ui/core';
-import { DataGrid, RowParams } from '@material-ui/data-grid';
-import { useState } from 'react';
+import {Box, Button, CircularProgress, Dialog, Grid} from '@material-ui/core';
+import {DataGrid, RowParams} from '@material-ui/data-grid';
+import {useState} from 'react';
 import NamedPerson from '../atoms/NamedPerson';
-import { Guest } from '../../prisma/client';
+import {Guest} from "../../domains/models";
 
 interface WaitingQueueProps {
     waitingGuests: Guest[];
-    addWaitingGuest: (guest: Guest) => void;
-    removeWaitingGuest: (guest: Guest) => void;
+    addWaitingGuest: (guest: Guest) => Promise<void>;
+    removeWaitingGuest: (guest: Guest) => Promise<void>;
     enterableGuests: Guest[] | null;
     addEnterableGuest: (guest: Guest) => void;
     removeEnterableGuest: (guest: Guest) => void;
@@ -15,6 +15,20 @@ interface WaitingQueueProps {
 
 export default function WaitingQueue(props: WaitingQueueProps): JSX.Element {
     const [open, setOpen] = useState(false);
+
+    const letGuestIn = (row: RowParams) => {
+        const guest = props.enterableGuests!.find(
+            (guest) => guest.id === row.getValue('id')
+        );
+        if (!guest) {
+            alert('ゲストが入店可能な状態ではありません');
+            return setOpen(false);
+        }
+
+        props.addWaitingGuest(guest);
+        props.removeEnterableGuest(guest);
+        return setOpen(false);
+    }
 
     return (
         <Box border={1} borderRight={0} height={90}>
@@ -66,19 +80,7 @@ export default function WaitingQueue(props: WaitingQueueProps): JSX.Element {
                                     { field: 'lastName', width: 200 },
                                     { field: 'firstName', width: 200 },
                                 ]}
-                                onRowClick={(row: RowParams) => {
-                                    const guest = props.enterableGuests!.find(
-                                        (guest) => guest.id === row.getValue('id')
-                                    );
-                                    if (!guest) {
-                                        alert('ゲストが入店可能な状態ではありません');
-                                        return setOpen(false);
-                                    }
-
-                                    props.addWaitingGuest(guest);
-                                    props.removeEnterableGuest(guest);
-                                    return setOpen(false);
-                                }}
+                                onRowClick={letGuestIn}
                             />
                         </>
                     )}

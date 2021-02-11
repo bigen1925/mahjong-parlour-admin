@@ -16,15 +16,11 @@ type AuthenticateResponse =
       detail: string;
     };
 
-@Tags('authenticate')
 @Route('authenticate')
+@Tags('authenticate')
 export class AuthenticateController extends Controller {
   /**
-   *
-   * @example params {
-   *   "loginId": "staff",
-   *   "password": "staff"
-   * }
+   * 従業員の認証
    */
   @Post()
   public async authenticate(@Body() params: AuthenticateInput): Promise<AuthenticateResponse> {

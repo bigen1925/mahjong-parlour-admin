@@ -5,9 +5,12 @@ import { prisma } from '../../app';
 @Route('tables')
 @Tags('tables')
 export class TablesController extends Controller {
+  /**
+   * 卓一覧の取得
+   */
   @Get()
   public async indexTables(): Promise<Table[]> {
-    const tables = await prisma.table.findMany({
+    return await prisma.table.findMany({
       include: {
         players: {
           include: {
@@ -17,7 +20,5 @@ export class TablesController extends Controller {
         },
       },
     });
-    console.log('tables', tables);
-    return tables;
   }
 }

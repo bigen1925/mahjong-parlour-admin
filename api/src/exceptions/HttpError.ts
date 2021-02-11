@@ -21,3 +21,9 @@ export class Forbidden extends HttpError {
     super(403, detail, 'Forbidden');
   }
 }
+
+export class NotFound extends HttpError {
+  constructor(detail: string) {
+    super(404, detail, 'Not Found');
+  }
+}

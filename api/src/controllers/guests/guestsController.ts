@@ -10,8 +10,11 @@ interface GuestX {
 @Route('guests')
 @Tags('guests')
 export class GuestsController extends Controller {
+  /**
+   * 顧客一覧の取得
+   */
   @Get()
-  public async index(@Query() waiting?: boolean, @Query() playing?: boolean): Promise<GuestX[]> {
+  public async indexGuest(@Query() waiting?: boolean, @Query() playing?: boolean): Promise<GuestX[]> {
     return await prisma.guest.findMany({
       where: {
         waitingGuest: waiting === true ? { isNot: null } : waiting === false ? { is: null } : undefined,

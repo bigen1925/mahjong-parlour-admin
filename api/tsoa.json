@@ -3,6 +3,9 @@
   "noImplicitAdditionalProperties": "throw-on-extras",
   "controllerPathGlobs": ["src/controllers/**/*Controller.ts"],
   "spec": {
+    "outputDirectory": "build",
+    "specVersion": 3,
+    "description": "mpa-api",
     "securityDefinitions": {
       "jwt": {
         "type": "http",
@@ -10,8 +13,32 @@
         "bearerFormat": "JWT"
       }
     },
-    "outputDirectory": "build",
-    "specVersion": 3
+    "tags": [
+      {
+        "name": "authenticate",
+        "description": "認証"
+      },
+      {
+        "name": "parlours",
+        "description": "店舗"
+      },
+      {
+        "name": "staffs",
+        "description": "従業員"
+      },
+      {
+        "name": "tables",
+        "description": "卓"
+      },
+      {
+        "name": "guests",
+        "description": "顧客"
+      },
+      {
+        "name": "waiting-guests",
+        "description": "待ち客"
+      }
+    ]
   },
   "routes": {
     "routesDir": "build",

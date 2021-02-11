@@ -1,7 +1,7 @@
 import { Box, CircularProgress, Container, Grid } from '@material-ui/core';
 import { FC, useEffect, useState } from 'react';
 import { Guest, Table } from '../../domains/models';
-import { getGuests, getTables } from '../../helpers/api';
+import * as api from '../../helpers/api';
 import PlayingTables from '../molecules/PlayingTables';
 import WaitingQueue from '../molecules/WaitingQueue';
 
@@ -14,23 +14,29 @@ const TablesAdmin: FC = () => {
         enterableGuests && setEnterableGuests(enterableGuests.filter((x) => x.id !== guest.id));
 
     const [waitingGuests, setWaitingGuests] = useState<Guest[]>([]);
-    const addWaitingGuest = (guest: Guest) => setWaitingGuests([...waitingGuests, guest]);
-    const removeWaitingGuest = (guest: Guest) => setWaitingGuests(waitingGuests.filter((x) => x.id !== guest.id));
+    const addWaitingGuest = async (guest: Guest) => {
+        setWaitingGuests([...waitingGuests, guest]);
+        await api.addWaitingGuest(guest.id);
+    };
+    const removeWaitingGuest = async (guest: Guest) => {
+        setWaitingGuests(waitingGuests.filter((x) => x.id !== guest.id));
+        await api.removeWaitingGuest(guest.id);
+    };
 
     useEffect(() => {
-        getGuests(false, false).then((guests) => {
+        api.getGuests(false, false).then((guests) => {
             setEnterableGuests(guests);
         });
     }, []);
 
     useEffect(() => {
-        getGuests(true, false).then((waiting) => {
+        api.getGuests(true, false).then((waiting) => {
             setWaitingGuests(waiting);
         });
     }, []);
 
     useEffect(() => {
-        getTables().then((tables) => {
+        api.getTables().then((tables) => {
             setTables(tables);
         });
     }, []);

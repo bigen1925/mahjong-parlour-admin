@@ -9,7 +9,10 @@ import { PrismaClient } from '../prisma/client';
 import { HttpError } from './exceptions/HttpError';
 
 export const app = express();
-export const prisma = new PrismaClient();
+export const prisma = new PrismaClient({
+  rejectOnNotFound: true,
+  log: process.env.NODE_ENV === 'development' ? ['query', 'info', `warn`, `error`] : ['warn', 'error'],
+});
 
 // Use body parser to read sent json payloads
 app.use(

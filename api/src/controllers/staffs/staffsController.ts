@@ -16,8 +16,11 @@ type StaffCreateParams = {
 @Route('staffs')
 @Tags('staffs')
 export class StaffsController extends Controller {
+  /**
+   * 従業員の作成
+   */
   @Post()
-  public async create(@Body() params: StaffCreateParams): Promise<StaffResponse> {
+  public async createStaff(@Body() params: StaffCreateParams): Promise<StaffResponse> {
     const org = await prisma.organization.findFirst();
 
     return prisma.staff.create({

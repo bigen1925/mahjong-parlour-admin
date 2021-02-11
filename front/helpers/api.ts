@@ -8,7 +8,7 @@ const client = axios.create({
     },
 });
 
-export function fetchApi(config: AxiosRequestConfig): Promise<unknown> {
+export function callApi(config: AxiosRequestConfig): Promise<unknown> {
     return client(config).then((res) => res.data);
 }
 
@@ -16,7 +16,7 @@ interface AuthenticateResponse {
     token: string;
 }
 export async function authenticate(loginId: string, password: string): Promise<AuthenticateResponse> {
-    return (await fetchApi({
+    return (await callApi({
         url: '/authenticate',
         method: 'post',
         data: { loginId, password },
@@ -24,10 +24,17 @@ export async function authenticate(loginId: string, password: string): Promise<A
 }
 
 export async function getGuests(waiting?: boolean, playing?: boolean): Promise<Guest[]> {
-    return (await fetchApi({ url: '/guests', params: { waiting, playing } })) as Guest[];
+    return (await callApi({ url: '/guests', params: { waiting, playing } })) as Guest[];
+}
+
+export async function addWaitingGuest(guestId: string): Promise<void> {
+    return (await callApi({ url: `/waiting-guests`, method: 'post', data: { guestId } })) as void;
+}
+
+export async function removeWaitingGuest(guestId: string): Promise<void> {
+    return (await callApi({ url: `/waiting-guests/${guestId}`, method: 'delete' })) as void;
 }
 
 export async function getTables(): Promise<Table[]> {
-    console.log('tables', await fetchApi({ url: '/tables' }));
-    return (await fetchApi({ url: '/tables' })) as Table[];
+    return (await callApi({ url: '/tables' })) as Table[];
 }

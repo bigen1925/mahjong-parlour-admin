@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
-import { Guest, Table } from '../domains/models';
+import { SEAT } from '../domains/constants';
+import { Guest, Player, Table } from '../domains/models';
 
 const client = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_URL_BASE,
@@ -23,8 +24,8 @@ export async function authenticate(loginId: string, password: string): Promise<A
     })) as AuthenticateResponse;
 }
 
-export async function getGuests(waiting?: boolean, playing?: boolean): Promise<Guest[]> {
-    return (await callApi({ url: '/guests', params: { waiting, playing } })) as Guest[];
+export async function getGuests(params: { waiting?: boolean; playing?: boolean }): Promise<Guest[]> {
+    return (await callApi({ url: '/guests', params })) as Guest[];
 }
 
 export async function addWaitingGuest(guestId: string): Promise<void> {
@@ -37,4 +38,18 @@ export async function removeWaitingGuest(guestId: string): Promise<void> {
 
 export async function getTables(): Promise<Table[]> {
     return (await callApi({ url: '/tables' })) as Table[];
+}
+
+export async function updateGuestPlayer(
+    guestId: string,
+    data: { tableId: string | null; seat: SEAT | null }
+): Promise<Player> {
+    return (await callApi({ url: `/players/as-guest/${guestId}`, method: 'patch', data })) as Player;
+}
+
+export async function updatePlayer(
+    playerId: string,
+    data: { tableId: string | null; seat: SEAT | null }
+): Promise<Player> {
+    return (await callApi({ url: `/players/${playerId}`, method: 'patch', data })) as Player;
 }

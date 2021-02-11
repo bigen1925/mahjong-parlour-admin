@@ -8,52 +8,15 @@ import {
     makeStyles,
     Typography,
 } from '@material-ui/core';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import AddCircleOutlineRoundedIcon from '@material-ui/icons/AddCircleOutlineRounded';
-import NamedPerson from '../atoms/NamedPerson';
-import { useState } from 'react';
 import { DataGrid, RowParams } from '@material-ui/data-grid';
-import modalStyles from '../../styles/modal.module.css';
+import AddCircleOutlineRoundedIcon from '@material-ui/icons/AddCircleOutlineRounded';
+import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+import { useState } from 'react';
 import { SEAT } from '../../domains/constants';
 import { Guest, Player, Table } from '../../domains/models';
-
-const useStyle = makeStyles({
-    // 1席左上
-    [SEAT.FIRST]: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-    },
-    // 2席右上
-    [SEAT.SECOND]: {
-        position: 'absolute',
-        top: 0,
-        right: 0,
-    },
-    // 3席右下
-    [SEAT.THIRD]: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-    },
-    // 4席左下
-    [SEAT.FOURTH]: {
-        position: 'absolute',
-        bottom: 0,
-        right: 0,
-    },
-    // 卓
-    table: {
-        transform: 'rotate(45deg)',
-        fontSize: 80,
-        position: 'absolute',
-        right: 0,
-        left: 0,
-        top: 0,
-        bottom: 0,
-        margin: 'auto',
-    },
-});
+import { updateGuestPlayer, updatePlayer } from '../../helpers/api';
+import modalStyles from '../../styles/modal.module.css';
+import NamedPerson from '../atoms/NamedPerson';
 
 interface PlayingTableProps {
     table: Table;
@@ -63,8 +26,7 @@ interface PlayingTableProps {
 }
 
 export default function PlayingTables(props: PlayingTableProps): JSX.Element {
-    const initialPlayersMap = new Map(props.table.players.map((player) => [player.seat, player]));
-    console.log('inimap', initialPlayersMap);
+    const initialPlayersMap = new Map(props.table.players.map((player) => [player.seat!, player]));
     const [playersMap, setPlayersMap] = useState<Map<SEAT, Player>>(initialPlayersMap);
     const [firstDealer, setFirstDealer] = useState<SEAT | null>(null);
     const [isOpenPlayerAdditionModal, setIsOpenPlayerAdditionModal] = useState(false);
@@ -82,8 +44,33 @@ export default function PlayingTables(props: PlayingTableProps): JSX.Element {
         }
 
         props.addWaitingGuest(player.guest);
-        playersMap.delete(seat);
-        setPlayersMap(playersMap);
+        updatePlayer(player.id, { tableId: null, seat: null }).then(() => {
+            const newMap = new Map(playersMap);
+            newMap.delete(seat);
+            setPlayersMap(newMap);
+        });
+    }
+
+    function addPlayer(row: RowParams) {
+        if (playerAdditionTarget === null) {
+            alert('席が選択されていません');
+            return setIsOpenPlayerAdditionModal(false);
+        }
+
+        const id = row.getValue('id') as string;
+        const guest = props.waitingGuests.find((x) => x.id === id);
+        if (!guest) {
+            alert('ゲストが待ち席にいませんでした');
+            return setIsOpenPlayerAdditionModal(false);
+        }
+
+        props.removeWaitingGuest(guest);
+        updateGuestPlayer(guest.id, { tableId: props.table.id, seat: playerAdditionTarget }).then((player) => {
+            const newMap = new Map(playersMap);
+            newMap.set(playerAdditionTarget, player);
+            setPlayersMap(newMap);
+            setIsOpenPlayerAdditionModal(false);
+        });
     }
 
     function openPlayerAdditionModal(target: SEAT) {
@@ -101,7 +88,6 @@ export default function PlayingTables(props: PlayingTableProps): JSX.Element {
                 <Box style={{ position: 'relative', height: 150, width: 150 }} mx="auto">
                     {/* 席 */}
                     {Object.values(SEAT).map((seat) => {
-                        console.log('seat', seat);
                         if (!playersMap.has(seat)) {
                             return (
                                 <Box key={seat} className={styles[seat]} onClick={() => openPlayerAdditionModal(seat)}>
@@ -110,10 +96,9 @@ export default function PlayingTables(props: PlayingTableProps): JSX.Element {
                             );
                         }
                         const player = playersMap.get(seat)!;
-                        const person = (player.guest || player.staff)!;
                         return (
                             <Box key={seat} className={styles[seat]} onClick={() => removePlayer(seat)}>
-                                <NamedPerson name={person.lastName} iconSize={iconSize} />
+                                <NamedPerson name={player.guest.lastName} iconSize={iconSize} />
                             </Box>
                         );
                     })}
@@ -144,28 +129,7 @@ export default function PlayingTables(props: PlayingTableProps): JSX.Element {
                             { field: 'lastName', width: 200 },
                             { field: 'firstName', width: 200 },
                         ]}
-                        onRowClick={(row: RowParams) => {
-                            if (playerAdditionTarget === null) {
-                                alert('席が選択されていません');
-                                return setIsOpenPlayerAdditionModal(false);
-                            }
-
-                            const id = row.getValue('id') as string;
-                            const guest = props.waitingGuests.find((x) => x.id === id);
-                            if (!guest) {
-                                alert('ゲストが待ち席にいませんでした');
-                                return setIsOpenPlayerAdditionModal(false);
-                            }
-                            props.removeWaitingGuest(guest);
-
-                            // FIXME
-                            const player = { guest: guest } as Player;
-
-                            playersMap.set(playerAdditionTarget, player);
-                            setPlayersMap(playersMap);
-
-                            return setIsOpenPlayerAdditionModal(false);
-                        }}
+                        onRowClick={addPlayer}
                     />
                 </Box>
             </Dialog>
@@ -195,9 +159,7 @@ export default function PlayingTables(props: PlayingTableProps): JSX.Element {
                                 return (
                                     <Box key={seat} className={styles[seat]} onClick={() => setFirstDealer(seat)}>
                                         <NamedPerson
-                                            name={
-                                                (playersMap.get(seat)!.guest || playersMap.get(seat)!.staff)!.lastName
-                                            }
+                                            name={playersMap.get(seat)!.guest.lastName}
                                             iconSize={iconSize}
                                             color={seat === firstDealer ? 'primary' : undefined}
                                         />
@@ -257,10 +219,7 @@ export default function PlayingTables(props: PlayingTableProps): JSX.Element {
                                                 }}
                                             >
                                                 <NamedPerson
-                                                    name={
-                                                        (playersMap.get(seat)!.guest || playersMap.get(seat)!.staff)!
-                                                            .lastName
-                                                    }
+                                                    name={playersMap.get(seat)!.guest.lastName}
                                                     iconSize={iconSize}
                                                 />
                                                 {ranking.indexOf(player) + 1 + '位'}
@@ -298,3 +257,41 @@ export default function PlayingTables(props: PlayingTableProps): JSX.Element {
         </>
     );
 }
+
+const useStyle = makeStyles({
+    // 1席左上
+    [SEAT.FIRST]: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+    },
+    // 2席右上
+    [SEAT.SECOND]: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+    },
+    // 3席右下
+    [SEAT.THIRD]: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+    },
+    // 4席左下
+    [SEAT.FOURTH]: {
+        position: 'absolute',
+        bottom: 0,
+        right: 0,
+    },
+    // 卓
+    table: {
+        transform: 'rotate(45deg)',
+        fontSize: 80,
+        position: 'absolute',
+        right: 0,
+        left: 0,
+        top: 0,
+        bottom: 0,
+        margin: 'auto',
+    },
+});

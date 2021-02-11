@@ -19,7 +19,7 @@ const TablesAdmin: FC = () => {
     };
 
     useEffect(() => {
-        api.getGuests(true, false).then((waiting) => {
+        api.getGuests({ waiting: true, playing: false }).then((waiting) => {
             setWaitingGuests(waiting);
         });
     }, []);

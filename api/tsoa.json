@@ -37,6 +37,10 @@
       {
         "name": "waiting-guests",
         "description": "待ち客"
+      },
+      {
+        "name": "players",
+        "description": "プレイヤー"
       }
     ]
   },

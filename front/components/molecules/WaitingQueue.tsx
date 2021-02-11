@@ -17,15 +17,13 @@ export default function WaitingQueue(props: WaitingQueueProps): JSX.Element {
 
     function letGuestIn(row: RowParams) {
         const guest = enterableGuests!.find((guest) => guest.id === row.getValue('id'))!;
-
-        props.addWaitingGuest(guest);
-        return setOpen(false);
+        props.addWaitingGuest(guest).then(() => setOpen(false));
     }
 
     function onClickEnter() {
         setEnterableGuests(null);
         setOpen(true);
-        getGuests(false, false).then((guests) => setEnterableGuests(guests));
+        getGuests({ waiting: false, playing: false }).then((guests) => setEnterableGuests(guests));
     }
 
     return (

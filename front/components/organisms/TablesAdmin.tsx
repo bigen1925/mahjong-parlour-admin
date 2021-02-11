@@ -8,11 +8,6 @@ import WaitingQueue from '../molecules/WaitingQueue';
 const TablesAdmin: FC = () => {
     const [tables, setTables] = useState<Table[] | null>(null);
 
-    const [enterableGuests, setEnterableGuests] = useState<Guest[] | null>(null);
-    const addEnterableGuest = (guest: Guest) => enterableGuests && setEnterableGuests([...enterableGuests, guest]);
-    const removeEnterableGuest = (guest: Guest) =>
-        enterableGuests && setEnterableGuests(enterableGuests.filter((x) => x.id !== guest.id));
-
     const [waitingGuests, setWaitingGuests] = useState<Guest[]>([]);
     const addWaitingGuest = async (guest: Guest) => {
         setWaitingGuests([...waitingGuests, guest]);
@@ -22,12 +17,6 @@ const TablesAdmin: FC = () => {
         setWaitingGuests(waitingGuests.filter((x) => x.id !== guest.id));
         await api.removeWaitingGuest(guest.id);
     };
-
-    useEffect(() => {
-        api.getGuests(false, false).then((guests) => {
-            setEnterableGuests(guests);
-        });
-    }, []);
 
     useEffect(() => {
         api.getGuests(true, false).then((waiting) => {
@@ -49,9 +38,6 @@ const TablesAdmin: FC = () => {
                     <Grid item xs={6}>
                         waiting guests
                         <WaitingQueue
-                            enterableGuests={enterableGuests}
-                            addEnterableGuest={addEnterableGuest}
-                            removeEnterableGuest={removeEnterableGuest}
                             waitingGuests={waitingGuests}
                             addWaitingGuest={addWaitingGuest}
                             removeWaitingGuest={removeWaitingGuest}

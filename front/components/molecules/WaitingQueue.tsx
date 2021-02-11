@@ -1,54 +1,44 @@
-import {Box, Button, CircularProgress, Dialog, Grid} from '@material-ui/core';
-import {DataGrid, RowParams} from '@material-ui/data-grid';
-import {useState} from 'react';
+import { Box, Button, CircularProgress, Dialog, Grid } from '@material-ui/core';
+import { DataGrid, RowParams } from '@material-ui/data-grid';
+import { useState } from 'react';
+import { Guest } from '../../domains/models';
+import { getGuests } from '../../helpers/api';
 import NamedPerson from '../atoms/NamedPerson';
-import {Guest} from "../../domains/models";
 
 interface WaitingQueueProps {
     waitingGuests: Guest[];
     addWaitingGuest: (guest: Guest) => Promise<void>;
     removeWaitingGuest: (guest: Guest) => Promise<void>;
-    enterableGuests: Guest[] | null;
-    addEnterableGuest: (guest: Guest) => void;
-    removeEnterableGuest: (guest: Guest) => void;
 }
 
 export default function WaitingQueue(props: WaitingQueueProps): JSX.Element {
     const [open, setOpen] = useState(false);
+    const [enterableGuests, setEnterableGuests] = useState<Guest[] | null>(null);
 
-    const letGuestIn = (row: RowParams) => {
-        const guest = props.enterableGuests!.find(
-            (guest) => guest.id === row.getValue('id')
-        );
-        if (!guest) {
-            alert('ゲストが入店可能な状態ではありません');
-            return setOpen(false);
-        }
+    function letGuestIn(row: RowParams) {
+        const guest = enterableGuests!.find((guest) => guest.id === row.getValue('id'))!;
 
         props.addWaitingGuest(guest);
-        props.removeEnterableGuest(guest);
         return setOpen(false);
+    }
+
+    function onClickEnter() {
+        setEnterableGuests(null);
+        setOpen(true);
+        getGuests(false, false).then((guests) => setEnterableGuests(guests));
     }
 
     return (
         <Box border={1} borderRight={0} height={90}>
             <Grid container alignItems="center" style={{ height: '100%', textAlign: 'center' }}>
                 {props.waitingGuests.map((guest) => (
-                    <Grid
-                        item
-                        xs={1}
-                        key={guest.id}
-                        onClick={() => {
-                            props.removeWaitingGuest(guest);
-                            props.addEnterableGuest(guest);
-                        }}
-                    >
+                    <Grid item xs={1} key={guest.id} onClick={() => props.removeWaitingGuest(guest)}>
                         <NamedPerson name={guest.lastName} iconSize={50} />
                     </Grid>
                 ))}
                 <Grid item xs={1} />
                 <Grid item xs={2}>
-                    <Button variant="contained" color="secondary" onClick={() => setOpen(true)}>
+                    <Button variant="contained" color="secondary" onClick={onClickEnter}>
                         来店
                     </Button>
                 </Grid>
@@ -65,16 +55,17 @@ export default function WaitingQueue(props: WaitingQueueProps): JSX.Element {
                 </Grid>
             </Grid>
 
+            {/* 来店時のモーダル */}
             <Dialog open={open} onClose={() => setOpen(false)}>
                 <Box height={500} width={400}>
-                    {props.enterableGuests === null ? (
+                    {enterableGuests === null ? (
                         <Box height="100%" width="100%" display="flex" justifyContent="center" alignItems="center">
                             <CircularProgress color="secondary" />
                         </Box>
                     ) : (
                         <>
                             <DataGrid
-                                rows={props.enterableGuests}
+                                rows={enterableGuests}
                                 columns={[
                                     { field: 'id', width: 70 },
                                     { field: 'lastName', width: 200 },

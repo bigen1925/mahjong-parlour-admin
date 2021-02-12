@@ -1,5 +1,5 @@
+import { Table } from '@prisma/client';
 import { Controller, Get, Route, Tags } from 'tsoa';
-import { Table } from '../../../prisma/client';
 import { prisma } from '../../app';
 
 @Route('tables')

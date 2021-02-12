@@ -8,14 +8,11 @@ services:
     image: mpa-front-prod
     container_name: mpa-front-prod
     working_dir: /app
-    volumes:
-      - /app/.next
-      - /app/node_modules
-      - ./front:/app:cached
     ports:
       - 3333:3000
     environment:
-      - NEXT_PUBLIC_API_URL_BASE=http://localhost:3000/api
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL_BASE=http://localhost:3000/
   
   api:
     build:
@@ -24,15 +21,10 @@ services:
     image: mpa-api-prod
     container_name: mpa-api-prod
     working_dir: /app
-    volumes:
-      - /app/build/build
-      - /app/build/src
-      - /app/node_modules
-      - ./api:/app:cached
     ports:
       - 3000:3000
     environment:
-      - PORT=3000
+      - NODE_ENV=production
       - DATABASE_URL=postgresql://mpa:password@database:5432/mpa
 
   database:

@@ -5,6 +5,7 @@
     "target": "es6",
     "module": "commonjs",
     "outDir": "build",
+    "allowJs": true,
     /* Strict Type-Checking Options */
     "strict": true,
     "noImplicitAny": true,

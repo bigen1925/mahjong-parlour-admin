@@ -2,10 +2,10 @@ FROM node:15.7-buster-slim
 
 WORKDIR /app
 
+# Prisma CLI dependency
 RUN apt-get -qy update && apt-get -qy install openssl
 
-COPY package.json .
-COPY package-lock.json .
+COPY package.json package-lock.json ./
 
 RUN npm ci
 
@@ -15,5 +15,3 @@ RUN chmod +x /entry-point.sh
 ENTRYPOINT ["/entry-point.sh"]
 
 CMD ["npm", "run", "dev"]
-
-EXPOSE 3000

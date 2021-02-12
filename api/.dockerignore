@@ -4,5 +4,8 @@ node_modules
 # tsoa
 /build
 
-# git
-.git
+# prisma
+/prisma/client
+
+# editor
+.idea

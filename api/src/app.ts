@@ -1,3 +1,4 @@
+import { PrismaClient } from '@prisma/client';
 import { ValidateError } from '@tsoa/runtime';
 import cors from 'cors';
 import express, { NextFunction, Request, Response } from 'express';
@@ -5,7 +6,6 @@ import bearerToken from 'express-bearer-token';
 import swaggerUi from 'swagger-ui-express';
 import { RegisterRoutes } from '../build/routes';
 import swaggerDocument from '../build/swagger.json';
-import { PrismaClient } from '../prisma/client';
 import { HttpError } from './exceptions/HttpError';
 
 export const app = express();

@@ -1,5 +1,5 @@
+import { Player } from '@prisma/client';
 import { Body, Controller, Patch, Path, Route, Tags } from 'tsoa';
-import { Player } from '../../../prisma/client';
 import { prisma } from '../../app';
 
 type UpdatePlayerRequest = {

@@ -1,7 +1,7 @@
+import { Staff } from '@prisma/client';
 import { Request } from 'express';
 import jwt from 'jsonwebtoken';
 import { config } from '../config';
-import { Staff } from '../prisma/client';
 import { prisma } from './app';
 import { Forbidden, Unauthorized } from './exceptions/HttpError';
 

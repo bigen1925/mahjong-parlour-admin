@@ -1,15 +1,38 @@
+FROM node:15.7-buster-slim as builder
+
+WORKDIR /app
+
+# Prisma CLI dependency
+RUN apt-get -qy update && apt-get -qy install openssl
+
+# NodeJS cependency
+COPY package.json package-lock.json ./
+RUN npm ci
+
+# Generate Prisma Client
+COPY prisma/schema.prisma ./prisma/schema.prisma
+RUN npx prisma generate
+
+COPY . .
+RUN npm run build
+
 
 FROM node:15.7-buster-slim as server
 
 WORKDIR /app
 
-COPY package.json .
-COPY package-lock.json .
-RUN npm ci --production
+RUN apt-get -qy update && apt-get -qy install openssl
+
+COPY package.json package-lock.json ./
+RUN npm ci --only=production
+
+COPY --from=builder /app/build ./build
 
 COPY ./docker/entry-point.sh /entry-point.sh
 RUN chmod +x /entry-point.sh
 
-CMD ["npm", "run", "start"]
+COPY ./prisma/schema.prisma ./build/prisma/schema.prisma
 
-EXPOSE 3000
+ENTRYPOINT ["/entry-point.sh"]
+
+CMD ["npm", "run", "start"]

@@ -1,27 +1,18 @@
 #!/bin/bash
 set -e
 
-node <<EOF
-// Mysqlの起動を待つスクリプト
-(async () => {
-  const { PrismaClient } = require('./prisma/client')
-  const client = new PrismaClient()
-  while (true) {
-    try {
-      console.log((new Date()).toISOString() + ' Trying to connect to mysql...')
-      await client.\$connect()
-      break;
-    } catch {
-      await new Promise(r => setTimeout(r,2000)); // sleep 2 sec
-      continue;
-    }
-  }
-  client.\$disconnect()
-  console.log((new Date()).toISOString() + ' Mysql is up!')
-})()
-EOF
+if [ "$NODE_ENV" = "production" ]; then
+  SCHEMA_OPTION="--schema ./build/prisma/schema.prisma"
+else
+  SCHEMA_OPTION=""
+fi
 
-# マイグレーションを行う
-npm run migrate
+npx prisma generate $SCHEMA_OPTION
+RETRIES=60
+until npm run migrate -- $SCHEMA_OPTION ; do
+  echo "Waiting for postgres server, $((RETRIES--)) remaining attempts..."
+  sleep 1
+done
+
 
 exec "$@"

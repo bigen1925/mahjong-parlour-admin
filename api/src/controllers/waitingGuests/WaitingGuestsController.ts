@@ -1,5 +1,5 @@
+import { Prisma } from '@prisma/client';
 import { Body, Controller, Delete, Path, Post, Route, SuccessResponse, Tags } from 'tsoa';
-import { Prisma } from '../../../prisma/client';
 import { prisma } from '../../app';
 import { NotFound } from '../../exceptions/HttpError';
 

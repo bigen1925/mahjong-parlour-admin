@@ -4,10 +4,17 @@ import { config } from '../../../config';
 import { prisma } from '../../app';
 import { hash } from '../../helpers/hash';
 
+/**
+ * @example {
+ *   "loginId": "staff0",
+ *   "password": "password"
+ * }
+ */
 type AuthenticateInput = {
   loginId: string;
   password: string;
 };
+
 type AuthenticateResponse =
   | {
       token: string;

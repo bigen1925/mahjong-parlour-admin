@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { hash } from '../src/helpers/hash';
 import { GENDER } from './constants';
 
 const prisma = new PrismaClient();
@@ -42,6 +43,8 @@ async function main() {
       })
     )
   );
+
+  // 従業員プレイヤーの作成
   const staffPlayers = await Promise.all(
     rangeTo(10).map((i) =>
       prisma.player.upsert({
@@ -56,14 +59,13 @@ async function main() {
     )
   );
 
-  // 従業員プレイヤーの作成
   await Promise.all(
-    staffPlayers.map((player, i) => {
+    staffPlayers.map((player, i) =>
       prisma.staff.upsert({
         create: {
           id: '37968687-ffba-4fb8-8a00-2e54fd9cb86' + i,
           loginId: 'staff' + i,
-          password: 'password',
+          password: hash('password'),
           lastName: '従業員' + i,
           firstName: 'さん',
           gender: GENDER.FEMALE,
@@ -74,12 +76,12 @@ async function main() {
         where: {
           id: '37968687-ffba-4fb8-8a00-2e54fd9cb86' + i,
         },
-      });
-    })
+      })
+    )
   );
 
   // 顧客プレイヤーの作成
-  const players = await Promise.all(
+  const guestPlayers = await Promise.all(
     rangeTo(20).map((i) =>
       prisma.player.upsert({
         create: {
@@ -99,7 +101,7 @@ async function main() {
   );
 
   const guests = await Promise.all(
-    players.map((player, i) =>
+    guestPlayers.map((player, i) =>
       prisma.guest.upsert({
         create: {
           id: '90a689d9-131c-40e0-8180-4d84d68daf' + ('0' + i).slice(-2),

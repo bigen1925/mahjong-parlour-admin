@@ -11,7 +11,7 @@ interface ParlourCreateInput {
 
 @Tags('parlours')
 @Route('parlours')
-@Security('jwt', ['read'])
+@Security('jwt', ['admin'])
 export class ParloursController extends Controller {
   /**
    * 店舗一覧の取得

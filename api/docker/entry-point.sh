@@ -14,5 +14,7 @@ until npm run migrate -- $SCHEMA_OPTION ; do
   sleep 1
 done
 
+npm run seed
+
 
 exec "$@"

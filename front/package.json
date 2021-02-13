@@ -16,6 +16,7 @@
         "@babel/plugin-proposal-decorators": "^7.12.12",
         "@material-ui/data-grid": "^4.0.0-alpha.18",
         "@material-ui/icons": "^4.11.2",
+        "@types/js-cookie": "^2.2.6",
         "@types/node": "^14.14.22",
         "@types/react": "^17.0.0",
         "@typescript-eslint/eslint-plugin": "^4.14.0",

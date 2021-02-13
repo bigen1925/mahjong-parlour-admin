@@ -35,8 +35,7 @@ export class AuthenticateController extends Controller {
 
     const token = jwt.sign(
       {
-        type: 'staff',
-        scope: 'read',
+        scope: 'staff',
         staffId: staff.id,
       },
       config.encrypt.key,

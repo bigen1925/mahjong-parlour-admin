@@ -7,6 +7,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/router';
 import React, { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { authenticate } from '../helpers/api';
@@ -46,13 +48,18 @@ interface FormData {
 
 const SignIn: FC = () => {
     const styles = useStyles();
+    const router = useRouter();
     const [isSigningIn, setIsSigningIn] = useState(false);
     const { register, handleSubmit, errors } = useForm<FormData>();
 
     function signIn(data: FormData) {
         setIsSigningIn(true);
-        authenticate(data.loginId, data.password).then((res) => console.log(res.token));
-        setTimeout(() => setIsSigningIn(false), 2000);
+        authenticate(data.loginId, data.password).then((res) => {
+            console.log(res.token);
+            Cookies.set('MPA_TOKEN', res.token);
+            setIsSigningIn(false);
+            router.push('/');
+        });
     }
 
     return (

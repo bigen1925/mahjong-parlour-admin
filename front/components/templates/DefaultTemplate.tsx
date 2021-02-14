@@ -2,8 +2,8 @@ import { Box } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import { FC, useEffect, useState } from 'react';
 import { api } from '../../pages/_app';
-import DefaultFooter from '../organisms/DefaultFooter';
-import DefaultHeader from '../organisms/DefaultHeader';
+import { DefaultFooter } from '../organisms/DefaultFooter';
+import { DefaultHeader } from '../organisms/DefaultHeader';
 
 export const DefaultTemplate: FC = (props) => {
     // 認証が必要

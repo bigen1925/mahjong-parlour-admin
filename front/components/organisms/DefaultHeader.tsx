@@ -1,7 +1,8 @@
 import { Grid, Typography } from '@material-ui/core';
 import Image from 'next/image';
+import { FC } from 'react';
 
-export default function DefaultHeader(): JSX.Element {
+export const DefaultHeader: FC = () => {
     return (
         <Grid container alignItems="center" style={{ height: '100%' }}>
             <Grid item xs={2}>
@@ -16,4 +17,4 @@ export default function DefaultHeader(): JSX.Element {
             </Grid>
         </Grid>
     );
-}
+};

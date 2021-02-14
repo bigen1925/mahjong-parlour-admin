@@ -3,9 +3,9 @@ import { FC, useEffect, useState } from 'react';
 import { Guest, Table } from '../../domains/models';
 import { api } from '../../pages/_app';
 import PlayingTables from '../molecules/PlayingTables';
-import WaitingQueue from '../molecules/WaitingQueue';
+import { WaitingGuestQueue } from '../molecules/WaitingGuestQueue';
 
-const TablesAdmin: FC = () => {
+export const TablesAdmin: FC = () => {
     const [tables, setTables] = useState<Table[] | null>(null);
 
     const [waitingGuests, setWaitingGuests] = useState<Guest[]>([]);
@@ -37,7 +37,7 @@ const TablesAdmin: FC = () => {
                 <Grid container justify="flex-end">
                     <Grid item xs={6}>
                         waiting guests
-                        <WaitingQueue
+                        <WaitingGuestQueue
                             waitingGuests={waitingGuests}
                             addWaitingGuest={addWaitingGuest}
                             removeWaitingGuest={removeWaitingGuest}
@@ -72,5 +72,3 @@ const TablesAdmin: FC = () => {
         </>
     );
 };
-
-export default TablesAdmin;

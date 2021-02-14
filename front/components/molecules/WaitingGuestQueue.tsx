@@ -11,7 +11,7 @@ import {
     Typography,
 } from '@material-ui/core';
 import { DataGrid, RowParams } from '@material-ui/data-grid';
-import { ChangeEventHandler, FC, useState } from 'react';
+import { ChangeEventHandler, FC, useEffect, useState } from 'react';
 import { GENDER } from '../../domains/constants';
 import { Guest } from '../../domains/models';
 import { api } from '../../pages/_app';
@@ -25,17 +25,45 @@ type WaitingGuestQueueProps = {
 
 export const WaitingGuestQueue: FC<WaitingGuestQueueProps> = (props) => {
     const [enterDialogOpen, setEnterDialogOpen] = useState(false);
-    const [queueableGuests, setQueueableGuests] = useState<Guest[] | null>(null);
-
     const [registerDialogOpen, setRegisterDialogOpen] = useState(false);
 
-    function handlePushGuest() {
-        setQueueableGuests(null);
-        setEnterDialogOpen(true);
-        api.getGuests({ waiting: false, playing: false }).then((guests) => {
-            setQueueableGuests(guests);
-        });
-    }
+    return (
+        <>
+            <PeopleQueue<Guest>
+                people={props.waitingGuests}
+                handleRemovePerson={props.removeWaitingGuest}
+                handlePushPerson={() => setEnterDialogOpen(true)}
+                handleRegisterPerson={() => setRegisterDialogOpen(true)}
+            />
+
+            {/* 来店時のモーダル */}
+            <EnterDialog open={enterDialogOpen} setOpen={setEnterDialogOpen} addWaitingGuest={props.addWaitingGuest} />
+
+            <RegisterDialog open={registerDialogOpen} setOpen={setRegisterDialogOpen} />
+        </>
+    );
+};
+
+/*********************
+ * 顧客入店時のモーダル
+ *********************/
+type EnterDialogProps = {
+    open: boolean;
+    setOpen: (open: boolean) => void;
+    addWaitingGuest: (guest: Guest) => Promise<void>;
+};
+const EnterDialog: FC<EnterDialogProps> = (props) => {
+    const [queueableGuests, setQueueableGuests] = useState<Guest[] | null>(null);
+
+    useEffect(() => {
+        if (props.open) {
+            setQueueableGuests(null);
+
+            api.getGuests({ waiting: false, playing: false }).then((guests) => {
+                setQueueableGuests(guests);
+            });
+        }
+    }, [props.open]);
 
     function pushGuest(row: RowParams) {
         const selectedGuestId = row.getValue('id') as string;
@@ -43,56 +71,46 @@ export const WaitingGuestQueue: FC<WaitingGuestQueueProps> = (props) => {
 
         if (!target) {
             alert('顧客が見つかりませんでした。再度お試しください。');
-            setEnterDialogOpen(false);
+            props.setOpen(false);
             return;
         }
 
-        props.addWaitingGuest(target).then(() => setEnterDialogOpen(false));
+        props.addWaitingGuest(target);
+        props.setOpen(false);
     }
 
     return (
-        <>
-            <PeopleQueue<Guest>
-                people={props.waitingGuests}
-                handleRemovePerson={props.removeWaitingGuest}
-                handlePushPerson={handlePushGuest}
-                handleRegisterPerson={() => setRegisterDialogOpen(true)}
-            />
-
-            {/* 来店時のモーダル */}
-            <Dialog open={enterDialogOpen} onClose={() => setEnterDialogOpen(false)}>
-                <Box height={500} width={400}>
-                    {queueableGuests === null ? (
-                        <Box height="100%" width="100%" display="flex" justifyContent="center" alignItems="center">
-                            <CircularProgress color="secondary" />
-                        </Box>
-                    ) : (
-                        <>
-                            <DataGrid
-                                rows={queueableGuests}
-                                columns={[
-                                    { field: 'id', width: 70 },
-                                    { field: 'lastName', width: 200 },
-                                    { field: 'firstName', width: 200 },
-                                ]}
-                                onRowClick={pushGuest}
-                            />
-                        </>
-                    )}
-                </Box>
-            </Dialog>
-            <RegisterDialog open={registerDialogOpen} setOpen={setRegisterDialogOpen} />
-        </>
+        <Dialog open={props.open} onClose={() => props.setOpen(false)}>
+            <Box height={500} width={400}>
+                {queueableGuests === null ? (
+                    <Box height="100%" width="100%" display="flex" justifyContent="center" alignItems="center">
+                        <CircularProgress color="secondary" />
+                    </Box>
+                ) : (
+                    <>
+                        <DataGrid
+                            rows={queueableGuests}
+                            columns={[
+                                { field: 'id', width: 70 },
+                                { field: 'lastName', width: 200 },
+                                { field: 'firstName', width: 200 },
+                            ]}
+                            onRowClick={pushGuest}
+                        />
+                    </>
+                )}
+            </Box>
+        </Dialog>
     );
 };
 
+/*********************
+ * 新規登録時のモーダル
+ *********************/
 type RegisterDialogProps = {
     open: boolean;
     setOpen: (open: boolean) => void;
 };
-/**
- * 新規登録時のモーダル
- */
 const RegisterDialog: FC<RegisterDialogProps> = (props) => {
     const [registerDisabled, setRegisterDisabled] = useState(false);
     const [lastName, setLastName] = useState('');

@@ -1,7 +1,10 @@
-import { AppProps } from 'next/app';
 import { createMuiTheme, CssBaseline, ThemeProvider } from '@material-ui/core';
 import { green, lightBlue } from '@material-ui/core/colors';
+import { AppProps } from 'next/app';
 import React from 'react';
+import { ApiClient } from '../helpers/api';
+
+export const api = new ApiClient();
 
 export default function MyApp({ Component, pageProps }: AppProps): JSX.Element {
     const theme = createMuiTheme({

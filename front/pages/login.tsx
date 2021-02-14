@@ -10,7 +10,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { useRouter } from 'next/router';
 import React, { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { authenticate } from '../helpers/api';
+import { api } from './_app';
 
 function Copyright() {
     return (
@@ -53,7 +53,8 @@ const SignIn: FC = () => {
 
     function signIn(data: FormData) {
         setIsSigningIn(true);
-        authenticate(data.loginId, data.password).then((res) => {
+        api.authenticate(data.loginId, data.password).then((res) => {
+            console.log('token', res.token);
             setIsSigningIn(false);
             router.push('/');
         });

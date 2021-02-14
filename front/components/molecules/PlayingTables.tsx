@@ -14,7 +14,7 @@ import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import { useState } from 'react';
 import { SEAT } from '../../domains/constants';
 import { Guest, Player, Table } from '../../domains/models';
-import { updateGuestPlayer, updatePlayer } from '../../helpers/api';
+import { api } from '../../pages/_app';
 import modalStyles from '../../styles/modal.module.css';
 import NamedPerson from '../atoms/NamedPerson';
 
@@ -44,7 +44,7 @@ export default function PlayingTables(props: PlayingTableProps): JSX.Element {
         }
 
         props.addWaitingGuest(player.guest);
-        updatePlayer(player.id, { tableId: null, seat: null }).then(() => {
+        api.updatePlayer(player.id, { tableId: null, seat: null }).then(() => {
             const newMap = new Map(playersMap);
             newMap.delete(seat);
             setPlayersMap(newMap);
@@ -65,7 +65,7 @@ export default function PlayingTables(props: PlayingTableProps): JSX.Element {
         }
 
         props.removeWaitingGuest(guest);
-        updateGuestPlayer(guest.id, { tableId: props.table.id, seat: playerAdditionTarget }).then((player) => {
+        api.updateGuestPlayer(guest.id, { tableId: props.table.id, seat: playerAdditionTarget }).then((player) => {
             const newMap = new Map(playersMap);
             newMap.set(playerAdditionTarget, player);
             setPlayersMap(newMap);

@@ -1,7 +1,7 @@
 import { Box, CircularProgress, Container, Grid } from '@material-ui/core';
 import { FC, useEffect, useState } from 'react';
 import { Guest, Table } from '../../domains/models';
-import * as api from '../../helpers/api';
+import { api } from '../../pages/_app';
 import PlayingTables from '../molecules/PlayingTables';
 import WaitingQueue from '../molecules/WaitingQueue';
 

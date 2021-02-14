@@ -15,7 +15,7 @@ import { DataGrid, RowParams } from '@material-ui/data-grid';
 import { ChangeEvent, useState } from 'react';
 import { GENDER } from '../../domains/constants';
 import { Guest } from '../../domains/models';
-import { createGuest, getGuests } from '../../helpers/api';
+import { api } from '../../pages/_app';
 import NamedPerson from '../atoms/NamedPerson';
 
 interface WaitingQueueProps {
@@ -43,12 +43,12 @@ export default function WaitingQueue(props: WaitingQueueProps): JSX.Element {
     function onClickEnter() {
         setEnterableGuests(null);
         setEnterDialogOpen(true);
-        getGuests({ waiting: false, playing: false }).then((guests) => setEnterableGuests(guests));
+        api.getGuests({ waiting: false, playing: false }).then((guests) => setEnterableGuests(guests));
     }
 
     function register() {
         setRegisterDisabled(true);
-        createGuest({ lastName, firstName, gender, email, address }).then(() => {
+        api.createGuest({ lastName, firstName, gender, email, address }).then(() => {
             setEnterDialogOpen(false);
         });
     }

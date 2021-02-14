@@ -1,10 +1,11 @@
 import { Prisma } from '@prisma/client';
-import { Body, Controller, Delete, Path, Post, Route, SuccessResponse, Tags } from 'tsoa';
+import { Body, Controller, Delete, Path, Post, Route, Security, SuccessResponse, Tags } from 'tsoa';
 import { prisma } from '../../app';
 import { NotFound } from '../../exceptions/HttpError';
 
 @Route('waiting-guests')
 @Tags('waiting-guests')
+@Security('jwt', ['staff'])
 export class WaitingGuestsController extends Controller {
   /**
    * 待ち客の追加

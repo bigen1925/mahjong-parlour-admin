@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Route, Tags } from 'tsoa';
+import { Body, Controller, Post, Route, Security, Tags } from 'tsoa';
 import { prisma } from '../../app';
 import { hash } from '../../helpers/hash';
 
@@ -15,6 +15,7 @@ type StaffCreateParams = {
 
 @Route('staffs')
 @Tags('staffs')
+@Security('jwt', ['staff'])
 export class StaffsController extends Controller {
   /**
    * 従業員の作成

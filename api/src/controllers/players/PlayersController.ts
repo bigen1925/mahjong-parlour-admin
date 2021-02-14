@@ -1,5 +1,5 @@
 import { Player } from '@prisma/client';
-import { Body, Controller, Patch, Path, Route, Tags } from 'tsoa';
+import { Body, Controller, Patch, Path, Route, Security, Tags } from 'tsoa';
 import { prisma } from '../../app';
 
 type UpdatePlayerRequest = {
@@ -11,6 +11,7 @@ type Nullable<T> = T | null;
 
 @Route('players')
 @Tags('players')
+@Security('jwt', ['staff'])
 export class PlayersController extends Controller {
   /**
    * プレイヤーの更新

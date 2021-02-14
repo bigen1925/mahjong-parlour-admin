@@ -26,6 +26,7 @@ type CreateGuestParams = {
 
 @Route('guests')
 @Tags('guests')
+@Security('jwt', ['staff'])
 export class GuestsController extends Controller {
   /**
    * 顧客一覧の取得

@@ -46,6 +46,7 @@
   },
   "routes": {
     "routesDir": "build",
+    "basePath": "/api",
     "authenticationModule": "src/authentication.ts"
   }
 }

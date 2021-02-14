@@ -3,7 +3,7 @@ import { GENDER, SEAT } from '../domains/constants';
 import { Guest, Player, Table } from '../domains/models';
 
 const client = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_URL_BASE,
+    baseURL: '/api',
     headers: {
         'Content-Type': 'application/json',
     },

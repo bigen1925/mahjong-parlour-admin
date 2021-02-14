@@ -27,10 +27,10 @@ type AuthenticateResponse =
 @Tags('authenticate')
 export class AuthenticateController extends Controller {
   /**
-   * 従業員の認証
+   * loginId / Password による従業員の認証
    */
   @Post()
-  public async authenticate(@Body() params: AuthenticateInput): Promise<AuthenticateResponse> {
+  public async staffAuthenticateByCredential(@Body() params: AuthenticateInput): Promise<AuthenticateResponse> {
     const staff = await prisma.staff.findUnique({
       where: { loginId: params.loginId },
     });
@@ -48,6 +48,8 @@ export class AuthenticateController extends Controller {
       config.encrypt.key,
       { expiresIn: '24h' }
     );
+
+    this.setHeader('Set-Cookie', `token=${token}; MaxAge=${24 * 60 * 60}; HttpOnly`);
 
     return { token };
   }

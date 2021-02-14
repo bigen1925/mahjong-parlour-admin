@@ -2,6 +2,7 @@ import { Box } from '@material-ui/core';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/router';
 import { FC, useEffect, useState } from 'react';
+import { getToken } from '../../helpers/api';
 import DefaultFooter from '../organisms/DefaultFooter';
 import DefaultHeader from '../organisms/DefaultHeader';
 
@@ -10,11 +11,23 @@ export const DefaultTemplate: FC = (props) => {
     const router = useRouter();
     const [ready, setReady] = useState(false);
     useEffect(() => {
-        if (!Cookies.get('MPA_TOKEN')) {
-            router.push('/login');
-            return;
+        if (Cookies.get('MPA_TOKEN')) {
+            console.debug('token is found.');
+            return setReady(true);
         }
-        setReady(true);
+
+        console.debug('token is not found, try to get token');
+
+        getToken()
+            .then((token) => {
+                console.debug('token is got', token);
+                setReady(true);
+            })
+            .catch((err) => {
+                if (err.response && err.response.status === 401) {
+                    router.push('/login');
+                }
+            });
     }, []);
 
     if (!ready) {

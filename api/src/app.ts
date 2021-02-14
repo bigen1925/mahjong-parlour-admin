@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { ValidateError } from '@tsoa/runtime';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { NextFunction, Request, Response } from 'express';
 import bearerToken from 'express-bearer-token';
@@ -26,6 +27,9 @@ app.use(express.json());
 // CORS
 app.use(cors());
 
+// Cookie
+app.use(cookieParser());
+
 // Token
 app.use(
   bearerToken({
@@ -37,7 +41,7 @@ app.use(
 RegisterRoutes(app);
 
 // Swagger UI
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Error Handlers
 app.use(function (err: unknown, req: Request, res: Response, next: NextFunction): Response | void {

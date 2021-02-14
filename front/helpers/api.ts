@@ -13,15 +13,24 @@ export function callApi(config: AxiosRequestConfig): Promise<unknown> {
     return client(config).then((res) => res.data);
 }
 
-interface AuthenticateResponse {
+type AuthenticateResponse = {
     token: string;
-}
+};
 export async function authenticate(loginId: string, password: string): Promise<AuthenticateResponse> {
     return (await callApi({
         url: '/authenticate',
         method: 'post',
         data: { loginId, password },
     })) as AuthenticateResponse;
+}
+
+type GetTokenResponse = {
+    token: string;
+};
+export async function getToken(): Promise<GetTokenResponse> {
+    return (await callApi({
+        url: '/token',
+    })) as GetTokenResponse;
 }
 
 export async function getGuests(params: { waiting?: boolean; playing?: boolean }): Promise<Guest[]> {
@@ -33,8 +42,8 @@ export async function createGuest(data: {
     gender: GENDER;
     email: string;
     address: string;
-}) {
-    return await callApi({ url: '/guests', method: 'post', data });
+}): Promise<{ token: string }> {
+    return (await callApi({ url: '/guests', method: 'post', data })) as { token: string };
 }
 
 export async function addWaitingGuest(guestId: string): Promise<void> {

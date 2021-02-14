@@ -1,5 +1,4 @@
 import { Box } from '@material-ui/core';
-import Cookies from 'js-cookie';
 import { useRouter } from 'next/router';
 import { FC, useEffect, useState } from 'react';
 import { api } from '../../pages/_app';
@@ -11,23 +10,12 @@ export const DefaultTemplate: FC = (props) => {
     const router = useRouter();
     const [ready, setReady] = useState(false);
     useEffect(() => {
-        if (Cookies.get('MPA_TOKEN')) {
-            console.debug('token is found.');
-            return setReady(true);
-        }
-
-        console.debug('token is not found, try to get token');
-
-        api.getToken()
-            .then((token) => {
-                console.debug('token is got', token);
-                setReady(true);
-            })
-            .catch((err) => {
-                if (err.response && err.response.status === 401) {
-                    router.push('/login');
-                }
-            });
+        api.isAuthenticated().then((auth) => {
+            if (auth) {
+                return setReady(true);
+            }
+            router.push('/login');
+        });
     }, []);
 
     if (!ready) {

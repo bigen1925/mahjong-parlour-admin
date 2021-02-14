@@ -3,6 +3,7 @@ import { GENDER, SEAT } from '../domains/constants';
 import { Guest, Player, Table } from '../domains/models';
 
 export class ApiClient {
+    #token: string | null = null;
     #client: AxiosInstance = axios.create({
         baseURL: '/api',
         headers: {
@@ -10,22 +11,55 @@ export class ApiClient {
         },
     });
 
-    #callApi = async (config: AxiosRequestConfig): Promise<unknown> => {
+    #callApi = async (config: AxiosRequestConfig, auth = true): Promise<unknown> => {
+        if (auth) {
+            if (!config.headers) {
+                config.headers = {};
+            }
+            config.headers['Authorization'] = `Bearer ${this.#token}`;
+        }
         return this.#client(config).then((res) => res.data);
     };
 
-    async authenticate(loginId: string, password: string): Promise<AuthenticateResponse> {
-        return (await this.#callApi({
-            url: '/authenticate',
-            method: 'post',
-            data: { loginId, password },
-        })) as AuthenticateResponse;
+    async isAuthenticated(): Promise<boolean> {
+        if (this.#token) return true;
+
+        return this.getToken()
+            .then((data) => {
+                const { token } = data as GetTokenResponse;
+                this.#token = token;
+                return true;
+            })
+            .catch((err) => {
+                if (err.response && err.response.status === 401) {
+                    return false;
+                }
+
+                throw err;
+            });
+    }
+
+    async authenticate(loginId: string, password: string): Promise<void> {
+        await this.#callApi(
+            {
+                url: '/authenticate',
+                method: 'post',
+                data: { loginId, password },
+            },
+            false
+        ).then((data) => {
+            const { token } = data as AuthenticateResponse;
+            this.#token = token;
+        });
     }
 
     async getToken(): Promise<GetTokenResponse> {
-        return (await this.#callApi({
-            url: '/token',
-        })) as GetTokenResponse;
+        return (await this.#callApi(
+            {
+                url: '/token',
+            },
+            false
+        )) as GetTokenResponse;
     }
 
     async getGuests(params: { waiting?: boolean; playing?: boolean }): Promise<Guest[]> {

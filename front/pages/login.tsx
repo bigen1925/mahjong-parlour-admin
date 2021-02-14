@@ -53,11 +53,13 @@ const SignIn: FC = () => {
 
     function signIn(data: FormData) {
         setIsSigningIn(true);
-        api.authenticate(data.loginId, data.password).then((res) => {
-            console.log('token', res.token);
-            setIsSigningIn(false);
-            router.push('/');
-        });
+        api.authenticate(data.loginId, data.password)
+            .then(() => {
+                router.push('/');
+            })
+            .finally(() => {
+                setIsSigningIn(false);
+            });
     }
 
     return (

@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios';
-import { SEAT } from '../domains/constants';
+import { GENDER, SEAT } from '../domains/constants';
 import { Guest, Player, Table } from '../domains/models';
 
 const client = axios.create({
@@ -26,6 +26,15 @@ export async function authenticate(loginId: string, password: string): Promise<A
 
 export async function getGuests(params: { waiting?: boolean; playing?: boolean }): Promise<Guest[]> {
     return (await callApi({ url: '/guests', params })) as Guest[];
+}
+export async function createGuest(data: {
+    lastName: string;
+    firstName: string;
+    gender: GENDER;
+    email: string;
+    address: string;
+}) {
+    return await callApi({ url: '/guests', method: 'post', data });
 }
 
 export async function addWaitingGuest(guestId: string): Promise<void> {

@@ -6,6 +6,7 @@ import bearerToken from 'express-bearer-token';
 import swaggerUi from 'swagger-ui-express';
 import { RegisterRoutes } from '../build/routes';
 import swaggerDocument from '../build/swagger.json';
+import { config } from '../config';
 import { HttpError } from './exceptions/HttpError';
 
 export const app = express();
@@ -26,7 +27,11 @@ app.use(express.json());
 app.use(cors());
 
 // Token
-app.use(bearerToken());
+app.use(
+  bearerToken({
+    cookie: { signed: true, secret: config.encrypt.key, key: 'MPA_TOKEN' },
+  })
+);
 
 // tsoa routes
 RegisterRoutes(app);

@@ -6,5 +6,5 @@ export const SEAT = {
 } as const;
 export type SEAT = typeof SEAT[keyof typeof SEAT];
 
-export const GENDER = { MALE: 0, FEAMLE: 1 } as const;
+export const GENDER = { MALE: 0, FEMALE: 1 } as const;
 export type GENDER = typeof GENDER[keyof typeof GENDER];

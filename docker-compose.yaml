@@ -8,6 +8,9 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf  
     ports:
       - 3000:80
+    depends_on:
+      - api
+      - front
     
   front:
     build:

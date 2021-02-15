@@ -1,7 +1,6 @@
 import {
     Box,
     Button,
-    CircularProgress,
     Dialog,
     FormControl,
     InputLabel,
@@ -10,12 +9,12 @@ import {
     TextField,
     Typography,
 } from '@material-ui/core';
-import { DataGrid, RowParams } from '@material-ui/data-grid';
-import { ChangeEventHandler, FC, useEffect, useState } from 'react';
+import { ChangeEventHandler, FC, useState } from 'react';
 import { GENDER } from '../../domains/constants';
 import { Guest } from '../../domains/models';
 import { api } from '../../pages/_app';
 import { PeopleQueue } from './PeopleQueue';
+import { PushPersonDialog } from './PushPersonDialog';
 
 type WaitingGuestQueueProps = {
     waitingGuests: Guest[];
@@ -37,70 +36,15 @@ export const WaitingGuestQueue: FC<WaitingGuestQueueProps> = (props) => {
             />
 
             {/* 来店時のモーダル */}
-            <EnterDialog open={enterDialogOpen} setOpen={setEnterDialogOpen} addWaitingGuest={props.addWaitingGuest} />
+            <PushPersonDialog
+                open={enterDialogOpen}
+                setOpen={setEnterDialogOpen}
+                pushPerson={(person) => props.addWaitingGuest(person as Guest)}
+                getQueueablePeople={() => api.getGuests({ waiting: false, playing: false })}
+            />
 
             <RegisterDialog open={registerDialogOpen} setOpen={setRegisterDialogOpen} />
         </>
-    );
-};
-
-/*********************
- * 顧客入店時のモーダル
- *********************/
-type EnterDialogProps = {
-    open: boolean;
-    setOpen: (open: boolean) => void;
-    addWaitingGuest: (guest: Guest) => Promise<void>;
-};
-const EnterDialog: FC<EnterDialogProps> = (props) => {
-    const [queueableGuests, setQueueableGuests] = useState<Guest[] | null>(null);
-
-    useEffect(() => {
-        if (props.open) {
-            setQueueableGuests(null);
-
-            api.getGuests({ waiting: false, playing: false }).then((guests) => {
-                setQueueableGuests(guests);
-            });
-        }
-    }, [props.open]);
-
-    function pushGuest(row: RowParams) {
-        const selectedGuestId = row.getValue('id') as string;
-        const target = queueableGuests!.find((guest) => guest.id == selectedGuestId);
-
-        if (!target) {
-            alert('顧客が見つかりませんでした。再度お試しください。');
-            props.setOpen(false);
-            return;
-        }
-
-        props.addWaitingGuest(target);
-        props.setOpen(false);
-    }
-
-    return (
-        <Dialog open={props.open} onClose={() => props.setOpen(false)}>
-            <Box height={500} width={400}>
-                {queueableGuests === null ? (
-                    <Box height="100%" width="100%" display="flex" justifyContent="center" alignItems="center">
-                        <CircularProgress color="secondary" />
-                    </Box>
-                ) : (
-                    <>
-                        <DataGrid
-                            rows={queueableGuests}
-                            columns={[
-                                { field: 'id', width: 70 },
-                                { field: 'lastName', width: 200 },
-                                { field: 'firstName', width: 200 },
-                            ]}
-                            onRowClick={pushGuest}
-                        />
-                    </>
-                )}
-            </Box>
-        </Dialog>
     );
 };
 

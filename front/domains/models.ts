@@ -15,8 +15,7 @@ export type Player = {
     createdAt: Date;
     updatedAt: Date;
     tableId: string | null;
-    guest: Guest;
-};
+} & ({ guest: Guest; staff?: never } | { guest?: never; staff: Staff });
 
 export type Guest = {
     id: string;

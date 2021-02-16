@@ -89,7 +89,13 @@ export class ApiClient {
     }
 
     async updateGuestPlayer(guestId: string, data: { tableId: string | null; seat: SEAT | null }): Promise<Player> {
+        console.log('updateGuestPlayer');
         return (await this.#callApi({ url: `/players/as-guest/${guestId}`, method: 'patch', data })) as Player;
+    }
+
+    async updateStaffPlayer(staffId: string, data: { tableId: string | null; seat: SEAT | null }): Promise<Player> {
+        console.log('updateStaffPlayer');
+        return (await this.#callApi({ url: `/players/as-staff/${staffId}`, method: 'patch', data })) as Player;
     }
 
     async updatePlayer(playerId: string, data: { tableId: string | null; seat: SEAT | null }): Promise<Player> {

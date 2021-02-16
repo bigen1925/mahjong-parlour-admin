@@ -38,4 +38,18 @@ export class PlayersController extends Controller {
       where: { id: guest.playerId },
     });
   }
+
+  /**
+   * 従業員プレイヤーの更新
+   */
+  @Patch('as-staff/{staffId}')
+  async updateStaffPlayer(@Path() staffId: string, @Body() data: UpdatePlayerRequest): Promise<Player> {
+    const staff = await prisma.staff.findUnique({ where: { id: staffId } });
+
+    return prisma.player.update({
+      data,
+      include: { guest: true, staff: true },
+      where: { id: staff.playerId },
+    });
+  }
 }

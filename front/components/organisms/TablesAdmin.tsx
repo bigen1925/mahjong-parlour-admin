@@ -79,6 +79,9 @@ export const TablesAdmin: FC = () => {
                                         waitingGuests={waitingGuests}
                                         addWaitingGuest={addWaitingGuest}
                                         removeWaitingGuest={removeWaitingGuest}
+                                        workingStaffs={workingStaffs}
+                                        addWorkingStaff={addWorkingStaff}
+                                        removeWorkingStaff={removeWorkingStaff}
                                     />
                                 </Grid>
                             ))}

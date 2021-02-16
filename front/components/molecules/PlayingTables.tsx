@@ -1,4 +1,5 @@
 import {
+    AppBar,
     Box,
     Button,
     Dialog,
@@ -6,6 +7,8 @@ import {
     DialogContent,
     DialogTitle,
     makeStyles,
+    Tab,
+    Tabs,
     Typography,
 } from '@material-ui/core';
 import { DataGrid, RowParams } from '@material-ui/data-grid';
@@ -13,7 +16,7 @@ import AddCircleOutlineRoundedIcon from '@material-ui/icons/AddCircleOutlineRoun
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import { useState } from 'react';
 import { SEAT } from '../../domains/constants';
-import { Guest, Player, Table } from '../../domains/models';
+import { Guest, Player, Staff, Table } from '../../domains/models';
 import { api } from '../../pages/_app';
 import modalStyles from '../../styles/modal.module.css';
 import NamedPerson from '../atoms/NamedPerson';
@@ -21,8 +24,11 @@ import NamedPerson from '../atoms/NamedPerson';
 interface PlayingTableProps {
     table: Table;
     waitingGuests: Guest[];
-    removeWaitingGuest: (guest: Guest) => void;
-    addWaitingGuest: (guest: Guest) => void;
+    removeWaitingGuest: (guest: Guest) => Promise<void>;
+    addWaitingGuest: (guest: Guest) => Promise<void>;
+    workingStaffs: Staff[];
+    addWorkingStaff: (staff: Staff) => Promise<void>;
+    removeWorkingStaff: (staff: Staff) => Promise<void>;
 }
 
 export default function PlayingTables(props: PlayingTableProps): JSX.Element {
@@ -35,15 +41,23 @@ export default function PlayingTables(props: PlayingTableProps): JSX.Element {
     const [isOpenGameFinishingModal, setIsOpenGameFinishingModal] = useState(false);
     const [startedAt, setStartedAt] = useState<Date | null>(null);
     const [ranking, setRanking] = useState<Player[]>([]);
+    const [tab, setTab] = useState<'tab-guest' | 'tab-staff'>('tab-guest');
+
+    function handleTabChange(_: unknown, newValue: 'tab-guest' | 'tab-staff') {
+        setTab(newValue);
+    }
 
     function removePlayer(seat: SEAT) {
         const player = playersMap.get(seat)!;
 
-        if (!player.guest) {
-            return;
+        if (player.guest) {
+            props.addWaitingGuest(player.guest);
         }
 
-        props.addWaitingGuest(player.guest);
+        if (player.staff) {
+            props.addWorkingStaff(player.staff);
+        }
+
         api.updatePlayer(player.id, { tableId: null, seat: null }).then(() => {
             const newMap = new Map(playersMap);
             newMap.delete(seat);
@@ -51,7 +65,8 @@ export default function PlayingTables(props: PlayingTableProps): JSX.Element {
         });
     }
 
-    function addPlayer(row: RowParams) {
+    function addGuestPlayer(row: RowParams) {
+        console.log('addGuestPlayer');
         if (playerAdditionTarget === null) {
             alert('席が選択されていません');
             return setIsOpenPlayerAdditionModal(false);
@@ -73,7 +88,31 @@ export default function PlayingTables(props: PlayingTableProps): JSX.Element {
         });
     }
 
+    function addStaffPlayer(row: RowParams) {
+        console.log('addStaffPlayer');
+        if (playerAdditionTarget === null) {
+            alert('席が選択されていません');
+            return setIsOpenPlayerAdditionModal(false);
+        }
+
+        const id = row.getValue('id') as string;
+        const staff = props.workingStaffs.find((x) => x.id === id);
+        if (!staff) {
+            alert('従業員が勤務中ではありません');
+            return setIsOpenPlayerAdditionModal(false);
+        }
+
+        props.removeWorkingStaff(staff);
+        api.updateStaffPlayer(staff.id, { tableId: props.table.id, seat: playerAdditionTarget }).then((player) => {
+            const newMap = new Map(playersMap);
+            newMap.set(playerAdditionTarget, player);
+            setPlayersMap(newMap);
+            setIsOpenPlayerAdditionModal(false);
+        });
+    }
+
     function openPlayerAdditionModal(target: SEAT) {
+        setTab('tab-guest');
         setPlayerAdditionTarget(target);
         setIsOpenPlayerAdditionModal(true);
     }
@@ -98,7 +137,11 @@ export default function PlayingTables(props: PlayingTableProps): JSX.Element {
                         const player = playersMap.get(seat)!;
                         return (
                             <Box key={seat} className={styles[seat]} onClick={() => removePlayer(seat)}>
-                                <NamedPerson name={player.guest.lastName} iconSize={iconSize} />
+                                <NamedPerson
+                                    name={(player.guest || player.staff).lastName}
+                                    iconSize={iconSize}
+                                    color={player.staff ? 'action' : undefined}
+                                />
                             </Box>
                         );
                     })}
@@ -122,15 +165,40 @@ export default function PlayingTables(props: PlayingTableProps): JSX.Element {
             {/* プレイヤー追加時のモーダル */}
             <Dialog open={isOpenPlayerAdditionModal} onClose={() => setIsOpenPlayerAdditionModal(false)}>
                 <Box height={500} width={400}>
-                    <DataGrid
-                        rows={props.waitingGuests}
-                        columns={[
-                            { field: 'id', width: 70 },
-                            { field: 'lastName', width: 200 },
-                            { field: 'firstName', width: 200 },
-                        ]}
-                        onRowClick={addPlayer}
-                    />
+                    <AppBar position="static" color="default">
+                        <Tabs
+                            value={tab}
+                            onChange={handleTabChange}
+                            indicatorColor="secondary"
+                            textColor="secondary"
+                            variant="fullWidth"
+                        >
+                            <Tab value="tab-guest" label="お客様" />
+                            <Tab value="tab-staff" label="従業員" />
+                        </Tabs>
+                    </AppBar>
+                    <Box hidden={tab !== 'tab-guest'} height="100%">
+                        <DataGrid
+                            rows={props.waitingGuests}
+                            columns={[
+                                { field: 'id', width: 70 },
+                                { field: 'lastName', width: 200 },
+                                { field: 'firstName', width: 200 },
+                            ]}
+                            onRowClick={addGuestPlayer}
+                        />
+                    </Box>
+                    <Box hidden={tab !== 'tab-staff'} height="100%">
+                        <DataGrid
+                            rows={props.workingStaffs}
+                            columns={[
+                                { field: 'id', width: 70 },
+                                { field: 'lastName', width: 200 },
+                                { field: 'firstName', width: 200 },
+                            ]}
+                            onRowClick={addStaffPlayer}
+                        />
+                    </Box>
                 </Box>
             </Dialog>
 
@@ -156,10 +224,11 @@ export default function PlayingTables(props: PlayingTableProps): JSX.Element {
                                         </Box>
                                     );
                                 }
+                                const player = playersMap.get(seat)!;
                                 return (
                                     <Box key={seat} className={styles[seat]} onClick={() => setFirstDealer(seat)}>
                                         <NamedPerson
-                                            name={playersMap.get(seat)!.guest.lastName}
+                                            name={(player.guest || player.staff).lastName}
                                             iconSize={iconSize}
                                             color={seat === firstDealer ? 'primary' : undefined}
                                         />
@@ -219,7 +288,7 @@ export default function PlayingTables(props: PlayingTableProps): JSX.Element {
                                                 }}
                                             >
                                                 <NamedPerson
-                                                    name={playersMap.get(seat)!.guest.lastName}
+                                                    name={(player.guest || player.staff).lastName}
                                                     iconSize={iconSize}
                                                 />
                                                 {ranking.indexOf(player) + 1 + '位'}

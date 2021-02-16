@@ -15,14 +15,14 @@ jobs:
     steps:
       - name: add to features
         if: github.event.label.name == 'feature'
-        uses: alex-page/github-project-automation-plus@master
+        uses: alex-page/github-project-automation-plus@v0.5.1
         with:
           project: features
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           
       - name: add to bugs
         if: github.event.label.name == 'bug'
-        uses: alex-page/github-project-automation-plus@master
+        uses: alex-page/github-project-automation-plus@v0.5.1
         with:
           project: bugs
           repo-token: ${{ secrets.GITHUB_TOKEN }}

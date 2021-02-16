@@ -28,7 +28,7 @@ export const WaitingGuestQueue: FC<WaitingGuestQueueProps> = (props) => {
 
     return (
         <>
-            <PeopleQueue<Guest>
+            <PeopleQueue
                 people={props.waitingGuests}
                 handleRemovePerson={props.removeWaitingGuest}
                 handlePushPerson={() => setEnterDialogOpen(true)}
@@ -39,7 +39,7 @@ export const WaitingGuestQueue: FC<WaitingGuestQueueProps> = (props) => {
             <PushPersonDialog
                 open={enterDialogOpen}
                 setOpen={setEnterDialogOpen}
-                pushPerson={(person) => props.addWaitingGuest(person as Guest)}
+                pushPerson={props.addWaitingGuest}
                 getQueueablePeople={() => api.getGuests({ waiting: false, playing: false })}
             />
 

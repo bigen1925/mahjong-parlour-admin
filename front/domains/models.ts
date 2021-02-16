@@ -31,3 +31,16 @@ export type Guest = {
     updatedAt: Date;
     organizationId: string;
 };
+
+export type Staff = {
+    id: string;
+    loginId: string;
+    password: string;
+    lastName: string;
+    firstName: string;
+    gender: GENDER;
+    playerId: string;
+    createdAt: Date;
+    updatedAt: Date;
+    organizationId: string;
+};

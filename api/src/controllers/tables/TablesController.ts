@@ -10,7 +10,7 @@ export class TablesController extends Controller {
    * 卓一覧の取得
    */
   @Get()
-  public async indexTables(): Promise<Table[]> {
+  async indexTables(): Promise<Table[]> {
     return await prisma.table.findMany({
       include: {
         players: {

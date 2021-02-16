@@ -30,7 +30,7 @@ export class AuthenticateController extends Controller {
    * loginId / Password による従業員の認証
    */
   @Post()
-  public async staffAuthenticate(@Body() params: AuthenticateInput): Promise<AuthenticateResponse> {
+  async staffAuthenticate(@Body() params: AuthenticateInput): Promise<AuthenticateResponse> {
     const staff = await prisma.staff.findUnique({
       where: { loginId: params.loginId },
     });

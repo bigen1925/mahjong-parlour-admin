@@ -1,20 +1,20 @@
 import { Box, CircularProgress, Dialog } from '@material-ui/core';
 import { DataGrid, RowParams } from '@material-ui/data-grid';
-import { FC, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type Person = {
     id: string;
     lastName: string;
     firstName: string;
 };
-type PushPersonDialogProps = {
+type PushPersonDialogProps<T> = {
     open: boolean;
     setOpen: (open: boolean) => void;
-    pushPerson: (person: Person) => Promise<void>;
-    getQueueablePeople: () => Promise<Person[]>;
+    pushPerson: (person: T) => Promise<void>;
+    getQueueablePeople: () => Promise<T[]>;
 };
-export const PushPersonDialog: FC<PushPersonDialogProps> = (props) => {
-    const [queueablePeople, setQueueablePeople] = useState<Person[] | null>(null);
+export function PushPersonDialog<T extends Person>(props: PushPersonDialogProps<T>): JSX.Element {
+    const [queueablePeople, setQueueablePeople] = useState<T[] | null>(null);
 
     useEffect(() => {
         if (props.open) {
@@ -64,4 +64,4 @@ export const PushPersonDialog: FC<PushPersonDialogProps> = (props) => {
             </Box>
         </Dialog>
     );
-};
+}

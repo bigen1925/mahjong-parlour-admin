@@ -34,17 +34,29 @@ model Parlour {
 
 // 従業員
 model Staff {
-    id              String      @id @default(uuid())
-    loginId         String      @unique // ログインID
-    password        String      // ログインパスワード
-    lastName        String      // 姓
-    firstName       String      // 名
-    gender          Int      // 性別
+    id              String          @id @default(uuid())
+    loginId         String          @unique // ログインID
+    password        String          // ログインパスワード
+    lastName        String          // 姓
+    firstName       String          // 名
+    gender          Int             // 性別
 
     organization    Organization
     parlours        Parlour[]
-    player          Player      @relation(fields: [playerId], references: [id])
+    workingStaff    WorkingStaff?
+    player          Player          @relation(fields: [playerId], references: [id])
     playerId        String
+
+    createdAt       DateTime        @default(now())
+    updatedAt       DateTime        @updatedAt
+}
+
+// 勤務中の従業員
+model WorkingStaff {
+    id              String      @id @default(uuid())
+
+    staff           Staff       @relation(fields: [staffId], references: [id])
+    staffId         String      @unique
 
     createdAt       DateTime    @default(now())
     updatedAt       DateTime    @updatedAt
@@ -52,22 +64,22 @@ model Staff {
 
 // 客
 model Guest {
-    id              String      @id @default(uuid())
-    lastName        String      // 姓
-    firstName       String      // 名
-    gender          Int         // 性別
-    email           String      @default("") // メールアドレス
-    address         String      @default("") // 住所
-    rewardPoints    Int         @default(0) // ポイント
+    id              String          @id @default(uuid())
+    lastName        String          // 姓
+    firstName       String          // 名
+    gender          Int             // 性別
+    email           String          @default("") // メールアドレス
+    address         String          @default("") // 住所
+    rewardPoints    Int             @default(0) // ポイント
 
     organization    Organization
     parlours        Parlour[]
     waitingGuest    WaitingGuest?
-    player          Player      @relation(fields: [playerId], references: [id])
+    player          Player          @relation(fields: [playerId], references: [id])
     playerId        String
 
-    createdAt       DateTime    @default(now())
-    updatedAt       DateTime    @updatedAt
+    createdAt       DateTime        @default(now())
+    updatedAt       DateTime        @updatedAt
 }
 
 // 待ち客

@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { GENDER, SEAT } from '../domains/constants';
-import { Guest, Player, Table } from '../domains/models';
+import { Guest, Player, Staff, Table } from '../domains/models';
 
 export class ApiClient {
     #token: string | null = null;
@@ -94,6 +94,18 @@ export class ApiClient {
 
     async updatePlayer(playerId: string, data: { tableId: string | null; seat: SEAT | null }): Promise<Player> {
         return (await this.#callApi({ url: `/players/${playerId}`, method: 'patch', data })) as Player;
+    }
+
+    async getStaffs(params: { working?: boolean; playing?: boolean }): Promise<Staff[]> {
+        return (await this.#callApi({ url: `/staffs`, params })) as Staff[];
+    }
+
+    async addWorkingStaff(staffId: string): Promise<void> {
+        return (await this.#callApi({ url: `/working-staffs`, method: 'post', data: { staffId } })) as void;
+    }
+
+    async removeWorkingStaff(staffId: string): Promise<void> {
+        return (await this.#callApi({ url: `/working-staffs/${staffId}`, method: 'delete' })) as void;
     }
 }
 

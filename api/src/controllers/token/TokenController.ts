@@ -13,7 +13,7 @@ export class TokenController extends Controller {
    * CookieにセットされたTokenを取得する
    */
   @Get()
-  public async getToken(@Request() request: ExRequest): Promise<GetTokenResponse> {
+  async getToken(@Request() request: ExRequest): Promise<GetTokenResponse> {
     console.log('cookies', request.cookies);
     if (!request.cookies.token) {
       throw new Unauthorized('認証されていません');

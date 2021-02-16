@@ -106,6 +106,16 @@ export class ApiClient {
         return (await this.#callApi({ url: `/staffs`, params })) as Staff[];
     }
 
+    async createStaff(data: {
+        loginId: string;
+        password: string;
+        lastName: string;
+        firstName: string;
+        gender: GENDER;
+    }): Promise<Staff> {
+        return (await this.#callApi({ url: `/staffs`, method: 'post', data })) as Staff;
+    }
+
     async addWorkingStaff(staffId: string): Promise<void> {
         return (await this.#callApi({ url: `/working-staffs`, method: 'post', data: { staffId } })) as void;
     }

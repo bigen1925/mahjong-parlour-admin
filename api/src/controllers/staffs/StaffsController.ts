@@ -2,10 +2,14 @@ import { Staff } from '@prisma/client';
 import { Body, Controller, Get, Post, Query, Route, Security, Tags } from 'tsoa';
 import { prisma } from '../../app';
 import { hash } from '../../helpers/hash';
+import { Gender } from '../../types/tsoa';
 
 type StaffCreateParams = {
   loginId: string;
   password: string;
+  lastName: string;
+  firstName: string;
+  gender: Gender;
 };
 
 @Route('staffs')
@@ -34,11 +38,8 @@ export class StaffsController extends Controller {
 
     return prisma.staff.create({
       data: {
-        loginId: params.loginId,
+        ...params,
         password: hash(params.password),
-        lastName: params.loginId + '姓',
-        firstName: params.loginId + '名',
-        gender: 0,
         organization: {
           connect: { id: org?.id },
         },

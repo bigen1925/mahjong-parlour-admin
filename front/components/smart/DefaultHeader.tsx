@@ -12,7 +12,7 @@ export const DefaultHeader: FC = () => {
             </Grid>
             <Grid item xs={2}>
                 <Grid container justify="center">
-                    <Typography variant="h5">卓管理</Typography>
+                    <Typography variant="h5">卓状況管理</Typography>
                 </Grid>
             </Grid>
         </Grid>

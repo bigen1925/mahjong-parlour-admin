@@ -19,7 +19,7 @@ import { SEAT } from '../../domains/constants';
 import { Guest, Player, Staff, Table } from '../../domains/models';
 import { api } from '../../pages/_app';
 import modalStyles from '../../styles/modal.module.css';
-import NamedPerson from '../atoms/NamedPerson';
+import NamedPerson from '../dumb/NamedPerson';
 
 interface PlayingTableProps {
     table: Table;
@@ -330,30 +330,35 @@ export default function PlayingTables(props: PlayingTableProps): JSX.Element {
 const useStyle = makeStyles({
     // 1席左上
     [SEAT.FIRST]: {
+        cursor: 'pointer',
         position: 'absolute',
         top: 0,
         left: 0,
     },
     // 2席右上
     [SEAT.SECOND]: {
+        cursor: 'pointer',
         position: 'absolute',
         top: 0,
         right: 0,
     },
     // 3席右下
     [SEAT.THIRD]: {
+        cursor: 'pointer',
         position: 'absolute',
         bottom: 0,
         left: 0,
     },
     // 4席左下
     [SEAT.FOURTH]: {
+        cursor: 'pointer',
         position: 'absolute',
         bottom: 0,
         right: 0,
     },
     // 卓
     table: {
+        cursor: 'pointer',
         transform: 'rotate(45deg)',
         fontSize: 80,
         position: 'absolute',

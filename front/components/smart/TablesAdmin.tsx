@@ -1,10 +1,10 @@
-import { Box, CircularProgress, Container, Grid } from '@material-ui/core';
-import { FC, useEffect, useState } from 'react';
-import { Guest, Staff, Table } from '../../domains/models';
-import { api } from '../../pages/_app';
-import PlayingTables from '../molecules/PlayingTables';
-import { WaitingGuestQueue } from '../molecules/WaitingGuestQueue';
-import { WorkingStaffQueue } from '../molecules/WorkingStaffQueue';
+import {Box, CircularProgress, Container, Grid} from '@material-ui/core';
+import {FC, useEffect, useState} from 'react';
+import {Guest, Staff, Table} from '../../domains/models';
+import {api} from '../../pages/_app';
+import PlayingTables from './PlayingTables';
+import {WaitingGuestQueue} from './WaitingGuestQueue';
+import {WorkingStaffQueue} from './WorkingStaffQueue';
 
 export const TablesAdmin: FC = () => {
     // 卓

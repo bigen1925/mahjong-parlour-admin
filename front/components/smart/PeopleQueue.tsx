@@ -1,5 +1,5 @@
 import { Box, Button, Grid } from '@material-ui/core';
-import NamedPerson from '../atoms/NamedPerson';
+import NamedPerson from '../dumb/NamedPerson';
 
 type PeopleQueueProps<T extends Person> = {
     people: T[];
@@ -19,7 +19,13 @@ export function PeopleQueue<T extends Person>(props: PeopleQueueProps<T>): JSX.E
         <Box border={1} borderRight={0} height={90}>
             <Grid container alignItems="center" style={{ height: '100%', textAlign: 'center' }}>
                 {props.people.map((person) => (
-                    <Grid item xs={1} key={person.id} onClick={() => props.handleRemovePerson(person)}>
+                    <Grid
+                        item
+                        xs={1}
+                        key={person.id}
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => props.handleRemovePerson(person)}
+                    >
                         <NamedPerson name={person.lastName} iconSize={50} />
                     </Grid>
                 ))}

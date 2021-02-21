@@ -1,4 +1,5 @@
 import { Box, CircularProgress, Dialog } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import { DataGrid, RowParams } from '@material-ui/data-grid';
 import { useEffect, useState } from 'react';
 
@@ -13,7 +14,17 @@ type PushPersonDialogProps<T> = {
     pushPerson: (person: T) => Promise<void>;
     getQueueablePeople: () => Promise<T[]>;
 };
+
+const useStyles = makeStyles(() => ({
+    root: {
+        '& .MuiDataGrid-row': {
+            cursor: 'pointer',
+        },
+    },
+}));
+
 export function PushPersonDialog<T extends Person>(props: PushPersonDialogProps<T>): JSX.Element {
+    const classes = useStyles();
     const [queueablePeople, setQueueablePeople] = useState<T[] | null>(null);
 
     useEffect(() => {
@@ -52,6 +63,7 @@ export function PushPersonDialog<T extends Person>(props: PushPersonDialogProps<
                     </Box>
                 ) : (
                     <DataGrid
+                        className={classes.root}
                         rows={queueablePeople}
                         columns={[
                             { field: 'id', width: 70 },

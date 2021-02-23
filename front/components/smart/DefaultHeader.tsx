@@ -1,4 +1,4 @@
-import { Grid, Typography } from '@material-ui/core';
+import { Grid, Link, Typography } from '@material-ui/core';
 import Image from 'next/image';
 import { FC } from 'react';
 
@@ -12,7 +12,20 @@ export const DefaultHeader: FC = () => {
             </Grid>
             <Grid item xs={2}>
                 <Grid container justify="center">
-                    <Typography variant="h5">卓状況管理</Typography>
+                    <Link href="/tables">
+                        <Typography variant="h5" color="textPrimary">
+                            卓状況管理
+                        </Typography>
+                    </Link>
+                </Grid>
+            </Grid>
+            <Grid item xs={2}>
+                <Grid container justify="center">
+                    <Link href="/guests">
+                        <Typography variant="h5" color="textPrimary">
+                            顧客管理
+                        </Typography>
+                    </Link>
                 </Grid>
             </Grid>
         </Grid>

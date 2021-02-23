@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { GENDER, SEAT } from '../domains/constants';
-import { Guest, Player, Staff, Table } from '../domains/models';
+import { Guest, GuestDetail, Player, Staff, Table } from '../domains/models';
 
 export class ApiClient {
     #token: string | null = null;
@@ -64,6 +64,35 @@ export class ApiClient {
 
     async getGuests(params: { waiting?: boolean; playing?: boolean }): Promise<Guest[]> {
         return (await this.#callApi({ url: '/guests', params })) as Guest[];
+    }
+
+    async getGuest(guestId: string): Promise<GuestDetail> {
+        const guest = (await this.#callApi({ url: `/guests/${guestId}` })) as Guest;
+        return {
+            ...guest,
+            rankingRates: {
+                1: 26.5,
+                2: 23.5,
+                3: 27.32,
+                4: 22.68,
+            },
+            rankingAverage: 2.39,
+            totalPlayCount: 342,
+            visitingHistories: [
+                {
+                    id: 1,
+                    enteredAt: new Date(2020, 1, 10, 10, 0),
+                    exitedAt: new Date(2020, 1, 10, 22, 32),
+                    playCount: 15,
+                },
+                {
+                    id: 2,
+                    enteredAt: new Date(2020, 1, 12, 18, 26),
+                    exitedAt: new Date(2020, 1, 13, 6, 49),
+                    playCount: 13,
+                },
+            ],
+        };
     }
 
     async createGuest(data: {

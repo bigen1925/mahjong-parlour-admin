@@ -31,6 +31,23 @@ export type Guest = {
     organizationId: string;
 };
 
+export type GuestDetail = Guest & {
+    rankingRates: {
+        1: number;
+        2: number;
+        3: number;
+        4: number;
+    };
+    rankingAverage: number;
+    totalPlayCount: number;
+    visitingHistories: {
+        id: number;
+        enteredAt: Date;
+        exitedAt: Date;
+        playCount: number;
+    }[];
+};
+
 export type Staff = {
     id: string;
     loginId: string;

@@ -1,7 +1,8 @@
 import { Guest } from '@prisma/client';
-import { Body, Controller, Get, Post, Query, Request, Route, Security, Tags } from 'tsoa';
+import { Body, Controller, Get, Path, Post, Query, Request, Route, Security, Tags } from 'tsoa';
 import { prisma } from '../../app';
 import { StaffAuthedRequest } from '../../authentication';
+import { UUID } from '../../types/tsoa';
 
 type CreateGuestParams = {
   lastName: string;
@@ -26,6 +27,14 @@ export class GuestsController extends Controller {
         player: playing === true ? { isNot: { tableId: null } } : playing === false ? { tableId: null } : undefined,
       },
     });
+  }
+
+  /**
+   * 顧客詳細の取得
+   */
+  @Get('{guestId}')
+  async showGuest(@Path() guestId: UUID): Promise<Guest> {
+    return await prisma.guest.findUnique({ where: { id: guestId } });
   }
 
   /**

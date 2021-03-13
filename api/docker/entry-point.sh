@@ -14,7 +14,11 @@ until npm run migrate -- $SCHEMA_OPTION ; do
   sleep 1
 done
 
-npm run seed
+
+if [ "$NODE_ENV" = "development" ]; then
+  npm run seed
+fi
+
 
 
 exec "$@"

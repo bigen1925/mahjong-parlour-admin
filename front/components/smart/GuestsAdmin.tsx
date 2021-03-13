@@ -1,4 +1,15 @@
-import { Box, Container, createStyles, Divider, Grid, List, ListItem, Theme, Typography } from '@material-ui/core';
+import {
+    Box,
+    CircularProgress,
+    Container,
+    createStyles,
+    Divider,
+    Grid,
+    List,
+    ListItem,
+    Theme,
+    Typography,
+} from '@material-ui/core';
 import { DataGrid, RowParams } from '@material-ui/data-grid';
 import { makeStyles } from '@material-ui/styles';
 import { FC, useEffect } from 'react';
@@ -38,22 +49,24 @@ export const GuestsAdmin: FC = () => {
         <Container className={classes.root}>
             <Grid container style={{ minHeight: 500 }}>
                 <Grid item xs={4}>
-                    <DataGrid
-                        columns={[
-                            { field: 'lastName', headerName: '姓', width: 140 },
-                            { field: 'firstName', headerName: '姓', width: 140 },
-                            { field: 'gender', headerName: '性別', width: 80 },
-                        ]}
-                        rows={
-                            guests
-                                ? guests.map((guest) => ({
-                                      ...guest,
-                                      gender: guest.gender === GENDER.MALE ? '男性' : '女性',
-                                  }))
-                                : []
-                        }
-                        onRowClick={handleNameListItemClick}
-                    />
+                    {!guests ? (
+                        <Box>
+                            <CircularProgress color="secondary" />
+                        </Box>
+                    ) : (
+                        <DataGrid
+                            columns={[
+                                { field: 'lastName', headerName: '姓', width: 140 },
+                                { field: 'firstName', headerName: '姓', width: 140 },
+                                { field: 'gender', headerName: '性別', width: 80 },
+                            ]}
+                            rows={guests.map((guest) => ({
+                                ...guest,
+                                gender: guest.gender === GENDER.MALE ? '男性' : '女性',
+                            }))}
+                            onRowClick={handleNameListItemClick}
+                        />
+                    )}
                 </Grid>
 
                 <Grid item xs={8}>

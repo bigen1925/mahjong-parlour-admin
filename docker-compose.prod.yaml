@@ -9,7 +9,7 @@ services:
     container_name: mpa-front-prod
     working_dir: /app
     ports:
-      - 3333:3000
+      - 80:3000
     environment:
       - NODE_ENV=production
       - NEXT_PUBLIC_API_URL_BASE=http://localhost:3000/
@@ -25,16 +25,4 @@ services:
       - 3000:3000
     environment:
       - NODE_ENV=production
-      - DATABASE_URL=postgresql://mpa:password@database:5432/mpa
-
-  database:
-    image: postgres:13.1-alpine
-    container_name: mpa-database-prod
-    volumes:
-      - /var/lib/postgresql/data
-    ports:
-      - 5432:5432
-    environment:
-      - POSTGRES_USER=mpa
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=mpa
+      - DATABASE_URL=postgresql://mpa:1kdE8qEVfOXlu8qoBg7a@mpa-db.cauauvqiuqvk.ap-northeast-1.rds.amazonaws.com:5432/mpa

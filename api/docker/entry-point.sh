@@ -7,13 +7,13 @@ else
   SCHEMA_OPTION=""
 fi
 
-npx prisma generate "$SCHEMA_OPTION"
+npx prisma generate $SCHEMA_OPTION
 RETRIES=60
-until npm run migrate -- "$SCHEMA_OPTION" ; do
+until npm run migrate -- $SCHEMA_OPTION ; do
   echo "Waiting for postgres server, $((RETRIES--)) remaining attempts..."
   sleep 1
 done
 
-npm run seed -- "$SCHEMA_OPTION"
+npm run seed -- $SCHEMA_OPTION
 
 exec "$@"

@@ -20,7 +20,6 @@ export const GuestsAdmin: FC = () => {
     const classes = useStyle();
     const [guests, setGuests] = useNullableState<Guest[]>();
     const [guestDetail, setGuestDetail] = useNullableState<GuestDetail>();
-    const guestIndex = {};
 
     function handleNameListItemClick(row: RowParams) {
         api.getGuest(row.getValue('id') as string).then((guest) => {
@@ -30,15 +29,14 @@ export const GuestsAdmin: FC = () => {
 
     useEffect(() => {
         api.getGuests({}).then((guests) => {
+            console.log(guests);
             setGuests(guests);
-            for (const guest of guests) {
-            }
         });
     }, []);
 
     return (
         <Container className={classes.root}>
-            <Grid container>
+            <Grid container style={{ minHeight: 500 }}>
                 <Grid item xs={4}>
                     <DataGrid
                         columns={[
@@ -46,10 +44,14 @@ export const GuestsAdmin: FC = () => {
                             { field: 'firstName', headerName: '姓', width: 140 },
                             { field: 'gender', headerName: '性別', width: 80 },
                         ]}
-                        rows={guests!.map((guest) => ({
-                            ...guest,
-                            gender: guest.gender === GENDER.MALE ? '男性' : '女性',
-                        }))}
+                        rows={
+                            guests
+                                ? guests.map((guest) => ({
+                                      ...guest,
+                                      gender: guest.gender === GENDER.MALE ? '男性' : '女性',
+                                  }))
+                                : []
+                        }
                         onRowClick={handleNameListItemClick}
                     />
                 </Grid>
